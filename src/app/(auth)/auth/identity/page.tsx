@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useFeorm } from "@/context/feorm-context";
+import { useMutation } from "convex/react";
+import { api } from "@/lib/convex";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 const regions = [
@@ -19,30 +21,38 @@ export default function IdentityPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  const setupIdentity = useMutation(api.auth.setupIdentity);
+
   const handleIdentitySetup = async () => {
     if (!name || !surname) return;
     setLoading(true);
     try {
       const fullPhone = `+264${phone.replace(/\s/g, "")}`;
-      await fetch("/api/auth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "setup-identity",
-          phone: fullPhone,
-          name,
-          surname,
-          region,
-          role: "explorer",
-        }),
+      await setupIdentity({
+        phone: fullPhone,
+        name,
+        surname,
+        region,
+        role: "explorer",
       });
+      setUser((prev) =>
+        prev
+          ? { ...prev, name, surname, region }
+          : {
+              id: "demo",
+              phone: fullPhone,
+              name,
+              surname,
+              region,
+              role: "explorer",
+              verified: false,
+            }
+      );
+      router.push("/auth/role");
     } catch {
-      // Continue anyway
+      // Continue anyway for demo
+      router.push("/auth/role");
     }
-    setUser((prev) =>
-      prev ? { ...prev, name, surname, region } : { id: "demo", phone: `+264${phone.replace(/\s/g, "")}`, name, surname, region, role: "explorer", verified: false }
-    );
-    router.push("/auth/role");
     setLoading(false);
   };
 

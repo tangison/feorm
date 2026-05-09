@@ -1,26 +1,21 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { useFeorm } from "@/context/feorm-context";
+import { useRouter } from "next/navigation";
+import { useQuery } from "convex/react";
+import { api } from "@/lib/convex";
 import { Clock, ArrowRight } from "lucide-react";
-import { formatPrice } from "@/components/feorm/listing-card";
 import Link from "next/link";
+import { formatPrice } from "@/components/feorm/listing-card";
 
 export default function JourneysPage() {
-  const { user, bookings, setBookings } = useFeorm();
+  const { user, phone } = useFeorm();
   const router = useRouter();
 
-  useEffect(() => {
-    if (user) {
-      fetch(`/api/bookings?userId=${user.id}`)
-        .then((res) => (res.ok ? res.json() : []))
-        .then((data) => {
-          setBookings(data);
-        })
-        .catch(() => {});
-    }
-  }, [user, setBookings]);
+  // Convex real-time query — bookings update automatically when status changes
+  const bookings = useQuery(api.bookings.getByUser, {
+    userId: user?.phone || `+264${phone.replace(/\s/g, "")}` || "demo",
+  });
 
   return (
     <div className="flex-grow w-full max-w-4xl mx-auto px-6 py-12 md:py-24">
@@ -29,11 +24,24 @@ export default function JourneysPage() {
           My Journeys
         </h2>
         <p className="text-sm text-[#787774]">
-          Active, upcoming, and past bookings on the Feorm network.
+          Active, upcoming, and past bookings on the Feorm network.{" "}
+          <span className="inline-flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#346538] animate-pulse" />
+            <span className="font-mono-feorm text-[9px] uppercase tracking-widest">Live</span>
+          </span>
         </p>
       </div>
 
-      {bookings.length === 0 ? (
+      {bookings === undefined && (
+        <div className="flex items-center gap-2 mb-8">
+          <div className="w-2 h-2 rounded-full bg-[#E8C96A] animate-pulse" />
+          <span className="font-mono-feorm text-[10px] text-[#787774] uppercase tracking-widest">
+            Syncing with Network...
+          </span>
+        </div>
+      )}
+
+      {bookings?.length === 0 && (
         <div className="border border-dashed border-[#D4C4A0]/50 bg-[#FEFDFB] rounded-[8px] p-12 text-center">
           <Clock size={32} className="text-[#D4C4A0] mx-auto mb-4" />
           <p className="text-sm text-[#787774] mb-6">
@@ -46,11 +54,13 @@ export default function JourneysPage() {
             Browse Marketplace <ArrowRight size={14} />
           </Link>
         </div>
-      ) : (
-        <div className="space-y-4 max-h-96 overflow-y-auto">
+      )}
+
+      {bookings && bookings.length > 0 && (
+        <div className="space-y-4 max-h-[600px] overflow-y-auto">
           {bookings.map((b) => (
             <div
-              key={b.id}
+              key={b._id}
               className="bento-card p-6 flex flex-col md:flex-row md:items-center gap-4"
             >
               <div className="flex-grow">
@@ -67,8 +77,9 @@ export default function JourneysPage() {
                     {b.status}
                   </span>
                   <span className="font-mono-feorm text-[10px] text-[#787774]">
-                    {b.referenceNumber}
+                    {b.reference}
                   </span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#346538] animate-pulse" />
                 </div>
                 <h3 className="font-serif-display text-xl text-[#1E1A14]">
                   {b.listing?.title || "Listing"}

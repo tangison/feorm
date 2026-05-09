@@ -2,11 +2,25 @@
 
 import { useRouter } from "next/navigation";
 import { useFeorm } from "@/context/feorm-context";
+import { useMutation } from "convex/react";
+import { api } from "@/lib/convex";
 import { Upload } from "lucide-react";
 
 export default function VerifyIdPage() {
-  const { setUser } = useFeorm();
+  const { user, phone, setUser } = useFeorm();
   const router = useRouter();
+  const verifyUser = useMutation(api.auth.verifyUser);
+
+  const handleVerify = async () => {
+    try {
+      const fullPhone = user?.phone || `+264${phone.replace(/\s/g, "")}`;
+      await verifyUser({ phone: fullPhone });
+    } catch {
+      // Continue anyway for demo
+    }
+    setUser((prev) => (prev ? { ...prev, verified: true } : null));
+    router.push("/marketplace");
+  };
 
   return (
     <div className="flex-grow flex items-center justify-center p-6 md:p-12 min-h-screen bg-[#FAF7F2]">
@@ -41,10 +55,7 @@ export default function VerifyIdPage() {
             Skip (Browse Only)
           </button>
           <button
-            onClick={() => {
-              setUser((prev) => (prev ? { ...prev, verified: true } : null));
-              router.push("/marketplace");
-            }}
+            onClick={handleVerify}
             className="flex-1 btn-primary-feorm py-3 text-xs uppercase tracking-widest"
           >
             Verify & Enter

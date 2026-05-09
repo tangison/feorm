@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useFeorm } from "@/context/feorm-context";
+import { useMutation } from "convex/react";
+import { api } from "@/lib/convex";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 export default function VerifyPage() {
@@ -11,6 +13,9 @@ export default function VerifyPage() {
   const [otpError, setOtpError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  // Convex mutation for OTP verification
+  const verifyOtp = useMutation(api.auth.verifyOtp);
 
   const handleVerifyOtp = async () => {
     if (otp !== "123456") {
@@ -21,30 +26,24 @@ export default function VerifyPage() {
     setOtpError("");
     try {
       const fullPhone = `+264${phone.replace(/\s/g, "")}`;
-      const res = await fetch("/api/auth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "verify-otp", phone: fullPhone, otp }),
-      });
-      const data = await res.json();
-      if (data.success) {
+      const result = await verifyOtp({ phone: fullPhone, otp });
+      if (result.success) {
         setUser({
-          id: data.userId,
+          id: result.userId,
           phone: fullPhone,
           role: "explorer",
           verified: false,
         });
-        if (data.isNewUser) {
+        if (result.isNewUser) {
           router.push("/auth/identity");
         } else {
           router.push("/marketplace");
         }
         return;
       }
-    } catch {
-      // Fallback
+    } catch (err: any) {
+      setOtpError(err.message || "Verification failed");
     }
-    router.push("/auth/identity");
     setLoading(false);
   };
 

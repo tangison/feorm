@@ -1,33 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useFeorm, type Listing } from "@/context/feorm-context";
+import { useQuery } from "convex/react";
+import { api } from "@/lib/convex";
 import { formatPrice } from "@/components/feorm/listing-card";
 import Image from "next/image";
 import { ChevronLeft, MessageCircle, ArrowRight } from "lucide-react";
 
 export default function ListingDetailPage() {
-  const { id } = useParams<{ id: string }>();
-  const { setSelectedListing } = useFeorm();
-  const [listing, setListing] = useState<Listing | null>(null);
-  const [loading, setLoading] = useState(true);
+  const params = useParams<{ id: string }>();
   const router = useRouter();
 
-  useEffect(() => {
-    if (!id) return;
-    fetch(`/api/listings`)
-      .then((res) => (res.ok ? res.json() : []))
-      .then((data: Listing[]) => {
-        const found = data.find((l) => l.id === id);
-        if (found) {
-          setListing(found);
-          setSelectedListing(found);
-        }
-      })
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, [id, setSelectedListing]);
+  // Convex real-time query for single listing
+  const listing = useQuery(api.listings.getById, {
+    id: params.id as any,
+  });
 
   const triggerWhatsApp = (title: string) => {
     const msg = encodeURIComponent(
@@ -36,15 +23,20 @@ export default function ListingDetailPage() {
     window.open(`https://wa.me/264810000000?text=${msg}`, "_blank");
   };
 
-  if (loading) {
+  if (listing === undefined) {
     return (
       <div className="flex-grow flex items-center justify-center min-h-[60vh]">
-        <p className="text-sm text-[#787774] font-mono-feorm">Loading...</p>
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-[#E8C96A] animate-pulse" />
+          <p className="text-sm text-[#787774] font-mono-feorm">
+            Syncing with Network...
+          </p>
+        </div>
       </div>
     );
   }
 
-  if (!listing) {
+  if (listing === null) {
     return (
       <div className="flex-grow flex items-center justify-center min-h-[60vh]">
         <div className="text-center">
@@ -60,7 +52,7 @@ export default function ListingDetailPage() {
     );
   }
 
-  const features = listing.features.split(",");
+  const features = listing.features;
 
   return (
     <div className="flex-grow w-full max-w-6xl mx-auto bg-[#FEFDFB] md:my-12 md:border md:border-[#3C2F1A]/10 md:rounded-[8px] md:min-h-[700px] overflow-hidden">
@@ -68,7 +60,7 @@ export default function ListingDetailPage() {
         {/* Left: Image */}
         <div className="w-full md:w-1/2 bg-[#FAF7F2] relative h-[40vh] md:h-auto border-b md:border-b-0 md:border-r border-[#3C2F1A]/10">
           <Image
-            src={listing.imageUrl}
+            src={listing.image}
             alt={listing.title}
             width={600}
             height={450}
@@ -123,7 +115,7 @@ export default function ListingDetailPage() {
               Specifications
             </h4>
             <div className="flex flex-wrap gap-2 mb-10">
-              {features.map((f) => (
+              {features.map((f: string) => (
                 <span
                   key={f}
                   className="border border-[#3C2F1A]/10 rounded bg-[#FAF7F2] px-3 py-1 text-xs text-[#787774]"
@@ -141,7 +133,7 @@ export default function ListingDetailPage() {
               <div className="w-10 h-10 rounded-full bg-[#1E1A14] text-[#FEFDFB] flex items-center justify-center text-xs font-medium">
                 {listing.hostName
                   .split(" ")
-                  .map((n) => n[0])
+                  .map((n: string) => n[0])
                   .join("")}
               </div>
               <div>
@@ -166,7 +158,7 @@ export default function ListingDetailPage() {
               </span>
             </div>
             <button
-              onClick={() => router.push(`/listing/${listing.id}/book`)}
+              onClick={() => router.push(`/listing/${params.id}/book`)}
               className="w-full btn-primary-feorm py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2"
             >
               {listing.type === "stay" ? "Request Stay" : "Rent Machinery"}

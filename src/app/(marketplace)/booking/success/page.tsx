@@ -1,17 +1,26 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useFeorm } from "@/context/feorm-context";
 import { CheckCircle, MessageCircle } from "lucide-react";
+import { useQuery } from "convex/react";
+import { api } from "@/lib/convex";
+import { Suspense } from "react";
 
-export default function BookingSuccessPage() {
-  const { latestRef, selectedListing } = useFeorm();
+function SuccessContent() {
+  const { selectedListing } = useFeorm();
+  const searchParams = useSearchParams();
   const router = useRouter();
+  const ref = searchParams.get("ref") || "";
+
+  // Try to look up booking from Convex by reference
+  const booking = useQuery(api.bookings.getByReference, ref ? { reference: ref } : "skip");
+
+  const listingTitle = booking?.listing?.title || selectedListing?.title || "Feorm Booking";
 
   const triggerWhatsApp = () => {
-    const title = selectedListing?.title || "Feorm Booking";
     const msg = encodeURIComponent(
-      `Hi, I've just booked [${title}] on Feorm. Looking forward to it! My Ref is: ${latestRef}`
+      `Hi, I've just booked [${listingTitle}] on Feorm. Looking forward to it! My Ref is: ${ref}`
     );
     window.open(`https://wa.me/264810000000?text=${msg}`, "_blank");
   };
@@ -31,14 +40,19 @@ export default function BookingSuccessPage() {
           finalize details.
         </p>
 
-        {latestRef && (
+        {ref && (
           <div className="border border-[#3C2F1A]/10 bg-[#FEFDFB] rounded-[8px] p-6 mb-8">
             <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-2">
               Booking Reference
             </p>
             <p className="font-mono-feorm text-2xl font-medium text-[#1E1A14]">
-              {latestRef}
+              {ref}
             </p>
+            {booking && (
+              <p className="font-mono-feorm text-[10px] text-[#787774] mt-2 uppercase">
+                Status: {booking.status} — {formatPrice(booking.totalPrice)}
+              </p>
+            )}
           </div>
         )}
 
@@ -58,5 +72,23 @@ export default function BookingSuccessPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+function formatPrice(cents: number): string {
+  return `N$ ${(cents / 100).toLocaleString()}`;
+}
+
+export default function BookingSuccessPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex-grow flex items-center justify-center min-h-[60vh]">
+          <p className="text-sm text-[#787774] font-mono-feorm">Loading...</p>
+        </div>
+      }
+    >
+      <SuccessContent />
+    </Suspense>
   );
 }

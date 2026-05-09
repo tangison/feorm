@@ -1,77 +1,77 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useFeorm, type Listing } from "@/context/feorm-context";
+import { useQuery, useMutation } from "convex/react";
+import { api } from "@/lib/convex";
 import { formatPrice } from "@/components/feorm/listing-card";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 export default function BookPage() {
-  const { id } = useParams<{ id: string }>();
-  const { user, setBookings, setLatestRef } = useFeorm();
-  const [listing, setListing] = useState<Listing | null>(null);
+  const params = useParams<{ id: string }>();
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [withOperator, setWithOperator] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    if (!id) return;
-    fetch(`/api/listings`)
-      .then((res) => (res.ok ? res.json() : []))
-      .then((data: Listing[]) => {
-        const found = data.find((l) => l.id === id);
-        if (found) setListing(found);
-      })
-      .catch(() => {});
-  }, [id]);
+  // Convex real-time query for listing details
+  const listing = useQuery(api.listings.getById, {
+    id: params.id as any,
+  });
 
-  const days = startDate && endDate
-    ? Math.max(1, Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24)))
-    : 0;
+  // Convex mutation for creating booking
+  const createBooking = useMutation(api.bookings.create);
+
+  const days =
+    startDate && endDate
+      ? Math.max(
+          1,
+          Math.ceil(
+            (new Date(endDate).getTime() - new Date(startDate).getTime()) /
+              (1000 * 60 * 60 * 24)
+          )
+        )
+      : 0;
 
   const rentalPrice = listing ? listing.price * days : 0;
   const serviceFee = Math.round(rentalPrice * 0.1);
   const totalPrice = rentalPrice + serviceFee + 150000;
 
   const handleCreateBooking = async () => {
-    if (!user || !listing || !startDate || !endDate) return;
+    if (!listing || !startDate || !endDate) return;
     setLoading(true);
     try {
-      const res = await fetch("/api/bookings", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: user.id,
-          listingId: listing.id,
-          startDate,
-          endDate,
-          totalPrice,
-          serviceFee,
-          withOperator,
-        }),
+      const result = await createBooking({
+        listingId: listing._id,
+        userId: "demo-user", // Will be replaced with actual phone from context
+        startDate,
+        endDate,
+        totalPrice,
+        escrowAmount: 150000,
+        serviceFee,
+        withOperator,
       });
-      if (res.ok) {
-        const booking = await res.json();
-        setBookings((prev) => [booking, ...prev]);
-        setLatestRef(booking.referenceNumber);
-        router.push("/booking/success");
-        return;
-      }
+
+      // Navigate to success page with reference
+      router.push(`/booking/success?ref=${result.reference}`);
     } catch {
-      // Fallback: show success anyway for demo
+      // Fallback for demo
+      const ref = `FE-${Date.now().toString(36).toUpperCase()}`;
+      router.push(`/booking/success?ref=${ref}`);
     }
-    const ref = `FE-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
-    setLatestRef(ref);
-    router.push("/booking/success");
     setLoading(false);
   };
 
   if (!listing) {
     return (
       <div className="flex-grow flex items-center justify-center min-h-[60vh]">
-        <p className="text-sm text-[#787774] font-mono-feorm">Loading...</p>
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-[#E8C96A] animate-pulse" />
+          <p className="text-sm text-[#787774] font-mono-feorm">
+            Syncing with Network...
+          </p>
+        </div>
       </div>
     );
   }
@@ -80,7 +80,7 @@ export default function BookPage() {
     <div className="flex-grow flex items-center justify-center p-6 md:p-12 min-h-[60vh] bg-[#FAF7F2]">
       <div className="max-w-lg w-full">
         <button
-          onClick={() => router.push(`/listing/${id}`)}
+          onClick={() => router.push(`/listing/${params.id}`)}
           className="mb-8 flex items-center gap-2 text-sm text-[#787774] hover:text-[#1E1A14] transition-colors"
         >
           <ArrowLeft size={16} /> Back to Listing
@@ -94,7 +94,8 @@ export default function BookPage() {
             {listing.title}
           </h2>
           <p className="text-sm text-[#787774]">
-            Configure your {listing.type === "stay" ? "stay" : "rental"} dates and options.
+            Configure your{" "}
+            {listing.type === "stay" ? "stay" : "rental"} dates and options.
           </p>
         </div>
 
@@ -133,7 +134,9 @@ export default function BookPage() {
                 className="mt-1 w-4 h-4 accent-[#1E1A14]"
               />
               <div>
-                <p className="text-sm font-medium text-[#1E1A14]">Operator Required</p>
+                <p className="text-sm font-medium text-[#1E1A14]">
+                  Operator Required
+                </p>
                 <p className="text-xs text-[#787774]">
                   Include a trained operator for this equipment (+N$ 500/day)
                 </p>
@@ -149,12 +152,18 @@ export default function BookPage() {
             </h4>
             <div className="space-y-3 text-sm">
               <div className="flex justify-between">
-                <span className="text-[#787774]">Rental ({formatPrice(listing.price)} x {days} days)</span>
-                <span className="font-mono-feorm text-[#1E1A14]">{formatPrice(rentalPrice)}</span>
+                <span className="text-[#787774]">
+                  Rental ({formatPrice(listing.price)} x {days} days)
+                </span>
+                <span className="font-mono-feorm text-[#1E1A14]">
+                  {formatPrice(rentalPrice)}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-[#787774]">Service Fee (10%)</span>
-                <span className="font-mono-feorm text-[#1E1A14]">{formatPrice(serviceFee)}</span>
+                <span className="font-mono-feorm text-[#1E1A14]">
+                  {formatPrice(serviceFee)}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-[#787774]">Security Escrow</span>
@@ -162,7 +171,9 @@ export default function BookPage() {
               </div>
               <div className="flex justify-between pt-3 border-t border-[#3C2F1A]/10 font-medium">
                 <span className="text-[#1E1A14]">Total to Pay</span>
-                <span className="font-mono-feorm text-[#1E1A14] text-lg">{formatPrice(totalPrice)}</span>
+                <span className="font-mono-feorm text-[#1E1A14] text-lg">
+                  {formatPrice(totalPrice)}
+                </span>
               </div>
             </div>
           </div>

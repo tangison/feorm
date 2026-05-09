@@ -4,9 +4,11 @@ import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { useFeorm } from "@/context/feorm-context";
 import ListingCard from "@/components/feorm/listing-card";
+import { useQuery } from "convex/react";
+import { api } from "@/lib/convex";
 
 export default function MarketplacePage() {
-  const { marketView, setMarketView, listings, setListings } = useFeorm();
+  const { marketView, setMarketView } = useFeorm();
   const searchParams = useSearchParams();
 
   // Read view from URL on mount
@@ -17,18 +19,10 @@ export default function MarketplacePage() {
     }
   }, [searchParams, setMarketView]);
 
-  // Fetch listings when market view changes
-  useEffect(() => {
-    const type = marketView === "stays" ? "stay" : "equipment";
-    fetch(`/api/listings?type=${type}`)
-      .then((res) => (res.ok ? res.json() : []))
-      .then((data) => {
-        setListings(data);
-      })
-      .catch(() => {});
-  }, [marketView, setListings]);
-
-  const currentListings = listings;
+  // Convex real-time query — UI auto-updates when DB changes
+  const convexListings = useQuery(api.listings.getByType, {
+    type: marketView === "stays" ? "stay" : "equipment",
+  });
 
   return (
     <div className="flex-grow w-full max-w-6xl mx-auto px-6 py-12 md:py-24">
@@ -56,16 +50,43 @@ export default function MarketplacePage() {
         </div>
       </div>
 
+      {/* Real-time sync indicator */}
+      {convexListings === undefined && (
+        <div className="mb-8 flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-[#E8C96A] animate-pulse" />
+          <span className="font-mono-feorm text-[10px] text-[#787774] uppercase tracking-widest">
+            Syncing with Network...
+          </span>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-        {currentListings.map((item) => (
-          <ListingCard key={item.id} item={item} />
+        {convexListings?.map((item) => (
+          <ListingCard
+            key={item._id}
+            item={{
+              id: item._id,
+              title: item.title,
+              region: item.region,
+              price: item.price,
+              type: item.type,
+              category: item.category,
+              description: item.description,
+              imageUrl: item.image,
+              features: item.features.join(","),
+              hostId: "",
+              hostName: item.hostName,
+              hostPhone: item.hostPhone,
+              available: item.available,
+            }}
+          />
         ))}
       </div>
 
-      {currentListings.length === 0 && (
+      {convexListings?.length === 0 && (
         <div className="border border-dashed border-[#D4C4A0]/50 bg-[#FEFDFB] rounded-[8px] p-12 text-center">
           <p className="text-sm text-[#787774]">
-            Loading listings...
+            No listings found. The network is still growing.
           </p>
         </div>
       )}
