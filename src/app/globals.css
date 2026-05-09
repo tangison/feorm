@@ -193,19 +193,34 @@
 ::-webkit-scrollbar-track { background: #FAF7F2; }
 ::-webkit-scrollbar-thumb { background: #D4C4A0; border-radius: 4px; }
 
-/* Reveal Animation */
+/* Reveal Animation - uses animation instead of JS-dependent class toggle */
 .reveal {
-  opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform, opacity;
+  animation: feorm-reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
+.delay-1 { animation-delay: 80ms; }
+.delay-2 { animation-delay: 160ms; }
+.delay-3 { animation-delay: 240ms; }
+
+@keyframes feorm-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.delay-1 { transition-delay: 80ms; }
-.delay-2 { transition-delay: 160ms; }
-.delay-3 { transition-delay: 240ms; }
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .bento-card:hover {
+    transform: none;
+  }
+}
