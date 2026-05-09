@@ -3,8 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useFeorm } from "@/context/feorm-context";
-import { useMutation } from "convex/react";
-import { api } from "@/lib/convex";
+import { useAuthMutations } from "@/hooks/use-auth";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 export default function VerifyPage() {
@@ -14,8 +13,8 @@ export default function VerifyPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  // Convex mutation for OTP verification
-  const verifyOtp = useMutation(api.auth.verifyOtp);
+  // Auth mutations with Convex primary + REST fallback
+  const { verifyOtp } = useAuthMutations();
 
   const handleVerifyOtp = async () => {
     if (otp !== "123456") {
@@ -71,10 +70,11 @@ export default function VerifyPage() {
 
         <div className="space-y-6">
           <div className="border border-[#3C2F1A]/20 bg-[#FEFDFB] p-4 rounded-[4px] focus-within:border-[#1E1A14] transition-colors">
-            <label className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-[#787774]">
+            <label htmlFor="otp-input" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-[#787774]">
               Verification Code
             </label>
             <input
+              id="otp-input"
               type="text"
               value={otp}
               onChange={(e) => {
@@ -83,18 +83,20 @@ export default function VerifyPage() {
               }}
               placeholder="123456"
               maxLength={6}
-              className="w-full bg-transparent outline-none text-2xl text-[#1E1A14] placeholder-[#D4C4A0] font-mono-feorm tracking-[0.3em]"
+              aria-invalid={otpError ? "true" : undefined}
+              aria-describedby={otpError ? "otp-error" : undefined}
+              className="w-full bg-transparent outline-none text-2xl text-[#1E1A14] placeholder-[#D4C4A0] font-mono-feorm tracking-[0.3em] min-h-[44px]"
             />
           </div>
 
           {otpError && (
-            <p className="text-xs text-[#9F2F2D] font-mono-feorm">{otpError}</p>
+            <p id="otp-error" role="alert" className="text-xs text-[#9F2F2D] font-mono-feorm">{otpError}</p>
           )}
 
           <button
             onClick={handleVerifyOtp}
             disabled={otp.length !== 6 || loading}
-            className="w-full btn-primary-feorm py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full btn-primary-feorm py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
           >
             {loading ? "Verifying..." : "Verify & Enter"}
             <ArrowRight size={14} />

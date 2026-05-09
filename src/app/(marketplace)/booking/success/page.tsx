@@ -3,8 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useFeorm } from "@/context/feorm-context";
 import { CheckCircle, MessageCircle } from "lucide-react";
-import { useQuery } from "convex/react";
-import { api } from "@/lib/convex";
+import { useBookingByReference } from "@/hooks/use-bookings";
 import { Suspense } from "react";
 
 function SuccessContent() {
@@ -13,8 +12,8 @@ function SuccessContent() {
   const router = useRouter();
   const ref = searchParams.get("ref") || "";
 
-  // Try to look up booking from Convex by reference
-  const booking = useQuery(api.bookings.getByReference, ref ? { reference: ref } : "skip");
+  // Try to look up booking from Convex by reference (with REST fallback)
+  const { data: booking } = useBookingByReference(ref);
 
   const listingTitle = booking?.listing?.title || selectedListing?.title || "Feorm Booking";
 

@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useQuery, useMutation } from "convex/react";
+import { useMutation } from "convex/react";
 import { api } from "@/lib/convex";
+import { useListing } from "@/hooks/use-listings";
 import { formatPrice } from "@/components/feorm/listing-card";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
@@ -15,10 +16,8 @@ export default function BookPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  // Convex real-time query for listing details
-  const listing = useQuery(api.listings.getById, {
-    id: params.id as any,
-  });
+  // Convex real-time query with REST fallback for listing details
+  const { data: listing, isLoading: listingLoading } = useListing(params.id);
 
   // Convex mutation for creating booking
   const createBooking = useMutation(api.bookings.create);
@@ -63,7 +62,7 @@ export default function BookPage() {
     setLoading(false);
   };
 
-  if (!listing) {
+  if (listingLoading || !listing) {
     return (
       <div className="flex-grow flex items-center justify-center min-h-[60vh]">
         <div className="flex items-center gap-2">
@@ -102,25 +101,27 @@ export default function BookPage() {
         <div className="space-y-5">
           <div className="grid grid-cols-2 gap-4">
             <div className="border border-[#3C2F1A]/20 bg-[#FEFDFB] p-4 rounded-[4px] focus-within:border-[#1E1A14] transition-colors">
-              <label className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-[#787774]">
+              <label htmlFor="start-date" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-[#787774]">
                 Start Date
               </label>
               <input
+                id="start-date"
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="w-full bg-transparent outline-none text-base text-[#1E1A14]"
+                className="w-full bg-transparent outline-none text-base text-[#1E1A14] min-h-[44px]"
               />
             </div>
             <div className="border border-[#3C2F1A]/20 bg-[#FEFDFB] p-4 rounded-[4px] focus-within:border-[#1E1A14] transition-colors">
-              <label className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-[#787774]">
+              <label htmlFor="end-date" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-[#787774]">
                 End Date
               </label>
               <input
+                id="end-date"
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="w-full bg-transparent outline-none text-base text-[#1E1A14]"
+                className="w-full bg-transparent outline-none text-base text-[#1E1A14] min-h-[44px]"
               />
             </div>
           </div>
@@ -182,7 +183,7 @@ export default function BookPage() {
         <button
           onClick={handleCreateBooking}
           disabled={!startDate || !endDate || loading}
-          className="w-full mt-8 btn-primary-feorm py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full mt-8 btn-harvest py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
         >
           {loading ? "Processing..." : "Initialize Contract"}
           <ArrowRight size={14} />

@@ -2,14 +2,13 @@
 
 import { useRouter } from "next/navigation";
 import { useFeorm } from "@/context/feorm-context";
-import { useMutation } from "convex/react";
-import { api } from "@/lib/convex";
+import { useAuthMutations } from "@/hooks/use-auth";
 import { Upload } from "lucide-react";
 
 export default function VerifyIdPage() {
   const { user, phone, setUser } = useFeorm();
   const router = useRouter();
-  const verifyUser = useMutation(api.auth.verifyUser);
+  const { verifyUser } = useAuthMutations();
 
   const handleVerify = async () => {
     try {

@@ -1,8 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useQuery } from "convex/react";
-import { api } from "@/lib/convex";
+import { useListing } from "@/hooks/use-listings";
 import { formatPrice } from "@/components/feorm/listing-card";
 import Image from "next/image";
 import { ChevronLeft, MessageCircle, ArrowRight } from "lucide-react";
@@ -11,10 +10,8 @@ export default function ListingDetailPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
 
-  // Convex real-time query for single listing
-  const listing = useQuery(api.listings.getById, {
-    id: params.id as any,
-  });
+  // Convex real-time query with REST fallback for single listing
+  const { data: listing, isLoading } = useListing(params.id);
 
   const triggerWhatsApp = (title: string) => {
     const msg = encodeURIComponent(
@@ -23,7 +20,7 @@ export default function ListingDetailPage() {
     window.open(`https://wa.me/264810000000?text=${msg}`, "_blank");
   };
 
-  if (listing === undefined) {
+  if (isLoading) {
     return (
       <div className="flex-grow flex items-center justify-center min-h-[60vh]">
         <div className="flex items-center gap-2">
@@ -159,10 +156,10 @@ export default function ListingDetailPage() {
             </div>
             <button
               onClick={() => router.push(`/listing/${params.id}/book`)}
-              className="w-full btn-primary-feorm py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2"
+              className="w-full btn-harvest py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 min-h-[44px]"
             >
               {listing.type === "stay" ? "Request Stay" : "Rent Machinery"}
-              <ArrowRight size={14} />
+              <ArrowRight size={14} aria-hidden="true" />
             </button>
             <button
               onClick={() => triggerWhatsApp(listing.title)}

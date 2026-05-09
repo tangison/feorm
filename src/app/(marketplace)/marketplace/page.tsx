@@ -4,8 +4,7 @@ import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { useFeorm } from "@/context/feorm-context";
 import ListingCard from "@/components/feorm/listing-card";
-import { useQuery } from "convex/react";
-import { api } from "@/lib/convex";
+import { useListings } from "@/hooks/use-listings";
 
 export default function MarketplacePage() {
   const { marketView, setMarketView } = useFeorm();
@@ -19,10 +18,8 @@ export default function MarketplacePage() {
     }
   }, [searchParams, setMarketView]);
 
-  // Convex real-time query — UI auto-updates when DB changes
-  const convexListings = useQuery(api.listings.getByType, {
-    type: marketView === "stays" ? "stay" : "equipment",
-  });
+  // Convex real-time query with REST fallback — UI auto-updates when DB changes
+  const { data: convexListings, isLoading } = useListings(marketView === "stays" ? "stay" : "equipment");
 
   return (
     <div className="flex-grow w-full max-w-6xl mx-auto px-6 py-12 md:py-24">
@@ -51,7 +48,7 @@ export default function MarketplacePage() {
       </div>
 
       {/* Real-time sync indicator */}
-      {convexListings === undefined && (
+      {isLoading && (
         <div className="mb-8 flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-[#E8C96A] animate-pulse" />
           <span className="font-mono-feorm text-[10px] text-[#787774] uppercase tracking-widest">

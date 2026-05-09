@@ -9,7 +9,7 @@ export default function MarketplaceLayout({
   return (
     <div className="flex-grow flex flex-col min-h-screen">
       <FeormNav />
-      <main className="flex-grow flex flex-col">{children}</main>
+      <main id="main-content" className="flex-grow flex flex-col page-enter">{children}</main>
       <FeormFooter />
     </div>
   );

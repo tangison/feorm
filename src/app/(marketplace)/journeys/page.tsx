@@ -2,8 +2,7 @@
 
 import { useFeorm } from "@/context/feorm-context";
 import { useRouter } from "next/navigation";
-import { useQuery } from "convex/react";
-import { api } from "@/lib/convex";
+import { useBookings } from "@/hooks/use-bookings";
 import { Clock, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { formatPrice } from "@/components/feorm/listing-card";
@@ -12,10 +11,8 @@ export default function JourneysPage() {
   const { user, phone } = useFeorm();
   const router = useRouter();
 
-  // Convex real-time query — bookings update automatically when status changes
-  const bookings = useQuery(api.bookings.getByUser, {
-    userId: user?.phone || `+264${phone.replace(/\s/g, "")}` || "demo",
-  });
+  // Convex real-time query with REST fallback — bookings update automatically when status changes
+  const { data: bookings, isLoading: bookingsLoading } = useBookings(user?.phone || `+264${phone.replace(/\s/g, "")}` || "demo");
 
   return (
     <div className="flex-grow w-full max-w-4xl mx-auto px-6 py-12 md:py-24">
@@ -32,7 +29,7 @@ export default function JourneysPage() {
         </p>
       </div>
 
-      {bookings === undefined && (
+      {bookingsLoading && (
         <div className="flex items-center gap-2 mb-8">
           <div className="w-2 h-2 rounded-full bg-[#E8C96A] animate-pulse" />
           <span className="font-mono-feorm text-[10px] text-[#787774] uppercase tracking-widest">

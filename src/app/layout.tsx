@@ -52,9 +52,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta name="theme-color" content="#1E1A14" />
+      </head>
       <body
         className={`${dmSerif.variable} ${dmSans.variable} ${jetbrainsMono.variable} antialiased`}
       >
+        {/* Skip to Content — WCAG 2.4.1 Bypass Blocks */}
+        <a href="#main-content" className="skip-link">
+          Skip to content
+        </a>
         <ConvexProviderWrapper>
           <FeormProvider>
             {children}

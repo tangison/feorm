@@ -5,7 +5,9 @@ export default function AuthLayout({
 }) {
   return (
     <div className="flex-grow flex flex-col min-h-screen">
-      {children}
+      <main id="main-content" className="flex-grow flex flex-col">
+        {children}
+      </main>
     </div>
   );
 }

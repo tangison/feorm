@@ -53,7 +53,7 @@ export default function ListingCard({ item }: { item: Listing }) {
               / day
             </span>
           </span>
-          <div className="w-8 h-8 rounded-full border border-[#3C2F1A]/10 flex items-center justify-center text-[#1E1A14] group-hover:bg-[#1E1A14] group-hover:text-[#FEFDFB] transition-colors">
+          <div className="w-10 h-10 min-w-[44px] min-h-[44px] rounded-full border border-[#3C2F1A]/10 flex items-center justify-center text-[#1E1A14] group-hover:bg-[#1E1A14] group-hover:text-[#FEFDFB] transition-colors">
             <ArrowRight size={14} />
           </div>
         </div>

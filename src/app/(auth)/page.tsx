@@ -8,6 +8,7 @@ import { ArrowRight } from "lucide-react";
 export default function AuthPage() {
   const { phone, setPhone } = useFeorm();
   const [loading, setLoading] = useState(false);
+  const [transitioning, setTransitioning] = useState(false);
   const router = useRouter();
 
   const handleRequestOtp = async () => {
@@ -25,14 +26,21 @@ export default function AuthPage() {
     } catch {
       // Demo mode: proceed anyway
     }
-    router.push("/auth/verify");
-    setLoading(false);
+    // Scale-in transition: fade out auth, then navigate
+    setTransitioning(true);
+    setTimeout(() => {
+      router.push("/auth/verify");
+    }, 300);
   };
 
   return (
-    <div className="flex-grow grid md:grid-cols-2 min-h-screen">
+    <div
+      className={`flex-grow grid md:grid-cols-2 min-h-screen transition-all duration-300 ease-out ${
+        transitioning ? "opacity-0 scale-[0.98] blur-[2px]" : "opacity-100 scale-100 blur-0"
+      }`}
+    >
       {/* Left: Editorial Cover */}
-      <div className="bg-[#1E1A14] text-[#FEFDFB] flex flex-col justify-between p-10 md:p-24 relative overflow-hidden">
+      <div className="bg-[#1E1A14] text-[#FEFDFB] flex flex-col justify-between p-10 md:p-24 relative overflow-hidden md:min-h-screen min-h-[40vh]">
         <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(circle_at_center,_#E8C96A_0%,_transparent_70%)] pointer-events-none" />
         <div className="reveal relative z-10">
           <h1 className="font-serif-display text-5xl md:text-7xl mb-2 italic lowercase">
@@ -42,9 +50,9 @@ export default function AuthPage() {
             Network 0.1
           </p>
         </div>
-        <div className="reveal delay-1 relative z-10 mt-24 md:mt-0">
+        <div className="reveal delay-1 relative z-10 mt-8 md:mt-0">
           <h2 className="font-serif-display text-3xl md:text-5xl mb-6 max-w-md leading-tight">
-            Where the land works for you.
+            Provision of the Land.
           </h2>
           <p className="text-sm md:text-base text-[#D4C4A0] max-w-sm leading-relaxed">
             A decentralized marketplace connecting Namibian farmland with those who
@@ -60,9 +68,9 @@ export default function AuthPage() {
             <kbd className="font-mono-feorm text-[10px] border border-[#3C2F1A]/20 bg-[#FEFDFB] px-2 py-1 rounded text-[#787774] mb-6 inline-block">
               SECURE GATEWAY
             </kbd>
-            <h3 className="font-serif-display text-3xl mb-3 text-[#1E1A14]">
+            <h2 className="font-serif-display text-3xl mb-3 text-[#1E1A14]">
               Establish Identity
-            </h3>
+            </h2>
             <p className="text-sm text-[#787774]">
               Access the communal marketplace via verified mobile credential.
             </p>
@@ -70,18 +78,23 @@ export default function AuthPage() {
 
           <div className="space-y-6">
             <div className="border border-[#3C2F1A]/20 bg-[#FEFDFB] p-4 rounded-[4px] focus-within:border-[#1E1A14] transition-colors">
-              <label className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-[#787774]">
+              <label
+                htmlFor="phone-input"
+                className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-[#787774]"
+              >
                 Mobile Number
               </label>
               <div className="flex items-center">
-                <span className="font-mono-feorm text-lg mr-3 text-[#3C2F1A]">
+                <span className="font-mono-feorm text-lg mr-3 text-[#3C2F1A]" aria-hidden="true">
                   +264
                 </span>
                 <input
+                  id="phone-input"
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="81 000 0000"
+                  autoComplete="tel-national"
                   className="w-full bg-transparent outline-none text-lg text-[#1E1A14] placeholder-[#D4C4A0] font-mono-feorm"
                 />
               </div>
@@ -89,14 +102,14 @@ export default function AuthPage() {
             <button
               onClick={handleRequestOtp}
               disabled={!phone || phone.length < 8 || loading}
-              className="w-full btn-primary-feorm py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full btn-primary-feorm py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
             >
               {loading ? "Requesting..." : "Request Access"}
-              <ArrowRight size={14} />
+              <ArrowRight size={14} aria-hidden="true" />
             </button>
           </div>
 
-          <div className="mt-6 p-4 bg-[#FBF3DB]/30 border border-[#E8C96A]/20 rounded-[4px]">
+          <div className="mt-6 p-4 bg-[#FBF3DB]/30 border border-[#E8C96A]/20 rounded-[4px]" role="note">
             <p className="text-[10px] text-[#956400] font-mono-feorm uppercase tracking-wide">
               Demo Mode: Enter any number, then use OTP <strong>123456</strong>
             </p>
@@ -104,7 +117,7 @@ export default function AuthPage() {
 
           <p className="mt-8 text-[10px] text-[#787774] uppercase tracking-wide leading-relaxed">
             By continuing, you agree to the{" "}
-            <a href="/auth/terms" className="border-b border-[#787774] pb-0.5">
+            <a href="/auth/terms" className="border-b border-[#787774] pb-0.5 hover:text-[#1E1A14] transition-colors">
               Communal Ethic
             </a>{" "}
             and standard terms of service.
