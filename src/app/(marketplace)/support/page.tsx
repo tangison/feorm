@@ -20,7 +20,7 @@ export default function SupportPage() {
 
       <div className="space-y-4">
         <a
-          href="https://wa.me/264810000000?text=Hello%2C%20I%20need%20help%20with%20Feorm."
+          href="https://wa.me/264853411522?text=Hello%2C%20I%20need%20help%20with%20Feorm."
           target="_blank"
           rel="noopener noreferrer"
           className="bento-card p-5 flex items-center gap-4 hover:border-[#25D366]/30 transition-colors group"

@@ -46,8 +46,11 @@ interface FeormUser {
   name?: string;
   surname?: string;
   region?: string;
-  role: string;
+  role: "explorer" | "lister" | "voyager" | "provider";
   verified: boolean;
+  avatarUrl?: string;
+  interests?: string[];
+  hasCompletedOnboarding?: boolean;
 }
 
 type MarketView = "stays" | "equipment";
@@ -76,12 +79,43 @@ interface FeormContextType {
   // Latest booking reference
   latestRef: string;
   setLatestRef: (ref: string) => void;
+
+  // Onboarding
+  onboardingStep: number;
+  setOnboardingStep: (step: number) => void;
+  selectedRole: "voyager" | "provider" | null;
+  setSelectedRole: (role: "voyager" | "provider" | null) => void;
+  interests: string[];
+  setInterests: (interests: string[]) => void;
+  avatarUrl: string;
+  setAvatarUrl: (url: string) => void;
+  hasCompletedOnboarding: boolean;
+  setHasCompletedOnboarding: (completed: boolean) => void;
+  providerAssets: ("stay" | "equipment")[];
+  setProviderAssets: (assets: ("stay" | "equipment")[]) => void;
 }
 
 const FeormContext = createContext<FeormContextType | null>(null);
 
-function loadSession(): { user: FeormUser | null; phone: string } {
-  if (typeof window === "undefined") return { user: null, phone: "" };
+function loadSession(): {
+  user: FeormUser | null;
+  phone: string;
+  selectedRole: "voyager" | "provider" | null;
+  interests: string[];
+  avatarUrl: string;
+  hasCompletedOnboarding: boolean;
+  providerAssets: ("stay" | "equipment")[];
+} {
+  if (typeof window === "undefined")
+    return {
+      user: null,
+      phone: "",
+      selectedRole: null,
+      interests: [],
+      avatarUrl: "",
+      hasCompletedOnboarding: false,
+      providerAssets: [],
+    };
   try {
     const saved = localStorage.getItem("feorm-session");
     if (saved) {
@@ -89,12 +123,25 @@ function loadSession(): { user: FeormUser | null; phone: string } {
       return {
         user: session.user || null,
         phone: session.phone || "",
+        selectedRole: session.selectedRole || null,
+        interests: session.interests || [],
+        avatarUrl: session.avatarUrl || "",
+        hasCompletedOnboarding: session.hasCompletedOnboarding || false,
+        providerAssets: session.providerAssets || [],
       };
     }
   } catch {
     // Ignore localStorage errors
   }
-  return { user: null, phone: "" };
+  return {
+    user: null,
+    phone: "",
+    selectedRole: null,
+    interests: [],
+    avatarUrl: "",
+    hasCompletedOnboarding: false,
+    providerAssets: [],
+  };
 }
 
 export function FeormProvider({ children }: { children: ReactNode }) {
@@ -107,17 +154,39 @@ export function FeormProvider({ children }: { children: ReactNode }) {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [latestRef, setLatestRef] = useState("");
 
-  // Persist session to localStorage when user/phone changes
+  // Onboarding state
+  const [onboardingStep, setOnboardingStep] = useState(0);
+  const [selectedRole, setSelectedRole] = useState<"voyager" | "provider" | null>(
+    session.selectedRole
+  );
+  const [interests, setInterests] = useState<string[]>(session.interests);
+  const [avatarUrl, setAvatarUrl] = useState(session.avatarUrl);
+  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(
+    session.hasCompletedOnboarding
+  );
+  const [providerAssets, setProviderAssets] = useState<("stay" | "equipment")[]>(
+    session.providerAssets
+  );
+
+  // Persist session to localStorage when user/phone/role/interests/avatar changes
   useEffect(() => {
     try {
       localStorage.setItem(
         "feorm-session",
-        JSON.stringify({ user, phone })
+        JSON.stringify({
+          user,
+          phone,
+          selectedRole,
+          interests,
+          avatarUrl,
+          hasCompletedOnboarding,
+          providerAssets,
+        })
       );
     } catch {
       // Ignore localStorage errors
     }
-  }, [user, phone]);
+  }, [user, phone, selectedRole, interests, avatarUrl, hasCompletedOnboarding, providerAssets]);
 
   return (
     <FeormContext.Provider
@@ -136,6 +205,18 @@ export function FeormProvider({ children }: { children: ReactNode }) {
         setBookings,
         latestRef,
         setLatestRef,
+        onboardingStep,
+        setOnboardingStep,
+        selectedRole,
+        setSelectedRole,
+        interests,
+        setInterests,
+        avatarUrl,
+        setAvatarUrl,
+        hasCompletedOnboarding,
+        setHasCompletedOnboarding,
+        providerAssets,
+        setProviderAssets,
       }}
     >
       {children}

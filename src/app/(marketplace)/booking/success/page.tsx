@@ -21,7 +21,7 @@ function SuccessContent() {
     const msg = encodeURIComponent(
       `Hi, I've just booked [${listingTitle}] on Feorm. Looking forward to it! My Ref is: ${ref}`
     );
-    window.open(`https://wa.me/264810000000?text=${msg}`, "_blank");
+    window.open(`https://wa.me/264853411522?text=${msg}`, "_blank");
   };
 
   return (

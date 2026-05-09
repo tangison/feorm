@@ -13,19 +13,24 @@ import {
   LogOut,
   Tent,
   Wrench,
+  DollarSign,
+  Package,
 } from "lucide-react";
 
 export default function FeormNav() {
-  const { user, setMarketView } = useFeorm();
+  const { user, selectedRole, setMarketView, avatarUrl } = useFeorm();
   const pathname = usePathname();
   const router = useRouter();
+
+  const isProvider = selectedRole === "provider";
 
   const userInitials =
     user?.name && user?.surname
       ? `${user.name[0]}${user.surname[0]}`
       : "JD";
 
-  const navItems = [
+  // Provider-specific nav items
+  const providerNavItems = [
     {
       label: "Farm Stays",
       href: "/marketplace?view=stays",
@@ -41,16 +46,16 @@ export default function FeormNav() {
       onClick: () => setMarketView("equipment"),
     },
     {
-      label: "Journeys",
-      href: "/journeys",
-      icon: Clock,
-      active: pathname === "/journeys",
-    },
-    {
       label: "Dashboard",
       href: "/dashboard",
       icon: LayoutDashboard,
       active: pathname === "/dashboard",
+    },
+    {
+      label: "Earnings",
+      href: "/dashboard",
+      icon: DollarSign,
+      active: false,
     },
     {
       label: "Profile",
@@ -66,8 +71,8 @@ export default function FeormNav() {
     },
   ];
 
-  // Mobile bottom nav — primary 4 items only
-  const mobileNavItems = [
+  // Voyager-specific nav items
+  const voyagerNavItems = [
     {
       label: "Explore",
       href: "/marketplace",
@@ -81,18 +86,35 @@ export default function FeormNav() {
       active: pathname === "/journeys",
     },
     {
-      label: "Dashboard",
-      href: "/dashboard",
-      icon: LayoutDashboard,
-      active: pathname === "/dashboard",
-    },
-    {
       label: "Profile",
       href: "/profile",
       icon: User,
       active: pathname === "/profile",
     },
+    {
+      label: "Support",
+      href: "/support",
+      icon: LifeBuoy,
+      active: pathname === "/support",
+    },
   ];
+
+  const navItems = isProvider ? providerNavItems : voyagerNavItems;
+
+  // Mobile nav items
+  const mobileProviderNav = [
+    { label: "Assets", href: "/marketplace", icon: Package, active: pathname === "/marketplace" },
+    { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, active: pathname === "/dashboard" },
+    { label: "Profile", href: "/profile", icon: User, active: pathname === "/profile" },
+  ];
+
+  const mobileVoyagerNav = [
+    { label: "Explore", href: "/marketplace", icon: MapPin, active: pathname === "/marketplace" || pathname.startsWith("/listing") },
+    { label: "Journeys", href: "/journeys", icon: Clock, active: pathname === "/journeys" },
+    { label: "Profile", href: "/profile", icon: User, active: pathname === "/profile" },
+  ];
+
+  const mobileNavItems = isProvider ? mobileProviderNav : mobileVoyagerNav;
 
   return (
     <>
@@ -119,6 +141,17 @@ export default function FeormNav() {
           </span>
         </Link>
 
+        {/* Role Badge */}
+        <div className="px-2 mb-6">
+          <span
+            className={`text-[9px] uppercase font-semibold px-2.5 py-1 rounded-full tracking-wider ${
+              isProvider ? "tag-verified" : "tag-pastel"
+            }`}
+          >
+            {isProvider ? "Provider" : "Voyager"}
+          </span>
+        </div>
+
         {/* Nav Items */}
         <nav className="flex-1 flex flex-col gap-1" role="navigation">
           {navItems.map((item) => {
@@ -139,7 +172,9 @@ export default function FeormNav() {
                 <Icon
                   size={16}
                   className={`transition-colors duration-200 ${
-                    isActive ? "text-[#E8C96A]" : "text-[#787774] group-hover:text-[#1E1A14]"
+                    isActive
+                      ? "text-[#E8C96A]"
+                      : "text-[#787774] group-hover:text-[#1E1A14]"
                   }`}
                   aria-hidden="true"
                 />
@@ -157,15 +192,25 @@ export default function FeormNav() {
             href="/profile"
             className="flex items-center gap-3 px-2 mb-4 group"
           >
-            <div className="w-9 h-9 rounded-full bg-[#1E1A14] text-[#FEFDFB] flex items-center justify-center text-xs font-medium font-serif-display">
-              {userInitials}
+            <div className="w-9 h-9 rounded-full bg-[#1E1A14] text-[#FEFDFB] flex items-center justify-center text-xs font-medium font-serif-display overflow-hidden">
+              {avatarUrl ? (
+                <Image
+                  src={avatarUrl}
+                  alt="Avatar"
+                  width={36}
+                  height={36}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                userInitials
+              )}
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-[#1E1A14] truncate">
                 {user?.name || "Demo"} {user?.surname || "User"}
               </p>
               <p className="font-mono-feorm text-[9px] text-[#787774] uppercase tracking-widest truncate">
-                {user?.role || "Explorer"}
+                {isProvider ? "Provider" : "Voyager"}
               </p>
             </div>
           </Link>

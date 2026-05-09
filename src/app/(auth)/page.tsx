@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useFeorm } from "@/context/feorm-context";
 import { ArrowRight } from "lucide-react";
+import Image from "next/image";
 
 export default function AuthPage() {
   const { phone, setPhone } = useFeorm();
@@ -26,7 +27,6 @@ export default function AuthPage() {
     } catch {
       // Demo mode: proceed anyway
     }
-    // Scale-in transition: fade out auth, then navigate
     setTransitioning(true);
     setTimeout(() => {
       router.push("/auth/verify");
@@ -36,42 +36,53 @@ export default function AuthPage() {
   return (
     <div
       className={`flex-grow grid md:grid-cols-2 min-h-screen transition-all duration-300 ease-out ${
-        transitioning ? "opacity-0 scale-[0.98] blur-[2px]" : "opacity-100 scale-100 blur-0"
+        transitioning
+          ? "opacity-0 scale-[0.98] blur-[2px]"
+          : "opacity-100 scale-100 blur-0"
       }`}
     >
-      {/* Left: Editorial Cover */}
-      <div className="bg-[#1E1A14] text-[#FEFDFB] flex flex-col justify-between p-10 md:p-24 relative overflow-hidden md:min-h-screen min-h-[40vh]">
-        <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(circle_at_center,_#E8C96A_0%,_transparent_70%)] pointer-events-none" />
-        <div className="reveal relative z-10">
-          <h1 className="font-serif-display text-5xl md:text-7xl mb-2 italic lowercase">
-            feorm<span className="text-[#E8C96A]">.</span>
-          </h1>
-          <p className="text-xs uppercase tracking-[0.2em] text-[#D4C4A0] font-mono-feorm">
-            Network 0.1
-          </p>
-        </div>
-        <div className="reveal delay-1 relative z-10 mt-8 md:mt-0">
-          <h2 className="font-serif-display text-3xl md:text-5xl mb-6 max-w-md leading-tight">
-            Provision of the Land.
-          </h2>
-          <p className="text-sm md:text-base text-[#D4C4A0] max-w-sm leading-relaxed">
-            A decentralized marketplace connecting Namibian farmland with those who
-            require its provisions and equipment.
-          </p>
+      {/* Left: Desaturated Hero Image */}
+      <div className="relative bg-[#1E1A14] overflow-hidden md:min-h-screen min-h-[35vh]">
+        <Image
+          src="/images/hero-gateway.png"
+          alt="Namibian horizon"
+          fill
+          className="object-cover opacity-60 saturate-[0.6]"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#1E1A14] via-[#1E1A14]/60 to-transparent md:bg-gradient-to-r md:from-transparent md:via-[#1E1A14]/40 md:to-[#1E1A14]" />
+        <div className="relative z-10 flex flex-col justify-between h-full p-10 md:p-20">
+          <div className="reveal">
+            <h1 className="font-serif-display text-5xl md:text-7xl mb-2 italic lowercase text-[#FEFDFB]">
+              feorm<span className="text-[#E8C96A]">.</span>
+            </h1>
+            <p className="text-[10px] uppercase tracking-[0.2em] text-[#D4C4A0] font-mono-feorm">
+              Network 0.1
+            </p>
+          </div>
+          <div className="reveal delay-1">
+            <h2 className="font-serif-display text-3xl md:text-5xl mb-4 text-[#FEFDFB] leading-tight max-w-md">
+              Provision of the Land.
+            </h2>
+            <p className="text-sm text-[#D4C4A0] max-w-sm leading-relaxed">
+              A decentralized marketplace connecting Namibian farmland with those
+              who require its provisions and equipment.
+            </p>
+          </div>
         </div>
       </div>
 
       {/* Right: Phone Auth */}
-      <div className="bg-[#FAF7F2] flex items-center justify-center p-10 md:p-24">
+      <div className="bg-[#FAF7F2] flex items-center justify-center p-10 md:p-20">
         <div className="w-full max-w-sm reveal delay-2">
           <div className="mb-12">
             <kbd className="font-mono-feorm text-[10px] border border-[#3C2F1A]/20 bg-[#FEFDFB] px-2 py-1 rounded text-[#787774] mb-6 inline-block">
               SECURE GATEWAY
             </kbd>
-            <h2 className="font-serif-display text-3xl mb-3 text-[#1E1A14]">
-              Establish Identity
+            <h2 className="font-serif-display text-3xl mb-3 text-[#1E1A14] tracking-tight">
+              Initialize Connection
             </h2>
-            <p className="text-sm text-[#787774]">
+            <p className="text-sm text-[#787774] leading-relaxed">
               Access the communal marketplace via verified mobile credential.
             </p>
           </div>
@@ -104,7 +115,7 @@ export default function AuthPage() {
               disabled={!phone || phone.length < 8 || loading}
               className="w-full btn-primary-feorm py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
             >
-              {loading ? "Requesting..." : "Request Access"}
+              {loading ? "Requesting..." : "Initialize Connection"}
               <ArrowRight size={14} aria-hidden="true" />
             </button>
           </div>
@@ -117,7 +128,10 @@ export default function AuthPage() {
 
           <p className="mt-8 text-[10px] text-[#787774] uppercase tracking-wide leading-relaxed">
             By continuing, you agree to the{" "}
-            <a href="/auth/terms" className="border-b border-[#787774] pb-0.5 hover:text-[#1E1A14] transition-colors">
+            <a
+              href="/auth/terms"
+              className="border-b border-[#787774] pb-0.5 hover:text-[#1E1A14] transition-colors"
+            >
               Communal Ethic
             </a>{" "}
             and standard terms of service.

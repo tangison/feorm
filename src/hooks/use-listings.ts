@@ -16,7 +16,7 @@ const DEMO_STAYS = [
     features: ["Communal Dining", "Livestock Tracking", "Borehole Water"],
     category: "Working Farm",
     hostName: "Johan Deetlefs",
-    hostPhone: "+264810000001",
+    hostPhone: "+264853411522",
     available: true,
   },
   {
@@ -31,7 +31,7 @@ const DEMO_STAYS = [
     features: ["Off-grid Solar", "Hiking Trails", "High Altitude"],
     category: "Guest House",
     hostName: "Anna //Khaoes",
-    hostPhone: "+264810000002",
+    hostPhone: "+264853411522",
     available: true,
   },
   {
@@ -46,7 +46,7 @@ const DEMO_STAYS = [
     features: ["Guided Walks", "Firepit", "Composting Toilet"],
     category: "Tent Camp",
     hostName: "Pieter Gaseb",
-    hostPhone: "+264810000003",
+    hostPhone: "+264853411522",
     available: true,
   },
   {
@@ -61,7 +61,7 @@ const DEMO_STAYS = [
     features: ["Canyon Views", "River Access", "Cultural Exchange"],
     category: "Tent Camp",
     hostName: "Tjipuka Tjivikua",
-    hostPhone: "+264810000006",
+    hostPhone: "+264853411522",
     available: true,
   },
   {
@@ -76,7 +76,7 @@ const DEMO_STAYS = [
     features: ["Goat Herding", "Red Dunes", "Traditional Braai"],
     category: "Working Farm",
     hostName: "Frikkie Boois",
-    hostPhone: "+264810000004",
+    hostPhone: "+264853411522",
     available: true,
   },
   {
@@ -91,7 +91,7 @@ const DEMO_STAYS = [
     features: ["River Delta", "Mokoro Excursions", "Bird Watching"],
     category: "Eco Lodge",
     hostName: "Muyunda Likoro",
-    hostPhone: "+264810000007",
+    hostPhone: "+264853411522",
     available: true,
   },
 ];
@@ -109,7 +109,7 @@ const DEMO_EQUIPMENT = [
     features: ["75 Horsepower", "Diesel", "Operator Optional"],
     category: "Machinery",
     hostName: "Johan Deetlefs",
-    hostPhone: "+264810000001",
+    hostPhone: "+264853411522",
     available: true,
   },
   {
@@ -124,7 +124,7 @@ const DEMO_EQUIPMENT = [
     features: ["High Pressure", "10m Piping", "Portable"],
     category: "Irrigation",
     hostName: "Frikkie Boois",
-    hostPhone: "+264810000004",
+    hostPhone: "+264853411522",
     available: true,
   },
   {
@@ -139,7 +139,7 @@ const DEMO_EQUIPMENT = [
     features: ["3-Point Hitch", "Heavy Steel", "No Power Required"],
     category: "Attachment",
     hostName: "Kaita Tjirare",
-    hostPhone: "+264810000005",
+    hostPhone: "+264853411522",
     available: true,
   },
   {
@@ -154,7 +154,7 @@ const DEMO_EQUIPMENT = [
     features: ["200m Depth", "Mud Pump Included", "Operator Available"],
     category: "Heavy Machinery",
     hostName: "Hannes van Wyk",
-    hostPhone: "+264810000008",
+    hostPhone: "+264853411522",
     available: true,
   },
   {
@@ -169,7 +169,7 @@ const DEMO_EQUIPMENT = [
     features: ["5kW Output", "Battery Bank", "Portable Frames"],
     category: "Energy",
     hostName: "Anna //Khaoes",
-    hostPhone: "+264810000002",
+    hostPhone: "+264853411522",
     available: true,
   },
   {
@@ -184,7 +184,7 @@ const DEMO_EQUIPMENT = [
     features: ["GPS Auto-Steer", "Yield Mapping", "Multi-Crop"],
     category: "Machinery",
     hostName: "Johan Deetlefs",
-    hostPhone: "+264810000001",
+    hostPhone: "+264853411522",
     available: true,
   },
 ];

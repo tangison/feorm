@@ -16,7 +16,7 @@ export default function ListingDetailPage() {
     const msg = encodeURIComponent(
       `System Alert: Initiating inquiry for [${title}] via Feorm network.`
     );
-    window.open(`https://wa.me/264810000000?text=${msg}`, "_blank");
+    window.open(`https://wa.me/264853411522?text=${msg}`, "_blank");
   };
 
   if (isLoading) {

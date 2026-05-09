@@ -120,3 +120,58 @@ Stage Summary:
 - Full demo mode accessible without any backend dependency
 - High-Agency Frontend Skill applied: skeleton loaders, stagger animations, tactile feedback
 - All pages compile and render correctly
+
+---
+Task ID: 8
+Agent: Main Agent
+Task: Implement Bifurcated Persona Flow — Voyager vs Provider onboarding, AI Avatar, Brand Identity PDF, WhatsApp redirect
+
+Work Log:
+- Updated FeormContext with comprehensive onboarding state:
+  - selectedRole (voyager/provider), interests[], avatarUrl, hasCompletedOnboarding
+  - providerAssets[], onboardingStep
+  - All state persisted to localStorage
+- Created AI Avatar Generation API endpoint (POST /api/avatar):
+  - Uses z-ai-web-dev-sdk to generate editorial headshot based on name/region
+  - Saves avatar to public/avatars/ directory
+  - Returns avatarUrl for display in nav and profile
+- Generated desaturated Namibian hero image for Gateway page (1344x768)
+- Updated auth Gateway page with hero image overlay (saturate-[0.6], gradient overlay)
+- Updated Identity Setup page with AI Avatar Generation:
+  - "Generate AI Identity" button with Sparkles icon
+  - Loading state with pulse indicator
+  - Avatar preview with Upload fallback icon
+- Redesigned Role Selection page with bento-style cards:
+  - "I am a Voyager" (Compass icon, Harvest gold hover) → /auth/voyager/interests
+  - "I am a Provider" (Tractor icon, Green hover) → /auth/provider/assets
+  - Active:scale-[0.98] tactile feedback, group-hover animations
+- Created Voyager Flow pages:
+  - /auth/voyager/interests: Pill-selection grid (12 options), selection count
+  - /auth/voyager/verify: Verification level (Verified Voyager green badge vs Skip)
+  - Download Brand Identity button
+- Created Provider Flow pages:
+  - /auth/provider/assets: Toggle Stay/Equipment with visual feedback
+  - /auth/provider/region: 13-region grid selector with MapPin icons
+  - Download Brand Identity button, Harvest CTA
+- Updated navigation to be role-aware:
+  - Provider sidebar: Farm Stays, Equipment, Dashboard, Earnings, Profile, Support
+  - Voyager sidebar: Explore, Journeys, Profile, Support
+  - Provider mobile: Assets, Dashboard, Profile
+  - Voyager mobile: Explore, Journeys, Profile
+  - Role badge displayed in sidebar (Provider=green, Voyager=harvest)
+  - Avatar image shown in sidebar user section
+- Created Brand Identity PDF download API (POST /api/brand-identity):
+  - Generates downloadable HTML with persona summary, palette, interests
+  - Available on both voyager/verify and provider/region pages
+- Updated all WhatsApp links to +264853411522:
+  - Listing detail, booking success, support page, all demo data hooks
+- All 16+ routes verified returning HTTP 200
+- Lint passes cleanly
+
+Stage Summary:
+- Bifurcated Persona Flow fully implemented: Voyager vs Provider
+- AI Avatar Generation integrated into onboarding
+- Role-aware navigation with different sidebar items per persona
+- Brand Identity PDF downloadable from onboarding completion
+- All WhatsApp links redirect to +264853411522
+- Complete onboarding flow: Gateway → OTP → Identity + AI Avatar → Role → Persona-specific screens → Marketplace/Dashboard
