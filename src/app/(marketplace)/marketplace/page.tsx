@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo, useCallback, Suspense } from "react";
+import { useEffect, useState, useMemo, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useFeormMarket } from "@/context/feorm-context";
 import ListingCard from "@/components/feorm/listing-card";
@@ -25,7 +25,7 @@ const NAMIBIAN_REGIONS = [
   "Omaheke",
 ];
 
-// Stable item transformation — avoids creating new objects on every render
+// Pure transform — used inside useMemo to preserve referential stability
 function transformItem(item: any) {
   return {
     id: item._id,
@@ -71,8 +71,9 @@ function MarketplaceContent() {
     marketView === "stays" ? "stay" : "equipment"
   );
 
-  // Filter listings by region and availability
-  const filteredListings = useMemo(() => {
+  // Filter listings by region and availability, then transform for stable refs
+  // This is memoized so ListingCard's React.memo comparison works correctly
+  const transformedListings = useMemo(() => {
     if (!listings) return [];
     let filtered = listings;
     if (selectedRegion !== "All Regions") {
@@ -83,7 +84,7 @@ function MarketplaceContent() {
     if (showAvailableOnly) {
       filtered = filtered.filter((item: any) => item.available !== false);
     }
-    return filtered;
+    return filtered.map(transformItem);
   }, [listings, selectedRegion, showAvailableOnly]);
 
   const handleRegionSelect = (region: string) => {
@@ -141,7 +142,7 @@ function MarketplaceContent() {
           </button>
           <span className="hidden md:inline-block mx-2 text-[#D4C4A0]">|</span>
           <span className="hidden md:inline-block font-mono-feorm text-[10px] text-[#787774] uppercase tracking-widest">
-            {filteredListings?.length || 0} listings
+            {transformedListings?.length || 0} listings
           </span>
         </div>
 
@@ -231,15 +232,15 @@ function MarketplaceContent() {
         </div>
       </div>
 
-      {/* Loading skeleton */}
+      {/* Loading skeleton — dimensions match ListingCard exactly */}
       {isLoading && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="bento-card flex flex-col">
-              <div className="h-64 p-2">
+              <div className="h-56 p-2">
                 <div className="w-full h-full skeleton-shimmer rounded-[4px]" />
               </div>
-              <div className="p-6 md:p-8 border-t border-[#3C2F1A]/5">
+              <div className="p-5 md:p-6 border-t border-[#3C2F1A]/5">
                 <div className="h-3 w-20 skeleton-shimmer mb-4" />
                 <div className="h-6 w-3/4 skeleton-shimmer mb-3" />
                 <div className="h-4 w-1/3 skeleton-shimmer mt-6" />
@@ -250,19 +251,19 @@ function MarketplaceContent() {
       )}
 
       {/* Bento Grid with stagger reveal */}
-      {!isLoading && filteredListings && filteredListings.length > 0 && (
+      {!isLoading && transformedListings && transformedListings.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 stagger-reveal">
-          {filteredListings.map((item: any) => (
+          {transformedListings.map((item) => (
             <ListingCard
-              key={item._id}
-              item={transformItem(item)}
+              key={item.id}
+              item={item}
             />
           ))}
         </div>
       )}
 
       {/* Empty state */}
-      {filteredListings?.length === 0 && !isLoading && (
+      {transformedListings?.length === 0 && !isLoading && (
         <div className="border border-dashed border-[#D4C4A0]/50 bg-[#FEFDFB] rounded-[8px] p-12 text-center">
           <p className="text-sm text-[#787774] mb-4">
             No listings found{selectedRegion !== "All Regions" ? ` in ${selectedRegion}` : ""}.

@@ -75,7 +75,9 @@ export function useListings(type: "stay" | "equipment") {
 }
 
 export function useListing(id: string) {
-  const [data, setData] = useState<any | null>(null);
+  // Pre-populate from demo data for instant render (no loading flash)
+  const demoFallback = ALL_DEMO.find((item) => item._id === id) || null;
+  const [data, setData] = useState<any | null>(demoFallback);
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
@@ -127,5 +129,6 @@ export function useListing(id: string) {
     };
   }, [id]);
 
+  // Not loading if we already have demo data
   return { data, isLoading: data === null && !notFound, notFound };
 }
