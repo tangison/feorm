@@ -1,406 +1,232 @@
+# Feorm MVP — Work Log
+
 ---
 Task ID: 1
-Agent: Main Agent
-Task: Build the complete Feorm MVP - Namibian Agrotourism & Equipment Rental Marketplace
+Agent: Main
+Task: Comprehensive codebase audit for illogical behavior
 
 Work Log:
-- Created Prisma schema with User, Listing, and Booking models (SQLite)
-- Pushed schema to database and seeded with 6 realistic listings (3 stays, 3 equipment)
-- Created demo user (Johan Deetlefs, +264810000000)
-- Updated globals.css with Feorm color palette (Earth, Soil, Bark, Harvest, Sand, Cream, Fog, White)
-- Added custom utility classes (bento-card, btn-primary-feorm, btn-secondary-feorm, tag-pastel, tag-verified, tag-machinery, tag-alert, spec-label, font-serif-display, font-mono-feorm)
-- Added reveal animation system with stagger delays
-- Updated layout.tsx with DM Serif Display, DM Sans, and JetBrains Mono fonts
-- Created API routes: /api/listings (GET/POST), /api/auth (POST with request-otp/verify-otp/setup-identity/me actions), /api/bookings (GET/POST), /api/seed (POST)
-- Demo auth: OTP 123456 for any phone number
-- Generated 6 authentic Namibian images using AI image generation (Premium Utilitarian aesthetic)
-- Built complete single-page application with 16 screens
-- Built Design System Footer with color palette showcase and typographic architecture
-- All lint checks pass cleanly
-- Verified API endpoints working correctly
-- Verified full auth flow, listings fetch, and page rendering
+- Read all source files in src/app/, src/components/, src/hooks/, src/lib/
+- Read all API routes
+- Read globals.css, tailwind config, prisma schema
+- Identified 6 CRITICAL, 10 HIGH, 12 MEDIUM, 8 LOW issues
+- Researched Namibian 14 regions and cultures for authentic representation
+- Found blur issue: `feorm-scale-in` keyframe uses `filter: blur(4px)` causing flash
+- Found demo data only covers ~5 of 14 Namibian regions
+- Found all demo hosts share same phone number
+- Found booking flow doesn't include operator fee in total price
+- Found bookings API doesn't support reference lookup
+- Found prices use `font-medium` instead of `font-mono-feorm`
+- Found context `setUser` type mismatch
+- Found session persistence IS implemented but needs strengthening
+- AI integration using GLM SDK already exists (suggest + rewrite routes)
+- Error boundary uses inline JS hover instead of CSS
+- Not-found page uses `<a>` instead of `<Link>`
 
 Stage Summary:
-- Complete Feorm MVP application built and functional
-- Database: SQLite with Prisma ORM, 6 seeded listings
-- Design: Premium Utilitarian Minimalism with earth-tone palette
-- Auth: Phone-first with demo OTP (123456)
-
----
-Task ID: 2
-Agent: Main Agent
-Task: Refactor Feorm from SPA to multi-page Next.js App Router application
-
-Stage Summary:
-- Fully refactored from SPA to multi-page Next.js App Router
-- Zustand removed — using React Context (FeormProvider) for shared state
-- 13 distinct routes with proper URL-based navigation
-- Route groups separate auth and marketplace layouts
+- Audit complete. Critical fixes needed: booking price calc, bookings API ref lookup, typography, blur animation, context types, demo data expansion to all 14 regions with authentic cultures
+- Session persistence: Already works via localStorage in feorm-context.tsx
+- AI: Already integrated via GLM SDK in /api/ai/suggest and /api/ai/rewrite
+- Next: Fix all critical issues, expand demo data, add Tangison AI assistant
 
 ---
 Task ID: 3
-Agent: Main Agent
-Task: Transition Feorm from Prisma/SQLite to Convex reactive backend
+Agent: Code Fix Agent
+Task: Fix critical code issues
+
+Work Log:
+- Fixed booking price calculation: added operatorFee (N$ 500/day × days when withOperator is true) to totalPrice, added operator fee line in price breakdown display
+- Added date validation: start date must be ≥ today, end date must be after start date; shows error messages and disables submit button when invalid
+- Fixed bookings API: added `reference` query param handling for `?reference=FE-XXXX` lookups using `findUnique` with `referenceNumber`, returns 404 if not found
+- Fixed typography: listing-card price, listing detail price, dashboard revenue all now use `font-mono-feorm` instead of generic `font-medium` or `font-serif-display`
+- Fixed blur animation flash: removed `filter: blur(4px)` from `feorm-scale-in` keyframe, changed scale from 0.95 to 0.98
+- Fixed context setUser type: changed from `(user: FeormUser | null) => void` to `React.Dispatch<React.SetStateAction<FeormUser | null>>`, imported React
+- Fixed error boundary: removed inline JS onMouseEnter/onMouseLeave handlers, replaced with CSS classes `border border-[#9F2F2D] text-[#9F2F2D] hover:bg-[#9F2F2D] hover:text-[#FEFDFB]`
+- Fixed not-found page: replaced `<a href="/marketplace">` with Next.js `<Link href="/marketplace">`, imported Link from "next/link"
+- Fixed profile fallback name: replaced hardcoded "Johan Deetlefs" with conditional that shows "Complete Your Profile" CTA when no user name
+- Fixed verification trust score typography: changed `font-serif-display` to `font-mono-feorm` for numeric/spec value
 
 Stage Summary:
-- Fully transitioned to Convex reactive backend
-- Real-time queries power marketplace, detail, and journeys pages
-- Prisma/SQLite still available as fallback
+- All 9 issues fixed (3 CRITICAL, 2 HIGH, 4 MEDIUM)
+- Lint passes cleanly with no errors
+- Dev server running without issues
 
 ---
 Task ID: 4
-Agent: Main Agent
-Task: Quality audit — accessibility, performance, theming, responsive
+Agent: Demo Data Expansion Agent
+Task: Expand demo data to cover ALL 14 Namibian regions with authentic cultures, ethnic groups, and agricultural context
+
+Work Log:
+- Read existing use-listings.ts: found only 6 stays covering 7 regions (some with vague names like "Central Region", "Coastal Inland", "Highlands", "Northwest", "Southern")
+- Read use-bookings.ts: found stale region names ("Central Region", "Northwest") and old listing titles in demo bookings
+- Read seed/route.ts: found only 2 demo users and 12 listings with same issues
+- Read dashboard/page.tsx: found references to old listing titles
+- EXPANDED DEMO_STAYS from 6 to 14 listings — one per Namibian region:
+  1. Zambezi Region — Lozi/Mafwe, floodplain, mokoro, fishing (Muyunda Likoro)
+  2. Kavango East — Mbunza, riverine farming, mahangu (Mukuve Munika)
+  3. Kavango West — Sambyu/Gciriku, flood-retreat farming (Rukoro Mbambo)
+  4. Ohangwena Region — Kwambi/Ngandjera, mahangu, cuca shops (Amadhila Nanyeni)
+  5. Oshana Region — Kwanyama, oshana floodplains (Nangolo Sheelongo)
+  6. Omusati Region — Kwanyama/Ndonga, makalani palms (Iilonga Nashilongo)
+  7. Oshikoto Region — Ndonga, Lake Oshikoto, copper (Ndapanda Hamunyela)
+  8. Kunene Region — Himba/Herero, desert pastoralism (Tjipuka Tjivikua)
+  9. Erongo Region — Damara/Nama, granite mountains (Anna //Khaoes)
+  10. Otjozondjupa Region — Herero/San, bushveld cattle (Tjitendero Kavari)
+  11. Khomas Region — Mixed/urban, highland camp (Pieter Gaseb)
+  12. Hardap Region — Nama/Afrikaner, Kalahari goats (Frikkie Boois)
+  13. Karas Region — Nama/Afrikaner, karakul sheep (Kooper ||Khauxa)
+  14. Omaheke Region — Herero/Tswana/San, sandveld cattle (Kahumba Rukero)
+- EXPANDED DEMO_EQUIPMENT from 6 to 10 listings across diverse regions:
+  7. Ohangwena — Mahangu Thresher (Hilja Amukana)
+  8. Kavango East — Irrigation Pipeline System (Thikusho Murangi)
+  9. Oshana — Seasonal Flood Pump Station (Shikongo yaNangolo)
+  10. Karas — Portable Stock Scale Unit (Elias Kooper)
+- Fixed ALL region names to use official Namibian region names (replaced "Central Region", "Coastal Inland", "Highlands", "Northwest", "Southern")
+- Assigned unique phone numbers to every host (+26481234001 through +26481234024)
+- Each listing has authentic cultural context in descriptions — ethnic groups, agricultural methods, architectural details
+- Descriptions written in "Premium Utilitarian" style: desaturated, dignified, no emojis, no cliches
+- Shows dignity and agency of communities, avoids tourist-gaze stereotyping
+- Updated use-bookings.ts: fixed stale region names and listing titles in demo bookings
+- Updated seed/route.ts: expanded from 2 to 14 demo users, 12 to 24 listings, all with correct region names and authentic data
+- Updated dashboard/page.tsx: fixed listing title references and active listings count
+- All lint checks pass cleanly
+
+Files Modified:
+- src/hooks/use-listings.ts (major expansion)
+- src/hooks/use-bookings.ts (region/title fixes)
+- src/app/api/seed/route.ts (full rewrite for 14 regions)
+- src/app/(marketplace)/dashboard/page.tsx (title/count fixes)
 
 Stage Summary:
-- P0 black screen FIXED (reveal animation now CSS-only)
-- Audit Health Score: 10/20
-- Identified 24 issues across 5 dimensions
+- ALL 14 Namibian regions now represented with authentic cultural context
+- 14 stays + 10 equipment = 24 total demo listings
+- Each host has a unique phone number and authentic ethnic-group-appropriate name
+- Descriptions avoid stereotyping while maintaining cultural specificity
+- Consistent Premium Utilitarian writing style throughout
 
 ---
 Task ID: 5
-Agent: Main Agent
-Task: Audit fixes — Harvest CTA, scale-in transitions, accessibility improvements
+Agent: Main
+Task: AI Integration - Tangison AI assistant, smarter rewrite, cultural context awareness
+
+Work Log:
+- Created /api/ai/chat route with Tangison AI personality — knowledgeable about all 14 Namibian regions, ethnic groups, agricultural cycles, and Feorm's escrow protocol
+- Created TangisonChat component — floating chat widget with message history, typing indicator, round avatar
+- Added Tangison to marketplace layout — available on all pages
+- Generated Tangison avatar image using image-generation skill with Premium Utilitarian style
+- Fixed AI rewrite description display — was showing [object Object], now correctly renders description and title from API response
+- Updated rewrittenDesc state type to handle both string and object responses
+- Generated listing images for new regions: Oshana, Kavango East, Kunene Desert, Karas Canyon, Omaheke Sandveld
 
 Stage Summary:
-- Audit Health Score improved from 10/20 to ~14/20
-- P0 fixes: focus indicators, label associations, error announcements, skip-nav
-- P1 fixes: touch targets (44px), Convex+REST fallback, Harvest CTA buttons
+- Tangison AI assistant live on all marketplace pages via floating chat button
+- AI chat uses GLM SDK (glm-4-flash) with deep Namibian cultural knowledge
+- Fallback responses cover booking, equipment, verification, regions, culture, payments
+- All AI features (suggest, rewrite, describe, chat) using z-ai-web-dev-sdk backend
 
 ---
 Task ID: 6
-Agent: Main Agent
-Task: Full demo mode — remove Convex dependency, REST primary, static fallback
+Agent: Main
+Task: Fix dashboard accept/decline buttons, marketplace region filter, profile fallback
+
+Work Log:
+- Wired Accept/Decline buttons on dashboard: now track processed state and show toast feedback
+- Created working region filter dropdown on marketplace page with all 14 Namibian regions
+- Added availability toggle filter on marketplace
+- Added clear filters button when any filter is active
+- Region filter syncs with URL search params
+- Empty state shows region-specific message when no listings found
 
 Stage Summary:
-- Feorm MVP fully accessible in demo mode without any external service dependency
-- REST API (Prisma/SQLite) is primary data source
-- Static demo data hardcoded in hooks as ultimate fallback
-- Demo credentials: Any phone number + OTP 123456
+- Dashboard Accept/Decline buttons now functional with toast feedback
+- Marketplace has working region filter (all 14 regions) + availability toggle
+- All lint checks pass
 
 ---
 Task ID: 7
-Agent: Main Agent
-Task: Update navigation system to desktop sidebar + mobile bottom nav, add more listings, polish for demo mode
+Agent: Explore
+Task: Architectural verification audit against 7 criteria
 
 Work Log:
-- Rewrote navigation component from top-bar to dual-layout system:
-  - Desktop: Fixed left sidebar (260px) with pill-shaped nav items, brand logo, user avatar, sign-out
-  - Mobile: Fixed bottom nav (72px) with 4 primary icons (Explore, Journeys, Dashboard, Profile)
-  - Safe area inset padding for iOS devices
-- Updated marketplace layout for sidebar offset (lg:ml-[260px]) and bottom nav padding (pb-[88px])
-- Expanded demo listings from 6 to 12 (6 stays + 6 equipment):
-  - New stays: Kunene River Camp, Kalahari Goat Station, Caprivi Wetlands Lodge
-  - New equipment: Borehole Drilling Rig, 5kW Solar Panel Array, Crop Harvesting Unit
-- Generated 6 new AI images for additional listings (1152x864 landscape)
-- Added 3 demo bookings to useBookings hook (confirmed, pending states)
-- Updated seed route with 12 listings and 2 demo users
-- Re-seeded database (12 listings confirmed)
-- Updated CSS with new utilities:
-  - .safe-area-bottom for iOS safe area
-  - .skeleton-shimmer loading animation
-  - .stagger-reveal for grid item cascade animation
-  - Updated prefers-reduced-motion to cover new animations
-- Polished all marketplace pages:
-  - Marketplace: skeleton loaders, stagger-reveal grid
-  - Listing card: category tag on image, ArrowUpRight icon, refined typography
-  - Listing detail: refined spacing, backdrop-blur back button
-  - Dashboard: 4 stats, 3 pending requests, recent activity feed
-  - Journeys: skeleton loaders, clickable booking cards, region/location display
-  - Profile: refined card layout, hover chevron animations
-  - Support: additional FAQ item, refined layout
-- Updated footer: 3-column layout (brand, quick links, metadata), color palette strip
-- All 13+ routes verified returning HTTP 200
-- Lint passes cleanly
+- Read ALL page files, component files, context, hooks, API routes, layouts, globals.css, tailwind config
+- Audited 7 criteria systematically across every source file
+
+AUDIT RESULTS:
+
+## 1. Accessibility — FAIL → FIXED
+- Skip link: Present in root layout (`<a href="#main-content" className="skip-link">`) ✅
+- Skip link CSS: `.skip-link` in globals.css with focus-visible behavior ✅
+- `<main id="main-content">` in both marketplace and auth layouts ✅
+- Focus-visible: Global `:focus-visible` rule in globals.css ✅
+- All images have alt text ✅
+- Interactive elements have aria-label or visible text ✅
+- All `<input>` elements have matching `<label htmlFor>` ✅
+- **ISSUE FOUND**: `tangison-chat.tsx` input had `id="tangison-input"` but no `<label>` or `aria-label`
+- **FIXED**: Added `aria-label="Type a message to Tangison"` to the chat input
+
+## 2. Typography — FAIL → FIXED (5 violations)
+- **VIOLATION 1**: Dashboard stats values ("14", "N$ 8,420", "3", "67%") used `font-serif-display` instead of `font-mono-feorm` — numeric/spec values must use mono font
+  - **FIXED**: Changed `font-serif-display` → `font-mono-feorm` in dashboard stats value class
+- **VIOLATION 2**: Dashboard AI Insights h3 used `text-sm font-medium` instead of `font-serif-display`
+  - **FIXED**: Changed to `font-serif-display text-lg`
+- **VIOLATION 3**: Voyager verify page h3 "Verified Voyager" used `text-sm font-medium` instead of `font-serif-display`
+  - **FIXED**: Changed to `font-serif-display text-lg`
+- **VIOLATION 4**: Profile page trust score "4.8" lacked `font-mono-feorm`
+  - **FIXED**: Added `font-mono-feorm` to the trust score value element
+- **VIOLATION 5**: Support page FAQ h4 items used `text-sm font-medium` instead of `font-serif-display`
+  - **FIXED**: Changed all 4 FAQ h4 items to `font-serif-display text-base`
+
+## 3. Navigation — PASS ✅
+- Mobile Bottom Bar: `<nav className="lg:hidden ...">` in nav.tsx ✅
+- Desktop Sidebar: `<aside className="hidden lg:flex ...">` in nav.tsx ✅
+- Both present in single nav.tsx file ✅
+
+## 4. Auth Bypass — PASS ✅
+- Auth page prepends `+264` to phone number ✅
+- API route `/api/auth` accepts `DEMO_OTP = "123456"` for verify-otp action ✅
+- Client-side verify page checks `otp !== "123456"` ✅
+- use-auth.ts hook has fallback accepting `123456` ✅
+- Demo mode hint visible on auth page and verify page ✅
+
+## 5. Session Persistence — PASS ✅
+- localStorage key: `"feorm-session"` ✅
+- `loadSession()` reads from localStorage on startup ✅
+- `useEffect` saves to localStorage when state changes ✅
+- All required fields persisted: user, phone, selectedRole, interests, avatarUrl, hasCompletedOnboarding, providerAssets ✅
+
+## 6. Error Handling — PASS ✅
+- `app/error.tsx` exists with branded "System Interrupt" page ✅
+- Has `role="alert"`, `aria-live="assertive"`, focus-visible styles ✅
+- `app/not-found.tsx` exists with Feorm-specific "Asset Not Found" copy ✅
+- Uses Next.js `<Link>` (not `<a>`) for return link ✅
+
+## 7. No Illogical Behavior — FAIL → FIXED (3 issues)
+- **ISSUE 1**: Identity page (`auth/identity/page.tsx`) region list had only 13 regions — missing Omusati
+  - **FIXED**: Added "Omusati" to regions array (now all 14)
+- **ISSUE 2**: Provider region page (`auth/provider/region/page.tsx`) region list had only 13 regions — missing Omusati
+  - **FIXED**: Added `{ name: "Omusati", code: "OMU" }` to NAMIBIA_REGIONS array (now all 14)
+- **ISSUE 3**: Auth page used `<a href="/auth/terms">` instead of `<Link href="/auth/terms">`
+  - **FIXED**: Replaced `<a>` with Next.js `<Link>`, imported Link from "next/link"
+- **No [object Object] rendering issues found** (previously fixed in Task 5)
+- **No broken navigation links found** (all internal links use valid paths)
+- **No missing component imports found**
+
+PRE-EXISTING ISSUES (not introduced by this audit):
+- `nav.tsx` line 192: TypeScript error — `onClick` property not in nav item type definition (pre-existing)
+- `verify-id/page.tsx` line 16: TypeScript error — `verifyUser` argument type mismatch (pre-existing)
+
+Files Modified:
+- src/components/feorm/tangison-chat.tsx (added aria-label to input)
+- src/app/(marketplace)/dashboard/page.tsx (fixed stats font, AI Insights h3 font)
+- src/app/(marketplace)/profile/page.tsx (fixed trust score font)
+- src/app/(auth)/auth/voyager/verify/page.tsx (fixed h3 header font)
+- src/app/(marketplace)/support/page.tsx (fixed FAQ h4 header fonts)
+- src/app/(auth)/auth/identity/page.tsx (added Omusati region)
+- src/app/(auth)/auth/provider/region/page.tsx (added Omusati region)
+- src/app/(auth)/page.tsx (replaced <a> with <Link> for terms link)
 
 Stage Summary:
-- Navigation fully converted to sidebar/bottom-nav pattern matching user's design spec
-- 12 total listings (6 stays + 6 equipment) with AI-generated images
-- Demo bookings visible on Journeys page
-- Full demo mode accessible without any backend dependency
-- High-Agency Frontend Skill applied: skeleton loaders, stagger animations, tactile feedback
-- All pages compile and render correctly
-
----
-Task ID: 8
-Agent: Main Agent
-Task: Implement Bifurcated Persona Flow — Voyager vs Provider onboarding, AI Avatar, Brand Identity PDF, WhatsApp redirect
-
-Work Log:
-- Updated FeormContext with comprehensive onboarding state:
-  - selectedRole (voyager/provider), interests[], avatarUrl, hasCompletedOnboarding
-  - providerAssets[], onboardingStep
-  - All state persisted to localStorage
-- Created AI Avatar Generation API endpoint (POST /api/avatar):
-  - Uses z-ai-web-dev-sdk to generate editorial headshot based on name/region
-  - Saves avatar to public/avatars/ directory
-  - Returns avatarUrl for display in nav and profile
-- Generated desaturated Namibian hero image for Gateway page (1344x768)
-- Updated auth Gateway page with hero image overlay (saturate-[0.6], gradient overlay)
-- Updated Identity Setup page with AI Avatar Generation:
-  - "Generate AI Identity" button with Sparkles icon
-  - Loading state with pulse indicator
-  - Avatar preview with Upload fallback icon
-- Redesigned Role Selection page with bento-style cards:
-  - "I am a Voyager" (Compass icon, Harvest gold hover) → /auth/voyager/interests
-  - "I am a Provider" (Tractor icon, Green hover) → /auth/provider/assets
-  - Active:scale-[0.98] tactile feedback, group-hover animations
-- Created Voyager Flow pages:
-  - /auth/voyager/interests: Pill-selection grid (12 options), selection count
-  - /auth/voyager/verify: Verification level (Verified Voyager green badge vs Skip)
-  - Download Brand Identity button
-- Created Provider Flow pages:
-  - /auth/provider/assets: Toggle Stay/Equipment with visual feedback
-  - /auth/provider/region: 13-region grid selector with MapPin icons
-  - Download Brand Identity button, Harvest CTA
-- Updated navigation to be role-aware:
-  - Provider sidebar: Farm Stays, Equipment, Dashboard, Earnings, Profile, Support
-  - Voyager sidebar: Explore, Journeys, Profile, Support
-  - Provider mobile: Assets, Dashboard, Profile
-  - Voyager mobile: Explore, Journeys, Profile
-  - Role badge displayed in sidebar (Provider=green, Voyager=harvest)
-  - Avatar image shown in sidebar user section
-- Created Brand Identity PDF download API (POST /api/brand-identity):
-  - Generates downloadable HTML with persona summary, palette, interests
-  - Available on both voyager/verify and provider/region pages
-- Updated all WhatsApp links to +264853411522:
-  - Listing detail, booking success, support page, all demo data hooks
-- All 16+ routes verified returning HTTP 200
-- Lint passes cleanly
-
-Stage Summary:
-- Bifurcated Persona Flow fully implemented: Voyager vs Provider
-- AI Avatar Generation integrated into onboarding
-- Role-aware navigation with different sidebar items per persona
-- Brand Identity PDF downloadable from onboarding completion
-- All WhatsApp links redirect to +264853411522
-- Complete onboarding flow: Gateway → OTP → Identity + AI Avatar → Role → Persona-specific screens → Marketplace/Dashboard
-
----
-Task ID: 2
-Agent: AI Routes Agent
-Task: Create AI-powered API routes using z-ai-web-dev-sdk
-
-Work Log:
-- Created POST /api/ai/rewrite — AI-powered property description rewriter
-  - Accepts { title, description, type, region, category }
-  - Uses z-ai-web-dev-sdk (glm-4-flash) with Feorm editorial voice system prompt
-  - Enforces 120-word cap on AI output
-  - Falls back to smart template-based rewrite with 3 contextual templates selected by title hash
-  - Returns { rewritten, original }
-- Created POST /api/ai/suggest — AI-powered smart suggestion engine
-  - Accepts { role, interests, region }
-  - Voyagers get 3 curated experience recommendations; providers get 3 asset optimization tips
-  - Parses JSON array from LLM response, validates categories (experience/equipment/optimization)
-  - Falls back to static contextual suggestions per role if SDK fails or parsing is incomplete
-  - Returns { suggestions: Array<{ title, description, category }> }
-- Created POST /api/ai/describe — AI-powered listing enhancer
-  - Accepts { title, type }
-  - Generates editorial description, 4-6 feature/spec tags, and suggested price range in N$ cents
-  - Validates parsed JSON: description length, features array, price min/max bounds
-  - Falls back to keyword-based template generation with context-aware features and pricing per type
-  - Returns { description, features: string[], suggestedPrice: { min, max } }
-- All three routes follow consistent pattern: try SDK → parse response → fallback to template
-- All lint checks pass cleanly
-
-Stage Summary:
-- 3 AI-powered API endpoints created with z-ai-web-dev-sdk integration
-- Robust fallback mechanisms ensure 100% uptime even when SDK is unavailable
-- Feorm editorial voice (Premium Utilitarian Minimalism) enforced in all AI outputs
-- Namibian agricultural context and communal trust model embedded in system prompts and fallback templates
-
----
-Task ID: 9
-Agent: Main Agent
-Task: Create error handling pages — Global Error Boundary and Not Found
-
-Work Log:
-- Created /src/app/error.tsx (Client Component):
-  - "use client" directive for Next.js error boundary protocol
-  - Accepts error (Error & { digest? }) and reset() props
-  - useEffect to console.error the error on mount
-  - AlertTriangle icon from Lucide in #9F2F2D (Feorm alert red)
-  - Title "System Interrupt" in font-serif-display (DM Serif Display)
-  - Body copy: "An unexpected condition has interrupted the Feorm network. Your session data has been preserved."
-  - Conditional error.digest display in font-mono-feorm for debugging
-  - "Attempt Recovery" button: calls reset(), uses btn-primary-feorm utility class
-  - "System Reset" button: destructive red outline style, clears localStorage feorm-session, redirects to "/"
-  - Accessibility: role="alert", aria-live="assertive", aria-atomic, aria-labels on buttons, focus-visible outlines
-  - Keyboard navigable: all buttons are native <button> elements with type="button"
-  - Responsive: flex-col on mobile, flex-row on sm+ for button layout
-- Created /src/app/not-found.tsx (Server Component):
-  - No "use client" — pure server component
-  - Inline SVG MapPin icon (Lucide path) since server components cannot import Lucide
-  - Title "Asset Not Found" in font-serif-display
-  - Body: "The requested coordinate in the Feorm network is currently unavailable."
-  - "Return to Marketplace" link to /marketplace with btn-primary-feorm inline styles (bg #1E1A14, text #FEFDFB, rounded-full, px-6 py-3, uppercase tracking-widest)
-  - No shadcn imports — basic HTML + inline styles + Tailwind-compatible classes
-  - Background: #FAF7F2 (warm beige)
-  - Exported metadata with title "Asset Not Found | Feorm"
-
-Stage Summary:
-- Two error handling pages created matching Feorm design system
-- Error boundary: Client Component with recovery/reset actions, accessible ARIA annotations
-- Not Found: Server Component with inline SVG, no client-side dependencies
-- Both use Feorm visual language: warm beige background, earth-tone typography, alert red accents
-
----
-Task ID: 3
-Agent: Main Agent
-Task: Build three enhanced "Power User" pages — Account Settings, Verification Center, Enhanced Dashboard
-
-Work Log:
-- Created AI API endpoints for Power User features:
-  - POST /api/ai/suggest — context-aware suggestion engine (profile, verification, optimization contexts)
-    - Uses z-ai-web-dev-sdk chat completions with Feorm editorial voice
-    - Falls back to static suggestions per context if SDK fails
-    - Returns { suggestions: string[] }
-  - POST /api/ai/rewrite — AI-powered listing description rewriter
-    - Accepts { title, description, type, region }
-    - Returns { original, rewritten } with enhanced title/description
-    - Falls back to template-based rewrite if SDK fails
-- Built Account Settings page (/settings):
-  - Session Management: Green dot indicator, displays phone/name/role/region from useFeorm(), Clear Session button
-  - Downloads: "Download Brand Identity" button (POST /api/brand-identity → HTML download), "Export Data" button (JSON export of session data)
-  - System Reset: Warning styled in #9F2F2D, "Reset Onboarding" (sets hasCompletedOnboarding=false), "Full System Reset" (clears all localStorage)
-  - AI-Powered: "Smart Profile Enhancement" button → calls /api/ai/suggest with profile context, displays suggestions in gold-accented card, skeleton shimmer loading state
-  - App Info: Project FE-N-0.1, Protocol: Escrow + Verification, Region: Sub-Saharan Africa
-- Built Verification Center page (/verification):
-  - Verification Status Card: Green badge if verified, amber if not, Trust Score display (4.8/5.0)
-  - ID Upload Section: Dashed border upload area, toast notification "ID upload simulated in demo mode", simulated 3-step verification timeline (Document Submitted → AI Verification with pulse animation → Trust Badge Awarded pending)
-  - Verification Benefits: 4-card grid (Verified Voyager Badge, Priority Booking, Higher Escrow Limits, Featured in Discovery Feed) with contextual icons
-  - AI-Powered: "Verify Identity with AI" button → calls /api/ai/suggest with verification context, displays AI verification tips in green-accented card
-- Rewrote Enhanced Dashboard page (/dashboard):
-  - AI Insights Card: Highlighted with left border accent (#E8C96A), auto-fetches on mount via /api/ai/suggest with provider role/region/assets, "Refresh Insights" button with spinning icon, skeleton shimmer loading state
-  - Revenue Chart: recharts BarChart with 6-month demo data (Oct-Mar, 420K-842K cents), harvest gold bars, minimal axis, custom bento-card tooltip, total N$ 35,920 with +18.4% trend indicator
-    - Chart rendered via separate RevenueChart component dynamically imported with ssr: false to avoid React 19 + recharts SSR compatibility issues
-  - Equipment Utilization: 6-item progress bar display (Tractor 85%, Pump 62%, Harrow 45%, Drill Rig 91%, Solar 78%, Harvester 55%), color-coded by utilization level (green ≥80%, gold ≥60%, red <60%)
-  - Preserved existing sections: Stats cards (4 grid), Pending Requests (3 items with Accept/Decline), Recent Activity feed
-  - Quick Actions: "Add New Listing" (harvest gold), "View Earnings" (secondary), "AI Optimize Descriptions" (primary) → calls /api/ai/rewrite for 3 demo listings, shows before/after comparison
-- Updated navigation (nav.tsx):
-  - Added ShieldCheck and Settings icons from lucide-react
-  - Added Verification (/verification) and Settings (/settings) links to both Provider and Voyager sidebar navs
-  - Placed after Profile and before Support in both nav configurations
-- All 3 pages follow Feorm design system:
-  - font-serif-display for headings, font-mono-feorm for labels/specs
-  - bento-card styling, btn-primary-feorm/btn-harvest/btn-secondary-feorm buttons
-  - tag-pastel/tag-verified/tag-machinery/tag-alert badges
-  - Feorm color palette (earth, soil, bark, harvest, sand, cream, fog, white)
-  - No emojis, no pure black (#000), no indigo/blue
-  - All inputs have matching <label htmlFor="id">
-  - min-h-[44px] touch targets on all interactive elements
-  - Mobile-first responsive design
-  - aria-labelledby on all sections, semantic HTML
-- All lint checks pass cleanly
-- All pages verified returning HTTP 200
-
-Stage Summary:
-- 3 Power User pages built: Account Settings, Verification Center, Enhanced Dashboard
-- 2 AI API endpoints created: /api/ai/suggest (multi-context), /api/ai/rewrite (listing optimizer)
-- RevenueChart extracted as separate component with dynamic import (ssr: false) to solve React 19 + recharts SSR compatibility
-- Navigation updated with Settings and Verification links for both personas
-- Full Feorm design system compliance across all new pages
-- All pages compile, render, and pass lint cleanly
-
----
-Task ID: 6
-Agent: Nav & Support Agent
-Task: Update navigation with Shield/Settings icons, reset onboarding on sign-out, enhance Support page
-
-Work Log:
-- Updated nav.tsx:
-  - Changed ShieldCheck import to Shield from lucide-react (both Provider and Voyager nav items)
-  - Added Settings link to mobileProviderNav (Assets, Dashboard, Profile, Settings)
-  - Added Settings link to mobileVoyagerNav (Explore, Journeys, Profile, Settings)
-  - Added setHasCompletedOnboarding to useFeorm destructuring
-  - Updated sign-out button to call setHasCompletedOnboarding(false) alongside localStorage.clear and router.push("/")
-  - Earnings link for Provider remains pointing to /dashboard as-is
-- Updated support page:
-  - Formatted WhatsApp phone number display as "+264 85 341 1522" (readable grouping)
-  - Made WhatsApp card more prominent with larger icon (12x12 circle) and formatted number in green
-  - Added "Direct Call" card with tel:+264853411522 link and Phone icon
-  - Added "System" section at bottom with two links:
-    - "Account Settings" → /settings (Settings icon)
-    - "Verification Center" → /verification (Shield icon)
-  - Added "AI-Powered Help" section:
-    - "Get AI-Powered Help" button calls POST /api/ai/suggest with { role, interests: ["support"], region: "Namibia" }
-    - Uses selectedRole from useFeorm context for role-aware suggestions
-    - Skeleton shimmer loading state (3 placeholder bars)
-    - Error state with alert red border and fallback message
-    - Results displayed in harvest-gold accented cards with title, description, and category badge
-  - Added "use client" directive (required for useState and useFeorm)
-  - Imported useFeorm, useState, Sparkles, Phone, Shield, Settings, Loader2
-- Lint passes cleanly
-- Support page verified returning HTTP 200
-
-Stage Summary:
-- Navigation updated: Shield replaces ShieldCheck, Settings added to mobile nav for both roles
-- Sign-out now properly resets onboarding state via setHasCompletedOnboarding(false)
-- Support page enhanced with Direct Call, System links, and AI-Powered Help section
-- All changes follow Feorm design system (earth tones, font-mono-feorm labels, bento-card styling, 44px touch targets)
-
----
-Task ID: 8
-Agent: AI Features Agent
-Task: Add AI-powered description rewriting and smart suggestions to listing detail page
-
-Work Log:
-- Added useState imports for rewrittenDesc, rewriting, suggestions, loadingSuggestions
-- Added Sparkles icon import from lucide-react
-- Implemented handleRewriteDescription handler:
-  - POSTs to /api/ai/rewrite with title, description, type, region, category
-  - On success, sets rewrittenDesc from API response
-  - On failure, falls back to original description
-- Implemented handleGetSuggestions handler:
-  - POSTs to /api/ai/suggest with voyager role, contextual interests, listing region
-  - On success, sets suggestions array from API response
-  - Silent failure on error
-- Modified Description section:
-  - When rewrittenDesc is null: shows original description + "AI Enhance" button (Sparkles icon, text-[10px] uppercase tracking-widest)
-  - While rewriting: shows tiny spinner animation + "Enhancing..." text
-  - When rewrittenDesc is set: shows rewritten text, "AI Enhanced" label, "Show Original" link that resets to null
-- Added AI Recommendations section below Host info:
-  - "AI Recommendations" heading in font-mono-feorm
-  - "Get Smart Suggestions" button with Sparkles icon
-  - Loading state: 3 skeleton shimmer placeholders
-  - Results: up to 3 suggestion cards with title, description, category tag
-- All existing functionality preserved intact
-- Lint passes cleanly
-- Dev server compiles without errors
-
-Stage Summary:
-- AI Description Rewrite feature added with enhance/revert toggle
-- AI Smart Suggest feature added with skeleton loading and suggestion cards
-- Both features use existing /api/ai/rewrite and /api/ai/suggest endpoints
-- Feorm design system maintained throughout
-
----
-Task ID: 10
-Agent: Main Orchestrator
-Task: Production Execution Strategy — Error handling, AI APIs, Power User screens, Image generation, Session persistence
-
-Work Log:
-- Audited entire codebase (21 routes, 13 API endpoints, 6 hooks, context, components)
-- Created Global Error Boundary (error.tsx): AlertTriangle icon, System Interrupt title, Attempt Recovery + System Reset buttons
-- Created Not Found page (not-found.tsx): Server component with inline SVG, "Asset Not Found" messaging
-- Created 3 AI-powered API routes using z-ai-web-dev-sdk (glm-4-flash):
-  - POST /api/ai/rewrite — Property description rewriter with Feorm editorial voice
-  - POST /api/ai/suggest — Smart suggestion engine (voyager/provider contexts)
-  - POST /api/ai/describe — Listing enhancer with features + pricing
-- Built Account Settings page (/settings): Session management, Brand Identity download, JSON export, System Reset, AI enhancement
-- Built Verification Center page (/verification): Trust status, ID upload timeline, Benefits grid, AI verification tips
-- Enhanced Dashboard (/dashboard): AI Insights card, Revenue Chart (recharts), Equipment Utilization bars, Quick Actions
-- Updated nav with Settings + Verification links for both personas, sign-out resets onboarding
-- Enhanced Support page with Direct Call (tel:+264853411522), System links, AI-Powered Help
-- Added AI features to listing detail: Description rewrite + Smart suggestions
-- Generated avatar placeholder and hero gateway images with z-ai CLI
-- All 21 routes verified returning HTTP 200
-- Lint passes cleanly
-
-Stage Summary:
-- Feorm MVP is architecturally hardened with defensive error handling (no black screens)
-- 3 AI-powered endpoints provide smart description rewriting, contextual suggestions, and listing enhancement
-- Power User screens (Settings, Verification, Dashboard) are fully functional with AI integration
-- Session state persisted to localStorage via FeormProvider context
-- All WhatsApp/phone links redirect to +264853411522
-- Complete application flow works end-to-end in demo mode
+- All 7 audit criteria now PASS
+- 9 fixes applied across 8 files
+- 0 new lint/type errors introduced
+- Remaining pre-existing TS errors are in nav.tsx (onClick type) and verify-id/page.tsx (verifyUser arg type)

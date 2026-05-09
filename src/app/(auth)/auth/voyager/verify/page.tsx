@@ -74,7 +74,7 @@ export default function VoyagerVerifyPage() {
                 <CheckCircle size={18} className="text-[#346538] group-hover:text-[#FEFDFB] transition-colors" />
               </div>
               <div>
-                <h3 className="text-sm font-medium text-[#1E1A14]">Verified Voyager</h3>
+                <h3 className="font-serif-display text-lg text-[#1E1A14]">Verified Voyager</h3>
                 <span className="tag-verified text-[9px] uppercase font-semibold px-2 py-0.5 tracking-wider">
                   Green Badge
                 </span>

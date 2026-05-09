@@ -1,15 +1,39 @@
 "use client";
 
-import { useEffect, Suspense } from "react";
+import { useEffect, useState, useMemo, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useFeorm } from "@/context/feorm-context";
 import ListingCard from "@/components/feorm/listing-card";
 import { useListings } from "@/hooks/use-listings";
+import { ChevronDown, X } from "lucide-react";
+
+const NAMIBIAN_REGIONS = [
+  "All Regions",
+  "Zambezi",
+  "Kavango East",
+  "Kavango West",
+  "Ohangwena",
+  "Oshana",
+  "Omusati",
+  "Oshikoto",
+  "Kunene",
+  "Erongo",
+  "Otjozondjupa",
+  "Khomas",
+  "Hardap",
+  "Karas",
+  "Omaheke",
+];
 
 function MarketplaceContent() {
   const { marketView, setMarketView } = useFeorm();
   const searchParams = useSearchParams();
   const router = useRouter();
+
+  const regionFromParams = searchParams.get("region") || "All Regions";
+  const [selectedRegion, setSelectedRegion] = useState(regionFromParams);
+  const [regionDropdownOpen, setRegionDropdownOpen] = useState(false);
+  const [showAvailableOnly, setShowAvailableOnly] = useState(false);
 
   useEffect(() => {
     const view = searchParams.get("view");
@@ -18,9 +42,51 @@ function MarketplaceContent() {
     }
   }, [searchParams, setMarketView]);
 
+  // Sync region from URL params (only when param changes)
+  const currentParamRegion = searchParams.get("region") || "All Regions";
+  useEffect(() => {
+    setSelectedRegion(currentParamRegion);
+  }, [currentParamRegion]);
+
   const { data: listings, isLoading } = useListings(
     marketView === "stays" ? "stay" : "equipment"
   );
+
+  // Filter listings by region and availability
+  const filteredListings = useMemo(() => {
+    if (!listings) return [];
+    let filtered = listings;
+    if (selectedRegion !== "All Regions") {
+      filtered = filtered.filter((item: any) =>
+        item.region?.toLowerCase().includes(selectedRegion.toLowerCase())
+      );
+    }
+    if (showAvailableOnly) {
+      filtered = filtered.filter((item: any) => item.available !== false);
+    }
+    return filtered;
+  }, [listings, selectedRegion, showAvailableOnly]);
+
+  const handleRegionSelect = (region: string) => {
+    setSelectedRegion(region);
+    setRegionDropdownOpen(false);
+    const params = new URLSearchParams(searchParams.toString());
+    if (region === "All Regions") {
+      params.delete("region");
+    } else {
+      params.set("region", region);
+    }
+    router.push(`/marketplace?${params.toString()}`);
+  };
+
+  const clearFilters = () => {
+    setSelectedRegion("All Regions");
+    setShowAvailableOnly(false);
+    router.push("/marketplace");
+  };
+
+  const hasActiveFilters =
+    selectedRegion !== "All Regions" || showAvailableOnly;
 
   return (
     <div className="flex-grow w-full max-w-6xl mx-auto px-6 py-12 md:py-24">
@@ -56,7 +122,7 @@ function MarketplaceContent() {
           </button>
           <span className="hidden md:inline-block mx-2 text-[#D4C4A0]">|</span>
           <span className="hidden md:inline-block font-mono-feorm text-[10px] text-[#787774] uppercase tracking-widest">
-            {listings?.length || 0} listings
+            {filteredListings?.length || 0} listings
           </span>
         </div>
 
@@ -71,13 +137,77 @@ function MarketplaceContent() {
                 : "Peer-to-peer machinery rentals secured via escrow protocol."}
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <button className="border border-[#3C2F1A]/10 bg-[#FEFDFB] px-3 py-1.5 rounded-full text-xs hover:bg-[#FAF7F2] transition-colors">
-              Region
+          <div className="flex items-center gap-2 flex-wrap">
+            {/* Region Filter Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setRegionDropdownOpen(!regionDropdownOpen)}
+                className={`border px-3 py-1.5 rounded-full text-xs hover:bg-[#FAF7F2] transition-colors flex items-center gap-1.5 min-h-[36px] ${
+                  selectedRegion !== "All Regions"
+                    ? "border-[#1E1A14] bg-[#1E1A14] text-[#FEFDFB]"
+                    : "border-[#3C2F1A]/10 bg-[#FEFDFB]"
+                }`}
+                aria-expanded={regionDropdownOpen}
+                aria-haspopup="listbox"
+                aria-label="Filter by region"
+              >
+                {selectedRegion === "All Regions" ? "Region" : selectedRegion}
+                <ChevronDown
+                  size={12}
+                  className={`transition-transform duration-200 ${
+                    regionDropdownOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+              {regionDropdownOpen && (
+                <div
+                  className="absolute right-0 top-full mt-1 w-48 bg-[#FEFDFB] border border-[#3C2F1A]/10 rounded-[8px] shadow-lg z-50 max-h-80 overflow-y-auto"
+                  role="listbox"
+                  aria-label="Select region"
+                >
+                  {NAMIBIAN_REGIONS.map((region) => (
+                    <button
+                      key={region}
+                      onClick={() => handleRegionSelect(region)}
+                      className={`w-full text-left px-4 py-2.5 text-xs hover:bg-[#FAF7F2] transition-colors ${
+                        selectedRegion === region
+                          ? "font-medium text-[#1E1A14] bg-[#FAF7F2]"
+                          : "text-[#787774]"
+                      } ${region === "All Regions" ? "border-b border-[#3C2F1A]/5" : ""}`}
+                      role="option"
+                      aria-selected={selectedRegion === region}
+                    >
+                      {region}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Availability Toggle */}
+            <button
+              onClick={() => setShowAvailableOnly(!showAvailableOnly)}
+              className={`border px-3 py-1.5 rounded-full text-xs transition-colors min-h-[36px] ${
+                showAvailableOnly
+                  ? "border-[#1E1A14] bg-[#1E1A14] text-[#FEFDFB]"
+                  : "border-[#3C2F1A]/10 bg-[#FEFDFB] hover:bg-[#FAF7F2]"
+              }`}
+              aria-pressed={showAvailableOnly}
+            >
+              Available
             </button>
-            <button className="border border-[#3C2F1A]/10 bg-[#FEFDFB] px-3 py-1.5 rounded-full text-xs hover:bg-[#FAF7F2] transition-colors">
-              Availability
-            </button>
+
+            {/* Clear Filters */}
+            {hasActiveFilters && (
+              <button
+                onClick={clearFilters}
+                className="border border-[#9F2F2D]/20 px-2 py-1 rounded-full text-xs text-[#9F2F2D] hover:bg-[#FDEBEC] transition-colors min-h-[36px] flex items-center gap-1"
+                aria-label="Clear all filters"
+              >
+                <X size={10} />
+                Clear
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -101,9 +231,9 @@ function MarketplaceContent() {
       )}
 
       {/* Bento Grid with stagger reveal */}
-      {!isLoading && listings && listings.length > 0 && (
+      {!isLoading && filteredListings && filteredListings.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 stagger-reveal">
-          {listings.map((item: any) => (
+          {filteredListings.map((item: any) => (
             <ListingCard
               key={item._id}
               item={{
@@ -129,11 +259,20 @@ function MarketplaceContent() {
       )}
 
       {/* Empty state */}
-      {listings?.length === 0 && !isLoading && (
+      {filteredListings?.length === 0 && !isLoading && (
         <div className="border border-dashed border-[#D4C4A0]/50 bg-[#FEFDFB] rounded-[8px] p-12 text-center">
-          <p className="text-sm text-[#787774]">
-            No listings found. The network is still growing.
+          <p className="text-sm text-[#787774] mb-4">
+            No listings found{selectedRegion !== "All Regions" ? ` in ${selectedRegion}` : ""}.
+            The network is still growing.
           </p>
+          {hasActiveFilters && (
+            <button
+              onClick={clearFilters}
+              className="btn-secondary-feorm px-5 py-2.5 text-xs uppercase tracking-widest"
+            >
+              Clear Filters
+            </button>
+          )}
         </div>
       )}
     </div>

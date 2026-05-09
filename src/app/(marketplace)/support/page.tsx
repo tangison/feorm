@@ -123,7 +123,7 @@ export default function SupportPage() {
           </h3>
           <div className="space-y-0 divide-y divide-[#3C2F1A]/5">
             <div className="py-4 first:pt-0 last:pb-0">
-              <h4 className="text-sm font-medium text-[#1E1A14] mb-1.5">
+              <h4 className="font-serif-display text-base text-[#1E1A14] mb-1.5">
                 How does escrow work?
               </h4>
               <p className="text-xs text-[#787774] leading-relaxed">
@@ -133,7 +133,7 @@ export default function SupportPage() {
               </p>
             </div>
             <div className="py-4">
-              <h4 className="text-sm font-medium text-[#1E1A14] mb-1.5">
+              <h4 className="font-serif-display text-base text-[#1E1A14] mb-1.5">
                 What if equipment is damaged?
               </h4>
               <p className="text-xs text-[#787774] leading-relaxed">
@@ -142,7 +142,7 @@ export default function SupportPage() {
               </p>
             </div>
             <div className="py-4">
-              <h4 className="text-sm font-medium text-[#1E1A14] mb-1.5">
+              <h4 className="font-serif-display text-base text-[#1E1A14] mb-1.5">
                 How do I get paid as a host?
               </h4>
               <p className="text-xs text-[#787774] leading-relaxed">
@@ -151,7 +151,7 @@ export default function SupportPage() {
               </p>
             </div>
             <div className="py-4 first:pt-0 last:pb-0">
-              <h4 className="text-sm font-medium text-[#1E1A14] mb-1.5">
+              <h4 className="font-serif-display text-base text-[#1E1A14] mb-1.5">
                 Can I cancel a booking?
               </h4>
               <p className="text-xs text-[#787774] leading-relaxed">

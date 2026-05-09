@@ -38,7 +38,7 @@ const equipmentUtilization = [
 ];
 
 const stats = [
-  { label: "Active Listings", value: "6", accent: false },
+  { label: "Active Listings", value: "14", accent: false },
   { label: "Earnings Available", value: "N$ 8,420", accent: true },
   { label: "Pending Requests", value: "3", accent: false },
   { label: "Occupancy Rate", value: "67%", accent: false },
@@ -55,7 +55,7 @@ const pendingRequests = [
   },
   {
     id: 2,
-    title: "Otjozondjupa Cattle Farm — Stay Request",
+    title: "Otjozondjupa Bushveld Station — Stay Request",
     requester: "Pieter Gaseb",
     duration: "5 days",
     amount: 425000,
@@ -63,7 +63,7 @@ const pendingRequests = [
   },
   {
     id: 3,
-    title: "Kunene River Camp — Stay Request",
+    title: "Kunene Desert Pasture Camp — Stay Request",
     requester: "Hannes van Wyk",
     duration: "4 days",
     amount: 380000,
@@ -73,7 +73,7 @@ const pendingRequests = [
 
 const recentActivity = [
   { action: "Payment received", detail: "Erongo Granite Lodge — N$ 2,400", time: "2h ago" },
-  { action: "Booking confirmed", detail: "Kalahari Goat Station — 3 nights", time: "5h ago" },
+  { action: "Booking confirmed", detail: "Hardap Kalahari Goat Station — 3 nights", time: "5h ago" },
   { action: "Equipment returned", detail: "Disc Harrow Implement — Condition: Good", time: "1d ago" },
 ];
 
@@ -86,6 +86,7 @@ export default function DashboardPage() {
   const [rewriteResults, setRewriteResults] = useState<
     Array<{ original: string; rewritten: string }> | null
   >(null);
+  const [processedRequests, setProcessedRequests] = useState<Set<number>>(new Set());
 
   // ─── AI Insights ──────────────────────────────────────────
   const fetchAiInsights = useCallback(async () => {
@@ -197,7 +198,7 @@ export default function DashboardPage() {
               <div>
                 <h3
                   id="ai-insights-heading"
-                  className="text-sm font-medium text-[#1E1A14]"
+                  className="font-serif-display text-lg text-[#1E1A14]"
                 >
                   AI Insights
                 </h3>
@@ -255,7 +256,7 @@ export default function DashboardPage() {
               {s.label}
             </p>
             <p
-              className={`font-serif-display text-2xl md:text-3xl ${
+              className={`font-mono-feorm text-2xl md:text-3xl ${
                 s.accent ? "text-[#346538]" : "text-[#1E1A14]"
               }`}
             >
@@ -276,7 +277,7 @@ export default function DashboardPage() {
         <div className="bento-card p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <p className="font-serif-display text-2xl text-[#1E1A14]">
+              <p className="font-mono-feorm text-2xl text-[#1E1A14]">
                 N$ 35,920
               </p>
               <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#346538] flex items-center gap-1 mt-1">
@@ -375,18 +376,32 @@ export default function DashboardPage() {
                 </p>
               </div>
               <div className="flex gap-2">
-                <button
-                  className="px-4 py-2 text-xs uppercase tracking-widest bg-[#EDF3EC] text-[#346538] rounded-full hover:bg-[#dde9dd] transition-colors active:scale-[0.98] min-h-[44px]"
-                  type="button"
-                >
-                  Accept
-                </button>
-                <button
-                  className="px-4 py-2 text-xs uppercase tracking-widest bg-[#FDEBEC] text-[#9F2F2D] rounded-full hover:bg-[#f5d5d6] transition-colors active:scale-[0.98] min-h-[44px]"
-                  type="button"
-                >
-                  Decline
-                </button>
+                {processedRequests.has(req.id) ? (
+                  <span className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] px-4 py-2">Processed</span>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => {
+                        setProcessedRequests((prev) => new Set(prev).add(req.id));
+                        toast({ title: `Accepted: ${req.title}` });
+                      }}
+                      className="px-4 py-2 text-xs uppercase tracking-widest bg-[#EDF3EC] text-[#346538] rounded-full hover:bg-[#dde9dd] transition-colors active:scale-[0.98] min-h-[44px]"
+                      type="button"
+                    >
+                      Accept
+                    </button>
+                    <button
+                      onClick={() => {
+                        setProcessedRequests((prev) => new Set(prev).add(req.id));
+                        toast({ title: `Declined: ${req.title}` });
+                      }}
+                      className="px-4 py-2 text-xs uppercase tracking-widest bg-[#FDEBEC] text-[#9F2F2D] rounded-full hover:bg-[#f5d5d6] transition-colors active:scale-[0.98] min-h-[44px]"
+                      type="button"
+                    >
+                      Decline
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           ))}

@@ -1,6 +1,6 @@
 "use client";
 
-import {
+import React, {
   createContext,
   useContext,
   useState,
@@ -58,7 +58,7 @@ type MarketView = "stays" | "equipment";
 interface FeormContextType {
   // User session
   user: FeormUser | null;
-  setUser: (user: FeormUser | null) => void;
+  setUser: React.Dispatch<React.SetStateAction<FeormUser | null>>;
   phone: string;
   setPhone: (phone: string) => void;
 

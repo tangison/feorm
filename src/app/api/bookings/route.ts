@@ -4,6 +4,23 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const userId = searchParams.get("userId");
+  const reference = searchParams.get("reference");
+
+  // Reference lookup takes priority
+  if (reference) {
+    try {
+      const booking = await db.booking.findUnique({
+        where: { referenceNumber: reference },
+        include: { listing: true },
+      });
+      return NextResponse.json(booking || { error: "Not found" }, { status: booking ? 200 : 404 });
+    } catch {
+      return NextResponse.json(
+        { error: "Failed to fetch booking" },
+        { status: 500 }
+      );
+    }
+  }
 
   if (!userId) {
     return NextResponse.json(

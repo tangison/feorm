@@ -137,7 +137,7 @@ export default function VerificationPage() {
                 Trust Score
               </span>
             </div>
-            <span className="font-serif-display text-2xl text-[#1E1A14]">
+            <span className="font-mono-feorm text-2xl text-[#1E1A14]">
               {trustScore}
             </span>
             <span className="text-xs text-[#787774]">/ 5.0</span>

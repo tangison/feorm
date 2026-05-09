@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useFeorm } from "@/context/feorm-context";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function AuthPage() {
   const { phone, setPhone } = useFeorm();
@@ -128,12 +129,12 @@ export default function AuthPage() {
 
           <p className="mt-8 text-[10px] text-[#787774] uppercase tracking-wide leading-relaxed">
             By continuing, you agree to the{" "}
-            <a
+            <Link
               href="/auth/terms"
               className="border-b border-[#787774] pb-0.5 hover:text-[#1E1A14] transition-colors"
             >
               Communal Ethic
-            </a>{" "}
+            </Link>{" "}
             and standard terms of service.
           </p>
         </div>

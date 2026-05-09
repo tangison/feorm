@@ -34,7 +34,16 @@ export default function BookPage() {
 
   const rentalPrice = listing ? listing.price * days : 0;
   const serviceFee = Math.round(rentalPrice * 0.1);
-  const totalPrice = rentalPrice + serviceFee + 150000;
+  const operatorFee = withOperator ? 50000 * days : 0;
+  const totalPrice = rentalPrice + serviceFee + 150000 + operatorFee;
+
+  // Date validation
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const startDateObj = startDate ? new Date(startDate) : null;
+  const endDateObj = endDate ? new Date(endDate) : null;
+  const startDateInvalid = startDateObj ? startDateObj < today : false;
+  const endDateInvalid = endDateObj && startDateObj ? endDateObj <= startDateObj : false;
 
   const handleCreateBooking = async () => {
     if (!listing || !startDate || !endDate) return;
@@ -145,7 +154,14 @@ export default function BookPage() {
           )}
         </div>
 
-        {startDate && endDate && (
+        {startDate && endDate && (startDateInvalid || endDateInvalid) && (
+          <div className="mt-4 p-4 rounded-[4px] bg-[#FDEBEC] text-[#9F2F2D] text-sm">
+            {startDateInvalid && <p>Start date must be today or later.</p>}
+            {endDateInvalid && <p>End date must be after start date.</p>}
+          </div>
+        )}
+
+        {startDate && endDate && !startDateInvalid && !endDateInvalid && (
           <div className="mt-8 border border-[#3C2F1A]/10 bg-[#FEFDFB] rounded-[8px] p-6">
             <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-4">
               Price Breakdown
@@ -169,6 +185,14 @@ export default function BookPage() {
                 <span className="text-[#787774]">Security Escrow</span>
                 <span className="font-mono-feorm text-[#1E1A14]">N$ 1,500</span>
               </div>
+              {withOperator && (
+                <div className="flex justify-between">
+                  <span className="text-[#787774]">Operator Fee (N$ 500 x {days} days)</span>
+                  <span className="font-mono-feorm text-[#1E1A14]">
+                    {formatPrice(operatorFee)}
+                  </span>
+                </div>
+              )}
               <div className="flex justify-between pt-3 border-t border-[#3C2F1A]/10 font-medium">
                 <span className="text-[#1E1A14]">Total to Pay</span>
                 <span className="font-mono-feorm text-[#1E1A14] text-lg">
@@ -181,7 +205,7 @@ export default function BookPage() {
 
         <button
           onClick={handleCreateBooking}
-          disabled={!startDate || !endDate || loading}
+          disabled={!startDate || !endDate || loading || startDateInvalid || endDateInvalid}
           className="w-full mt-8 btn-harvest py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
         >
           {loading ? "Processing..." : "Initialize Contract"}

@@ -36,7 +36,9 @@ export default function ProfilePage() {
           </div>
           <div className="flex-1 min-w-0">
             <h3 className="font-serif-display text-xl text-[#1E1A14]">
-              {user?.name || "Johan"} {user?.surname || "Deetlefs"}
+              {user?.name && user?.surname
+                ? `${user.name} ${user.surname}`
+                : "Complete Your Profile"}
             </h3>
             <p className="text-sm text-[#787774] font-mono-feorm flex items-center gap-1">
               <MapPin size={10} aria-hidden="true" />
@@ -71,7 +73,7 @@ export default function ProfilePage() {
               <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#787774] mb-1">
                 Trust Score
               </p>
-              <p className="text-sm text-[#1E1A14] flex items-center gap-1.5">
+              <p className="text-sm text-[#1E1A14] flex items-center gap-1.5 font-mono-feorm">
                 <Star size={14} className="text-[#E8C96A]" /> 4.8
               </p>
             </div>

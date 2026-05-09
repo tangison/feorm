@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Asset Not Found | Feorm",
@@ -52,7 +53,7 @@ export default function NotFound() {
 
         {/* Return Link */}
         <div className="pt-4">
-          <a
+          <Link
             href="/marketplace"
             className="inline-block text-xs uppercase tracking-widest font-medium transition-all duration-200 no-underline"
             style={{
@@ -63,7 +64,7 @@ export default function NotFound() {
             }}
           >
             Return to Marketplace
-          </a>
+          </Link>
         </div>
       </div>
     </div>

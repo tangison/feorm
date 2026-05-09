@@ -15,6 +15,7 @@ const NAMIBIA_REGIONS = [
   { name: "Kunene", code: "KU" },
   { name: "Ohangwena", code: "OH" },
   { name: "Oshana", code: "OS" },
+  { name: "Omusati", code: "OMU" },
   { name: "Oshikoto", code: "OK" },
   { name: "Zambezi", code: "ZA" },
   { name: "Kavango East", code: "KE" },

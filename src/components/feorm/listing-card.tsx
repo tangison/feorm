@@ -48,7 +48,7 @@ export default function ListingCard({ item }: { item: Listing }) {
           </h3>
         </div>
         <div className="mt-5 flex justify-between items-end">
-          <span className="text-base font-medium text-[#1E1A14]">
+          <span className="text-base font-medium font-mono-feorm text-[#1E1A14]">
             {formatPrice(item.price)}{" "}
             <span className="text-[10px] text-[#787774] font-normal uppercase tracking-wide">
               / day

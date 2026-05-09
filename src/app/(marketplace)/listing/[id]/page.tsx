@@ -14,7 +14,7 @@ export default function ListingDetailPage() {
   const { data: listing, isLoading, notFound } = useListing(params.id);
 
   // AI Description Rewrite state
-  const [rewrittenDesc, setRewrittenDesc] = useState<string | null>(null);
+  const [rewrittenDesc, setRewrittenDesc] = useState<string | { title?: string; description?: string } | null>(null);
   const [rewriting, setRewriting] = useState(false);
 
   // AI Smart Suggest state
@@ -49,7 +49,7 @@ export default function ListingDetailPage() {
       }
     } catch {
       // Fallback: just show the original
-      setRewrittenDesc(listing.description);
+      setRewrittenDesc(listing.description as string);
     }
     setRewriting(false);
   };
@@ -151,7 +151,7 @@ export default function ListingDetailPage() {
               </h2>
 
               <div className="text-[#1E1A14] mb-8 pb-8 border-b border-[#3C2F1A]/10">
-                <span className="text-2xl font-medium">
+                <span className="text-2xl font-medium font-mono-feorm">
                   {formatPrice(listing.price)}
                 </span>
                 <span className="text-sm text-[#787774] ml-1 uppercase tracking-wide">
@@ -166,8 +166,15 @@ export default function ListingDetailPage() {
               {rewrittenDesc !== null ? (
                 <div className="mb-8">
                   <p className="text-[#3C2F1A] text-sm leading-relaxed">
-                    {rewrittenDesc}
+                    {typeof rewrittenDesc === "string"
+                      ? rewrittenDesc
+                      : rewrittenDesc.description || listing.description}
                   </p>
+                  {typeof rewrittenDesc === "object" && rewrittenDesc.title && (
+                    <p className="text-[#5C4A2A] text-sm font-medium mt-2">
+                      {rewrittenDesc.title}
+                    </p>
+                  )}
                   <div className="flex items-center gap-3 mt-2">
                     <span className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#787774]">
                       AI Enhanced

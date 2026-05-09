@@ -82,20 +82,7 @@ export default function GlobalError({
 
           <button
             onClick={handleSystemReset}
-            className="rounded-full px-6 py-3 text-xs uppercase tracking-widest font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9F2F2D]"
-            style={{
-              backgroundColor: "transparent",
-              border: "1px solid #9F2F2D",
-              color: "#9F2F2D",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "#9F2F2D";
-              e.currentTarget.style.color = "#FEFDFB";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "transparent";
-              e.currentTarget.style.color = "#9F2F2D";
-            }}
+            className="rounded-full px-6 py-3 text-xs uppercase tracking-widest font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9F2F2D] border border-[#9F2F2D] text-[#9F2F2D] hover:bg-[#9F2F2D] hover:text-[#FEFDFB]"
             aria-label="System Reset — clear session and return to home"
             type="button"
           >

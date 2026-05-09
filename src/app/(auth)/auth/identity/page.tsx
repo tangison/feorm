@@ -9,7 +9,7 @@ import Image from "next/image";
 
 const regions = [
   "Khomas", "Otjozondjupa", "Erongo", "Hardap", "Omaheke",
-  "Karas", "Kunene", "Ohangwena", "Oshana", "Oshikoto",
+  "Karas", "Kunene", "Ohangwena", "Oshana", "Omusati", "Oshikoto",
   "Zambezi", "Kavango East", "Kavango West",
 ];
 
