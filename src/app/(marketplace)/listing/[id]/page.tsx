@@ -1,10 +1,11 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 import { useListing } from "@/hooks/use-listings";
 import { formatPrice } from "@/components/feorm/listing-card";
 import Image from "next/image";
-import { ChevronLeft, MessageCircle, ArrowRight } from "lucide-react";
+import { ChevronLeft, MessageCircle, ArrowRight, Sparkles } from "lucide-react";
 
 export default function ListingDetailPage() {
   const params = useParams<{ id: string }>();
@@ -12,11 +13,67 @@ export default function ListingDetailPage() {
 
   const { data: listing, isLoading, notFound } = useListing(params.id);
 
+  // AI Description Rewrite state
+  const [rewrittenDesc, setRewrittenDesc] = useState<string | null>(null);
+  const [rewriting, setRewriting] = useState(false);
+
+  // AI Smart Suggest state
+  const [suggestions, setSuggestions] = useState<Array<{ title: string; description: string; category: string }> | null>(null);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+
   const triggerWhatsApp = (title: string) => {
     const msg = encodeURIComponent(
       `System Alert: Initiating inquiry for [${title}] via Feorm network.`
     );
     window.open(`https://wa.me/264853411522?text=${msg}`, "_blank");
+  };
+
+  const handleRewriteDescription = async () => {
+    if (!listing) return;
+    setRewriting(true);
+    try {
+      const res = await fetch("/api/ai/rewrite", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: listing.title,
+          description: listing.description,
+          type: listing.type,
+          region: listing.region,
+          category: listing.category,
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setRewrittenDesc(data.rewritten);
+      }
+    } catch {
+      // Fallback: just show the original
+      setRewrittenDesc(listing.description);
+    }
+    setRewriting(false);
+  };
+
+  const handleGetSuggestions = async () => {
+    setLoadingSuggestions(true);
+    try {
+      const res = await fetch("/api/ai/suggest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          role: "voyager",
+          interests: listing?.type === "stay" ? ["Farm Stays", "Cultural Exchange"] : ["Equipment", "Machinery"],
+          region: listing?.region || "Namibia",
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setSuggestions(data.suggestions);
+      }
+    } catch {
+      // Silent fail
+    }
+    setLoadingSuggestions(false);
   };
 
   if (isLoading) {
@@ -102,12 +159,52 @@ export default function ListingDetailPage() {
                 </span>
               </div>
 
+              {/* Description with AI Enhance */}
               <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-3">
                 Description
               </h4>
-              <p className="text-[#3C2F1A] text-sm leading-relaxed mb-8">
-                {listing.description}
-              </p>
+              {rewrittenDesc !== null ? (
+                <div className="mb-8">
+                  <p className="text-[#3C2F1A] text-sm leading-relaxed">
+                    {rewrittenDesc}
+                  </p>
+                  <div className="flex items-center gap-3 mt-2">
+                    <span className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#787774]">
+                      AI Enhanced
+                    </span>
+                    <button
+                      onClick={() => setRewrittenDesc(null)}
+                      className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#E8C96A] hover:text-[#1E1A14] transition-colors underline underline-offset-2"
+                    >
+                      Show Original
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="mb-8">
+                  <p className="text-[#3C2F1A] text-sm leading-relaxed">
+                    {listing.description}
+                  </p>
+                  <button
+                    onClick={handleRewriteDescription}
+                    disabled={rewriting}
+                    className="text-[10px] uppercase tracking-widest text-[#787774] hover:text-[#1E1A14] font-mono-feorm flex items-center gap-1 mt-2 transition-colors disabled:opacity-50"
+                    aria-label="AI Enhance description"
+                  >
+                    {rewriting ? (
+                      <>
+                        <span className="inline-block w-3 h-3 border border-[#787774]/40 border-t-[#787774] rounded-full animate-spin" />
+                        Enhancing...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles size={12} />
+                        AI Enhance
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
 
               <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-3">
                 Specifications
@@ -145,6 +242,55 @@ export default function ListingDetailPage() {
                 <span className="tag-verified text-[10px] uppercase font-medium px-2.5 py-1">
                   Verified
                 </span>
+              </div>
+
+              {/* AI Recommendations */}
+              <div className="mt-8 pt-8 border-t border-[#3C2F1A]/10">
+                <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-3">
+                  AI Recommendations
+                </h4>
+                {suggestions === null && !loadingSuggestions && (
+                  <button
+                    onClick={handleGetSuggestions}
+                    className="text-[10px] uppercase tracking-widest text-[#787774] hover:text-[#1E1A14] font-mono-feorm flex items-center gap-1 transition-colors border border-[#3C2F1A]/10 rounded-full px-3 py-1.5 hover:border-[#3C2F1A]/30"
+                    aria-label="Get smart suggestions"
+                  >
+                    <Sparkles size={12} />
+                    Get Smart Suggestions
+                  </button>
+                )}
+                {loadingSuggestions && (
+                  <div className="space-y-3">
+                    {[1, 2, 3].map((i) => (
+                      <div
+                        key={i}
+                        className="skeleton-shimmer rounded-lg h-16 w-full"
+                      />
+                    ))}
+                  </div>
+                )}
+                {suggestions !== null && suggestions.length > 0 && (
+                  <div className="space-y-3">
+                    {suggestions.slice(0, 3).map((s, i) => (
+                      <div
+                        key={i}
+                        className="border border-[#3C2F1A]/10 rounded-lg p-3 bg-[#FAF7F2]"
+                      >
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-sm font-medium text-[#1E1A14]">
+                            {s.title}
+                          </span>
+                          <span className="text-[9px] uppercase tracking-widest text-[#787774] font-mono-feorm border border-[#3C2F1A]/10 rounded-full px-2 py-0.5">
+                            {s.category}
+                          </span>
+                        </div>
+                        <p className="text-xs text-[#787774] leading-relaxed">
+                          {s.description}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 

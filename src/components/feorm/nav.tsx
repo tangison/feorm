@@ -15,10 +15,12 @@ import {
   Wrench,
   DollarSign,
   Package,
+  Settings,
+  Shield,
 } from "lucide-react";
 
 export default function FeormNav() {
-  const { user, selectedRole, setMarketView, avatarUrl } = useFeorm();
+  const { user, selectedRole, setMarketView, avatarUrl, setHasCompletedOnboarding } = useFeorm();
   const pathname = usePathname();
   const router = useRouter();
 
@@ -64,6 +66,18 @@ export default function FeormNav() {
       active: pathname === "/profile",
     },
     {
+      label: "Verification",
+      href: "/verification",
+      icon: Shield,
+      active: pathname === "/verification",
+    },
+    {
+      label: "Settings",
+      href: "/settings",
+      icon: Settings,
+      active: pathname === "/settings",
+    },
+    {
       label: "Support",
       href: "/support",
       icon: LifeBuoy,
@@ -86,10 +100,22 @@ export default function FeormNav() {
       active: pathname === "/journeys",
     },
     {
+      label: "Verification",
+      href: "/verification",
+      icon: Shield,
+      active: pathname === "/verification",
+    },
+    {
       label: "Profile",
       href: "/profile",
       icon: User,
       active: pathname === "/profile",
+    },
+    {
+      label: "Settings",
+      href: "/settings",
+      icon: Settings,
+      active: pathname === "/settings",
     },
     {
       label: "Support",
@@ -106,12 +132,14 @@ export default function FeormNav() {
     { label: "Assets", href: "/marketplace", icon: Package, active: pathname === "/marketplace" },
     { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, active: pathname === "/dashboard" },
     { label: "Profile", href: "/profile", icon: User, active: pathname === "/profile" },
+    { label: "Settings", href: "/settings", icon: Settings, active: pathname === "/settings" },
   ];
 
   const mobileVoyagerNav = [
     { label: "Explore", href: "/marketplace", icon: MapPin, active: pathname === "/marketplace" || pathname.startsWith("/listing") },
     { label: "Journeys", href: "/journeys", icon: Clock, active: pathname === "/journeys" },
     { label: "Profile", href: "/profile", icon: User, active: pathname === "/profile" },
+    { label: "Settings", href: "/settings", icon: Settings, active: pathname === "/settings" },
   ];
 
   const mobileNavItems = isProvider ? mobileProviderNav : mobileVoyagerNav;
@@ -217,6 +245,7 @@ export default function FeormNav() {
           <button
             onClick={() => {
               localStorage.removeItem("feorm-session");
+              setHasCompletedOnboarding(false);
               router.push("/");
             }}
             className="flex items-center gap-3 rounded-full px-5 py-2.5 text-[#9F2F2D] hover:bg-[#FDEBEC] transition-all duration-200 w-full min-h-[44px]"
