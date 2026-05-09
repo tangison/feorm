@@ -96,7 +96,7 @@ export default function TermsPage() {
             router.push("/auth/verify-id");
           }}
           disabled={!accepted}
-          className="w-full btn-primary-feorm py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full btn-primary-feorm px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
         >
           I Accept — Continue
           <ArrowRight size={14} />

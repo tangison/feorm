@@ -90,7 +90,7 @@ export default function ProfilePage() {
         {!user?.verified && (
           <Link
             href="/auth/verify-id"
-            className="bento-card p-5 flex items-center justify-between hover:border-[#1E1A14]/30 transition-colors group"
+            className="bento-card bento-card-lift p-5 flex items-center justify-between hover:border-[#1E1A14]/30 transition-colors group"
           >
             <div className="flex items-center gap-3">
               <Shield size={18} className="text-[#956400]" />
@@ -105,7 +105,7 @@ export default function ProfilePage() {
 
         <Link
           href="/support"
-          className="bento-card p-5 flex items-center justify-between hover:border-[#1E1A14]/30 transition-colors group"
+          className="bento-card bento-card-lift p-5 flex items-center justify-between hover:border-[#1E1A14]/30 transition-colors group"
         >
           <div className="flex items-center gap-3">
             <Settings size={18} className="text-[#787774]" />

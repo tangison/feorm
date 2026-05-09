@@ -13,7 +13,7 @@ export default function ListingCard({ item }: { item: Listing }) {
   return (
     <Link
       href={`/listing/${item.id}`}
-      className="bento-card flex flex-col group cursor-pointer"
+      className="bento-card bento-card-lift flex flex-col group cursor-pointer"
     >
       <div className="h-56 p-2 bg-[#FEFDFB]">
         <div className="w-full h-full relative rounded-[4px] overflow-hidden bg-[#FAF7F2]">
@@ -54,7 +54,7 @@ export default function ListingCard({ item }: { item: Listing }) {
               / day
             </span>
           </span>
-          <div className="w-8 h-8 min-w-[36px] min-h-[36px] rounded-full border border-[#3C2F1A]/10 flex items-center justify-center text-[#787774] group-hover:bg-[#1E1A14] group-hover:text-[#FEFDFB] group-hover:border-[#1E1A14] transition-all duration-200">
+          <div className="w-9 h-9 min-w-[44px] min-h-[44px] rounded-full border border-[#3C2F1A]/10 flex items-center justify-center text-[#787774] group-hover:bg-[#1E1A14] group-hover:text-[#FEFDFB] group-hover:border-[#1E1A14] transition-all duration-200">
             <ArrowUpRight size={13} />
           </div>
         </div>

@@ -46,7 +46,7 @@ export default function VoyagerVerifyPage() {
       <div className="max-w-md w-full">
         <button
           onClick={() => router.push("/auth/voyager/interests")}
-          className="mb-8 flex items-center gap-2 text-sm text-[#787774] hover:text-[#1E1A14] transition-colors"
+          className="mb-8 flex items-center gap-2 text-sm text-[#787774] hover:text-[#1E1A14] transition-colors min-h-[44px]"
         >
           <ArrowLeft size={16} /> Back
         </button>
@@ -102,7 +102,7 @@ export default function VoyagerVerifyPage() {
 
         <button
           onClick={() => handleComplete(false)}
-          className="w-full btn-primary-feorm py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 min-h-[44px]"
+          className="w-full btn-primary-feorm px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 min-h-[44px]"
         >
           Enter the Marketplace
           <ArrowRight size={14} />
@@ -110,7 +110,7 @@ export default function VoyagerVerifyPage() {
 
         <button
           onClick={handleDownloadBrandIdentity}
-          className="w-full mt-3 border border-[#3C2F1A]/10 py-3 text-xs uppercase tracking-widest flex justify-center items-center gap-2 rounded-full text-[#787774] hover:text-[#1E1A14] hover:border-[#3C2F1A]/20 transition-all min-h-[44px]"
+          className="w-full mt-3 border border-[#3C2F1A]/10 px-5 py-3 text-xs uppercase tracking-widest flex justify-center items-center gap-2 rounded-full text-[#787774] hover:text-[#1E1A14] hover:border-[#3C2F1A]/20 transition-all min-h-[44px]"
         >
           <Download size={14} /> Download Brand Identity
         </button>

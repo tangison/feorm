@@ -26,7 +26,7 @@ export default function ProviderAssetsPage() {
       <div className="max-w-md w-full">
         <button
           onClick={() => router.push("/auth/role")}
-          className="mb-8 flex items-center gap-2 text-sm text-[#787774] hover:text-[#1E1A14] transition-colors"
+          className="mb-8 flex items-center gap-2 text-sm text-[#787774] hover:text-[#1E1A14] transition-colors min-h-[44px]"
         >
           <ArrowLeft size={16} /> Back
         </button>
@@ -132,7 +132,7 @@ export default function ProviderAssetsPage() {
         <button
           onClick={handleContinue}
           disabled={assets.length === 0}
-          className="w-full btn-primary-feorm py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
+          className="w-full btn-primary-feorm px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
         >
           Continue
           <ArrowRight size={14} />

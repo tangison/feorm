@@ -88,7 +88,7 @@ export default function BookPage() {
       <div className="max-w-lg w-full">
         <button
           onClick={() => router.push(`/listing/${params.id}`)}
-          className="mb-8 flex items-center gap-2 text-sm text-[#787774] hover:text-[#1E1A14] transition-colors"
+          className="mb-8 flex items-center gap-2 text-sm text-[#787774] hover:text-[#1E1A14] transition-colors min-h-[44px] px-1"
         >
           <ArrowLeft size={16} /> Back to Listing
         </button>
@@ -206,7 +206,7 @@ export default function BookPage() {
         <button
           onClick={handleCreateBooking}
           disabled={!startDate || !endDate || loading || startDateInvalid || endDateInvalid}
-          className="w-full mt-8 btn-harvest py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
+          className="w-full mt-8 btn-harvest px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
         >
           {loading ? "Processing..." : "Initialize Contract"}
           <ArrowRight size={14} />

@@ -58,13 +58,13 @@ function SuccessContent() {
         <div className="space-y-3">
           <button
             onClick={triggerWhatsApp}
-            className="w-full border border-[#25D366] text-[#25D366] py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 rounded-full hover:bg-[#25D366]/5 transition-colors"
+            className="w-full border border-[#25D366] text-[#25D366] px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 rounded-full hover:bg-[#25D366]/5 transition-colors min-h-[44px]"
           >
             <MessageCircle size={14} /> Connect via WhatsApp
           </button>
           <button
             onClick={() => router.push("/marketplace")}
-            className="w-full btn-secondary-feorm py-3 text-xs uppercase tracking-widest"
+            className="w-full btn-secondary-feorm px-5 py-3 text-xs uppercase tracking-widest min-h-[44px]"
           >
             Return to Marketplace
           </button>

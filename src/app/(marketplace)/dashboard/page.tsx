@@ -352,7 +352,7 @@ export default function DashboardPage() {
           {pendingRequests.map((req) => (
             <div
               key={req.id}
-              className="bento-card p-5 flex flex-col md:flex-row md:items-center gap-4"
+              className="bento-card bento-card-lift p-5 flex flex-col md:flex-row md:items-center gap-4"
             >
               <div className="flex-grow">
                 <div className="flex items-center gap-3 mb-2">

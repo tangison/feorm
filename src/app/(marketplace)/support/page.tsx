@@ -72,7 +72,7 @@ export default function SupportPage() {
           href="https://wa.me/264853411522?text=Hello%2C%20I%20need%20help%20with%20Feorm."
           target="_blank"
           rel="noopener noreferrer"
-          className="bento-card p-5 flex items-center gap-4 hover:border-[#25D366]/30 transition-colors group"
+          className="bento-card bento-card-lift p-5 flex items-center gap-4 hover:border-[#25D366]/30 transition-colors group"
         >
           <div className="w-12 h-12 rounded-full bg-[#25D366]/10 flex items-center justify-center shrink-0">
             <MessageCircle size={20} className="text-[#25D366]" />
@@ -97,7 +97,7 @@ export default function SupportPage() {
         {/* ── Direct Call ───────────────────────────────────────── */}
         <a
           href="tel:+264853411522"
-          className="bento-card p-5 flex items-center gap-4 hover:border-[#1E1A14]/20 transition-colors group"
+          className="bento-card bento-card-lift p-5 flex items-center gap-4 hover:border-[#1E1A14]/20 transition-colors group"
         >
           <div className="w-12 h-12 rounded-full bg-[#1E1A14]/5 flex items-center justify-center shrink-0">
             <Phone size={20} className="text-[#1E1A14]" />
@@ -178,7 +178,7 @@ export default function SupportPage() {
           <button
             onClick={handleAiHelp}
             disabled={aiLoading}
-            className="btn-primary-feorm flex items-center gap-2 min-h-[44px]"
+            className="btn-primary-feorm flex items-center gap-2 px-5 py-3 min-h-[44px]"
             aria-labelledby="ai-support-heading"
           >
             {aiLoading ? (

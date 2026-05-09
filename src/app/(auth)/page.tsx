@@ -114,7 +114,7 @@ export default function AuthPage() {
             <button
               onClick={handleRequestOtp}
               disabled={!phone || phone.length < 8 || loading}
-              className="w-full btn-primary-feorm py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
+              className="w-full btn-primary-feorm px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
             >
               {loading ? "Requesting..." : "Initialize Connection"}
               <ArrowRight size={14} aria-hidden="true" />

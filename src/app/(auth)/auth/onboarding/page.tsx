@@ -56,7 +56,7 @@ export default function OnboardingPage() {
           {step > 0 && (
             <button
               onClick={() => setStep((s) => s - 1)}
-              className="flex-1 btn-secondary-feorm py-3 text-xs uppercase tracking-widest"
+              className="flex-1 btn-secondary-feorm px-5 py-3 text-xs uppercase tracking-widest"
             >
               Back
             </button>
@@ -69,7 +69,7 @@ export default function OnboardingPage() {
                 router.push("/auth/terms");
               }
             }}
-            className="flex-1 btn-primary-feorm py-3 text-xs uppercase tracking-widest flex justify-center items-center gap-2"
+            className="flex-1 btn-primary-feorm px-5 py-3 text-xs uppercase tracking-widest flex justify-center items-center gap-2"
           >
             {step < 2 ? "Next" : "Continue"}
             <ArrowRight size={14} />

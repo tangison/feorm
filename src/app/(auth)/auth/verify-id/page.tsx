@@ -49,13 +49,13 @@ export default function VerifyIdPage() {
         <div className="flex flex-col md:flex-row gap-4">
           <button
             onClick={() => router.push("/marketplace")}
-            className="flex-1 btn-secondary-feorm py-3 text-xs uppercase tracking-widest"
+            className="flex-1 btn-secondary-feorm px-5 py-3 text-xs uppercase tracking-widest"
           >
             Skip (Browse Only)
           </button>
           <button
             onClick={handleVerify}
-            className="flex-1 btn-primary-feorm py-3 text-xs uppercase tracking-widest"
+            className="flex-1 btn-primary-feorm px-5 py-3 text-xs uppercase tracking-widest"
           >
             Verify & Enter
           </button>

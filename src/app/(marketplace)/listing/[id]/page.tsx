@@ -108,7 +108,7 @@ export default function ListingDetailPage() {
   const features = listing.features;
 
   return (
-    <div className="flex-grow w-full max-w-6xl mx-auto px-4 md:px-6 py-6 md:py-12">
+    <div className="flex-grow w-full max-w-6xl mx-auto px-6 py-6 md:py-12">
       <div className="bg-[#FEFDFB] border border-[#3C2F1A]/10 rounded-[8px] overflow-hidden md:min-h-[600px]">
         <div className="flex flex-col md:flex-row h-full">
           {/* Left: Image */}
@@ -310,14 +310,14 @@ export default function ListingDetailPage() {
               </div>
               <button
                 onClick={() => router.push(`/listing/${params.id}/book`)}
-                className="w-full btn-harvest py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 min-h-[44px]"
+                className="w-full btn-harvest px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 min-h-[44px]"
               >
                 {listing.type === "stay" ? "Request Stay" : "Rent Machinery"}
                 <ArrowRight size={14} aria-hidden="true" />
               </button>
               <button
                 onClick={() => triggerWhatsApp(listing.title)}
-                className="w-full mt-3 border border-[#25D366] text-[#25D366] py-3 text-xs uppercase tracking-widest flex justify-center items-center gap-2 rounded-full hover:bg-[#25D366]/5 transition-colors"
+                className="w-full mt-3 border border-[#25D366] text-[#25D366] px-5 py-3 text-xs uppercase tracking-widest flex justify-center items-center gap-2 rounded-full hover:bg-[#25D366]/5 transition-colors min-h-[44px]"
               >
                 <MessageCircle size={14} /> WhatsApp Inquiry
               </button>

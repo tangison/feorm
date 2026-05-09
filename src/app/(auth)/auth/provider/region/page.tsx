@@ -42,7 +42,7 @@ export default function ProviderRegionPage() {
       <div className="max-w-lg w-full">
         <button
           onClick={() => router.push("/auth/provider/assets")}
-          className="mb-8 flex items-center gap-2 text-sm text-[#787774] hover:text-[#1E1A14] transition-colors"
+          className="mb-8 flex items-center gap-2 text-sm text-[#787774] hover:text-[#1E1A14] transition-colors min-h-[44px]"
         >
           <ArrowLeft size={16} /> Back
         </button>
@@ -93,7 +93,7 @@ export default function ProviderRegionPage() {
         <button
           onClick={handleComplete}
           disabled={!selectedRegion}
-          className="w-full btn-harvest py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
+          className="w-full btn-harvest px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
         >
           Launch Host Dashboard
           <ArrowRight size={14} />
@@ -125,7 +125,7 @@ export default function ProviderRegionPage() {
               }
             } catch {}
           }}
-          className="w-full mt-3 border border-[#3C2F1A]/10 py-3 text-xs uppercase tracking-widest flex justify-center items-center gap-2 rounded-full text-[#787774] hover:text-[#1E1A14] hover:border-[#3C2F1A]/20 transition-all min-h-[44px]"
+          className="w-full mt-3 border border-[#3C2F1A]/10 px-5 py-3 text-xs uppercase tracking-widest flex justify-center items-center gap-2 rounded-full text-[#787774] hover:text-[#1E1A14] hover:border-[#3C2F1A]/20 transition-all min-h-[44px]"
         >
           <Download size={14} /> Download Brand Identity
         </button>
