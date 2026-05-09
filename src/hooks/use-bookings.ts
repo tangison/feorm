@@ -2,6 +2,73 @@
 
 import { useState, useEffect, useCallback } from "react";
 
+// ─── Demo Bookings (Fallback) ──────────────────────────────
+const DEMO_BOOKINGS = [
+  {
+    _id: "demo-booking-1",
+    listingId: "demo-stay-1",
+    userId: "demo-user",
+    startDate: "2026-03-15",
+    endDate: "2026-03-20",
+    totalPrice: 425000,
+    escrowAmount: 150000,
+    serviceFee: 42500,
+    status: "confirmed",
+    reference: "FE-M4K7R2-PQ8N",
+    withOperator: false,
+    listing: {
+      id: "demo-stay-1",
+      title: "Otjozondjupa Cattle Farm",
+      type: "stay",
+      category: "Working Farm",
+      region: "Central Region",
+      imageUrl: "/images/stay-cattle-farm.png",
+    },
+  },
+  {
+    _id: "demo-booking-2",
+    listingId: "demo-equip-1",
+    userId: "demo-user",
+    startDate: "2026-04-01",
+    endDate: "2026-04-04",
+    totalPrice: 600000,
+    escrowAmount: 150000,
+    serviceFee: 60000,
+    status: "pending",
+    reference: "FE-H9B3X1-KL4V",
+    withOperator: true,
+    listing: {
+      id: "demo-equip-1",
+      title: "John Deere 5075E",
+      type: "equipment",
+      category: "Machinery",
+      region: "Khomas Region",
+      imageUrl: "/images/equip-tractor.png",
+    },
+  },
+  {
+    _id: "demo-booking-3",
+    listingId: "demo-stay-4",
+    userId: "demo-user",
+    startDate: "2026-05-10",
+    endDate: "2026-05-14",
+    totalPrice: 475000,
+    escrowAmount: 150000,
+    serviceFee: 47500,
+    status: "pending",
+    reference: "FE-W2D8Y5-TJ3M",
+    withOperator: false,
+    listing: {
+      id: "demo-stay-4",
+      title: "Kunene River Camp",
+      type: "stay",
+      category: "Tent Camp",
+      region: "Northwest",
+      imageUrl: "/images/stay-river-camp.png",
+    },
+  },
+];
+
 interface BookingData {
   _id: string;
   listingId: string;
@@ -17,7 +84,7 @@ interface BookingData {
   listing?: any;
 }
 
-// Hook for user's bookings — REST API primary
+// Hook for user's bookings — REST API primary, demo fallback
 export function useBookings(userId: string) {
   const [data, setData] = useState<BookingData[] | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
@@ -63,9 +130,9 @@ export function useBookings(userId: string) {
       } catch {
         // REST failed
       }
-      // Demo mode: no bookings yet
+      // Demo mode: return demo bookings
       if (!cancelled) {
-        setData([]);
+        setData(DEMO_BOOKINGS);
         setIsLoading(false);
       }
     }
@@ -87,7 +154,6 @@ export function useBookingByReference(reference: string) {
 
   useEffect(() => {
     if (!reference) {
-      // Use a microtask to avoid setting state directly in render
       const id = requestAnimationFrame(() => {
         setData(null);
         setIsLoading(false);
@@ -95,19 +161,51 @@ export function useBookingByReference(reference: string) {
       return () => cancelAnimationFrame(id);
     }
 
-    // For demo mode, return a simple booking object after brief delay
-    const timer = setTimeout(() => {
-      setData({
-        _id: reference,
-        reference,
-        status: "pending",
-        totalPrice: 0,
-        listing: null,
-      });
-      setIsLoading(false);
-    }, 300);
+    let cancelled = false;
 
-    return () => clearTimeout(timer);
+    async function fetchBooking() {
+      try {
+        const res = await fetch(`/api/bookings?reference=${encodeURIComponent(reference)}`);
+        if (res.ok && !cancelled) {
+          const raw = await res.json();
+          if (raw && !raw.error) {
+            setData({
+              _id: raw.id,
+              reference: raw.referenceNumber,
+              status: raw.status,
+              totalPrice: raw.totalPrice,
+              listing: raw.listing,
+            });
+            setIsLoading(false);
+            return;
+          }
+        }
+      } catch {
+        // REST failed
+      }
+      // Demo fallback
+      if (!cancelled) {
+        const demoBooking = DEMO_BOOKINGS.find(
+          (b) => b.reference === reference
+        );
+        setData(
+          demoBooking || {
+            _id: reference,
+            reference,
+            status: "confirmed",
+            totalPrice: 0,
+            listing: null,
+          }
+        );
+        setIsLoading(false);
+      }
+    }
+
+    fetchBooking();
+
+    return () => {
+      cancelled = true;
+    };
   }, [reference]);
 
   return { data, isLoading };

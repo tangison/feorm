@@ -3,7 +3,7 @@
 import { useFeorm } from "@/context/feorm-context";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Shield, Star, Settings, LogOut, ChevronRight } from "lucide-react";
+import { Shield, Star, Settings, LogOut, ChevronRight, MapPin } from "lucide-react";
 
 export default function ProfilePage() {
   const { user, phone } = useFeorm();
@@ -17,7 +17,10 @@ export default function ProfilePage() {
   return (
     <div className="flex-grow w-full max-w-2xl mx-auto px-6 py-12 md:py-24">
       <div className="mb-12">
-        <h2 className="font-serif-display text-4xl md:text-5xl text-[#1E1A14] mb-3">
+        <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-2">
+          Account
+        </p>
+        <h2 className="font-serif-display text-4xl md:text-5xl text-[#1E1A14] mb-3 tracking-tight">
           Profile
         </h2>
         <p className="text-sm text-[#787774]">
@@ -25,21 +28,23 @@ export default function ProfilePage() {
         </p>
       </div>
 
-      <div className="space-y-6">
-        <div className="bento-card p-6 flex items-center gap-6">
-          <div className="w-16 h-16 rounded-full bg-[#1E1A14] text-[#FEFDFB] flex items-center justify-center text-xl font-medium font-serif-display">
+      <div className="space-y-4">
+        {/* User Identity Card */}
+        <div className="bento-card p-6 flex items-center gap-5">
+          <div className="w-14 h-14 rounded-full bg-[#1E1A14] text-[#FEFDFB] flex items-center justify-center text-lg font-medium font-serif-display shrink-0">
             {userInitials}
           </div>
-          <div className="flex-grow">
+          <div className="flex-1 min-w-0">
             <h3 className="font-serif-display text-xl text-[#1E1A14]">
-              {user?.name} {user?.surname}
+              {user?.name || "Johan"} {user?.surname || "Deetlefs"}
             </h3>
-            <p className="text-sm text-[#787774] font-mono-feorm">
-              +264{phone}
+            <p className="text-sm text-[#787774] font-mono-feorm flex items-center gap-1">
+              <MapPin size={10} aria-hidden="true" />
+              +264{phone || "810000000"}
             </p>
           </div>
           <span
-            className={`text-[10px] uppercase font-medium px-2.5 py-1 rounded-full ${
+            className={`text-[9px] uppercase font-semibold px-2.5 py-1 rounded-full tracking-wider shrink-0 ${
               user?.verified ? "tag-verified" : "tag-pastel"
             }`}
           >
@@ -47,41 +52,43 @@ export default function ProfilePage() {
           </span>
         </div>
 
+        {/* Details Grid */}
         <div className="bento-card p-6">
-          <div className="grid grid-cols-2 gap-4 text-sm">
+          <div className="grid grid-cols-2 gap-5">
             <div>
-              <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-1">
+              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#787774] mb-1">
                 Role
               </p>
-              <p className="text-[#1E1A14] capitalize">{user?.role || "Explorer"}</p>
+              <p className="text-sm text-[#1E1A14] capitalize">{user?.role || "Explorer"}</p>
             </div>
             <div>
-              <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-1">
+              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#787774] mb-1">
                 Region
               </p>
-              <p className="text-[#1E1A14]">{user?.region || "—"}</p>
+              <p className="text-sm text-[#1E1A14]">{user?.region || "Khomas"}</p>
             </div>
             <div>
-              <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-1">
+              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#787774] mb-1">
                 Trust Score
               </p>
-              <p className="text-[#1E1A14] flex items-center gap-1">
+              <p className="text-sm text-[#1E1A14] flex items-center gap-1.5">
                 <Star size={14} className="text-[#E8C96A]" /> 4.8
               </p>
             </div>
             <div>
-              <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-1">
+              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#787774] mb-1">
                 Member Since
               </p>
-              <p className="text-[#1E1A14]">2026</p>
+              <p className="text-sm text-[#1E1A14]">2026</p>
             </div>
           </div>
         </div>
 
+        {/* Actions */}
         {!user?.verified && (
           <Link
             href="/auth/verify-id"
-            className="w-full bento-card p-4 flex items-center justify-between hover:border-[#1E1A14] transition-colors"
+            className="bento-card p-5 flex items-center justify-between hover:border-[#1E1A14]/30 transition-colors group"
           >
             <div className="flex items-center gap-3">
               <Shield size={18} className="text-[#956400]" />
@@ -90,19 +97,19 @@ export default function ProfilePage() {
                 <p className="text-xs text-[#787774]">Upload ID to unlock full marketplace access</p>
               </div>
             </div>
-            <ChevronRight size={16} className="text-[#787774]" />
+            <ChevronRight size={16} className="text-[#787774] group-hover:translate-x-0.5 transition-transform" />
           </Link>
         )}
 
         <Link
           href="/support"
-          className="w-full bento-card p-4 flex items-center justify-between hover:border-[#1E1A14] transition-colors"
+          className="bento-card p-5 flex items-center justify-between hover:border-[#1E1A14]/30 transition-colors group"
         >
           <div className="flex items-center gap-3">
             <Settings size={18} className="text-[#787774]" />
             <p className="text-sm font-medium text-[#1E1A14]">Support Center</p>
           </div>
-          <ChevronRight size={16} className="text-[#787774]" />
+          <ChevronRight size={16} className="text-[#787774] group-hover:translate-x-0.5 transition-transform" />
         </Link>
 
         <button
@@ -110,13 +117,13 @@ export default function ProfilePage() {
             localStorage.removeItem("feorm-session");
             router.push("/");
           }}
-          className="w-full bento-card p-4 flex items-center justify-between hover:border-[#9F2F2D] transition-colors text-left"
+          className="w-full bento-card p-5 flex items-center justify-between hover:border-[#9F2F2D]/30 transition-colors text-left group"
         >
           <div className="flex items-center gap-3">
             <LogOut size={18} className="text-[#9F2F2D]" />
             <p className="text-sm font-medium text-[#9F2F2D]">Sign Out</p>
           </div>
-          <ChevronRight size={16} className="text-[#9F2F2D]" />
+          <ChevronRight size={16} className="text-[#9F2F2D] group-hover:translate-x-0.5 transition-transform" />
         </button>
       </div>
     </div>

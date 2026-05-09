@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
 // ─── Static Demo Data (Ultimate Fallback) ──────────────────────────
 const DEMO_STAYS = [
@@ -47,6 +47,51 @@ const DEMO_STAYS = [
     category: "Tent Camp",
     hostName: "Pieter Gaseb",
     hostPhone: "+264810000003",
+    available: true,
+  },
+  {
+    _id: "demo-stay-4",
+    title: "Kunene River Camp",
+    type: "stay",
+    region: "Northwest",
+    price: 95000,
+    description:
+      "Desert oasis encampment perched above the Kunene River gorge. Canvas pavilions on raised timber decks with panoramic canyon views. Guided river crossings and Himba cultural exchange available.",
+    image: "/images/stay-river-camp.png",
+    features: ["Canyon Views", "River Access", "Cultural Exchange"],
+    category: "Tent Camp",
+    hostName: "Tjipuka Tjivikua",
+    hostPhone: "+264810000006",
+    available: true,
+  },
+  {
+    _id: "demo-stay-5",
+    title: "Kalahari Goat Station",
+    type: "stay",
+    region: "Southern",
+    price: 55000,
+    description:
+      "Working goat station on the edge of the Kalahari. Participate in seasonal herding across red dune landscapes. Stone kraal accommodations with traditional braai facilities.",
+    image: "/images/stay-goat-station.png",
+    features: ["Goat Herding", "Red Dunes", "Traditional Braai"],
+    category: "Working Farm",
+    hostName: "Frikkie Boois",
+    hostPhone: "+264810000004",
+    available: true,
+  },
+  {
+    _id: "demo-stay-6",
+    title: "Caprivi Wetlands Lodge",
+    type: "stay",
+    region: "Zambezi",
+    price: 110000,
+    description:
+      "Stilted timber cabins above the Caprivi floodplains. Unparalleled access to river delta ecosystems. Guided mokoro excursions and birding treks included in seasonal packages.",
+    image: "/images/stay-wetlands-lodge.png",
+    features: ["River Delta", "Mokoro Excursions", "Bird Watching"],
+    category: "Eco Lodge",
+    hostName: "Muyunda Likoro",
+    hostPhone: "+264810000007",
     available: true,
   },
 ];
@@ -97,6 +142,51 @@ const DEMO_EQUIPMENT = [
     hostPhone: "+264810000005",
     available: true,
   },
+  {
+    _id: "demo-equip-4",
+    title: "Borehole Drilling Rig",
+    type: "equipment",
+    region: "Kunene Region",
+    price: 280000,
+    description:
+      "Truck-mounted rotary drilling rig capable of 200m borehole depth. Includes mud pump and casing equipment. Operator with 12 years experience available at additional cost. Minimum 3-day rental period.",
+    image: "/images/equip-drilling-rig.png",
+    features: ["200m Depth", "Mud Pump Included", "Operator Available"],
+    category: "Heavy Machinery",
+    hostName: "Hannes van Wyk",
+    hostPhone: "+264810000008",
+    available: true,
+  },
+  {
+    _id: "demo-equip-5",
+    title: "5kW Solar Panel Array",
+    type: "equipment",
+    region: "Erongo Region",
+    price: 65000,
+    description:
+      "Complete off-grid photovoltaic system. 16 mono-crystalline panels, inverter, and battery bank. Portable mounting frames for seasonal relocation. Ideal for remote farm operations.",
+    image: "/images/equip-solar-array.png",
+    features: ["5kW Output", "Battery Bank", "Portable Frames"],
+    category: "Energy",
+    hostName: "Anna //Khaoes",
+    hostPhone: "+264810000002",
+    available: true,
+  },
+  {
+    _id: "demo-equip-6",
+    title: "Crop Harvesting Unit",
+    type: "equipment",
+    region: "Otjozondjupa",
+    price: 200000,
+    description:
+      "Full-size agricultural harvesting unit suitable for wheat, maize, and sunflower crops. GPS-guided auto-steer with yield mapping. Requires 150HP minimum tractor for transport. Seasonal availability only.",
+    image: "/images/equip-combine.png",
+    features: ["GPS Auto-Steer", "Yield Mapping", "Multi-Crop"],
+    category: "Machinery",
+    hostName: "Johan Deetlefs",
+    hostPhone: "+264810000001",
+    available: true,
+  },
 ];
 
 const ALL_DEMO = [...DEMO_STAYS, ...DEMO_EQUIPMENT];
@@ -116,7 +206,6 @@ export function useListings(type: "stay" | "equipment") {
         const res = await fetch(`/api/listings?type=${type}`);
         if (res.ok && !cancelled) {
           const raw = await res.json();
-          // Map REST API data to Convex-like shape
           const mapped = raw.map((item: any) => ({
             _id: item.id,
             title: item.title,
@@ -163,7 +252,6 @@ export function useListing(id: string) {
 
     async function fetchListing() {
       try {
-        // Try fetching single listing by ID directly
         const res = await fetch(`/api/listings?id=${encodeURIComponent(id)}`);
         if (res.ok && !cancelled) {
           const found = await res.json();

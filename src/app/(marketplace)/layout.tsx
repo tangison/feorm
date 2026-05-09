@@ -9,8 +9,16 @@ export default function MarketplaceLayout({
   return (
     <div className="flex-grow flex flex-col min-h-screen">
       <FeormNav />
-      <main id="main-content" className="flex-grow flex flex-col page-enter">{children}</main>
-      <FeormFooter />
+      {/* Desktop: offset for 260px sidebar | Mobile: offset for 72px bottom nav */}
+      <main
+        id="main-content"
+        className="flex-grow flex flex-col page-enter lg:ml-[260px] pb-[88px] lg:pb-0"
+      >
+        {children}
+      </main>
+      <div className="lg:ml-[260px]">
+        <FeormFooter />
+      </div>
     </div>
   );
 }

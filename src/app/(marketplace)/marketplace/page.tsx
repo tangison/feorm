@@ -11,7 +11,6 @@ function MarketplaceContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  // Read view from URL on mount
   useEffect(() => {
     const view = searchParams.get("view");
     if (view === "stays" || view === "equipment") {
@@ -19,7 +18,6 @@ function MarketplaceContent() {
     }
   }, [searchParams, setMarketView]);
 
-  // REST API query for listings
   const { data: listings, isLoading } = useListings(
     marketView === "stays" ? "stay" : "equipment"
   );
@@ -35,7 +33,7 @@ function MarketplaceContent() {
               setMarketView("stays");
               router.push("/marketplace?view=stays");
             }}
-            className={`px-5 py-2.5 rounded-full text-xs uppercase tracking-widest font-medium transition-all min-h-[44px] ${
+            className={`px-5 py-2.5 rounded-full text-xs uppercase tracking-widest font-medium transition-all duration-200 min-h-[44px] ${
               marketView === "stays"
                 ? "bg-[#1E1A14] text-[#FEFDFB]"
                 : "bg-transparent border border-[#3C2F1A]/10 text-[#787774] hover:bg-[#FAF7F2]"
@@ -48,7 +46,7 @@ function MarketplaceContent() {
               setMarketView("equipment");
               router.push("/marketplace?view=equipment");
             }}
-            className={`px-5 py-2.5 rounded-full text-xs uppercase tracking-widest font-medium transition-all min-h-[44px] ${
+            className={`px-5 py-2.5 rounded-full text-xs uppercase tracking-widest font-medium transition-all duration-200 min-h-[44px] ${
               marketView === "equipment"
                 ? "bg-[#1E1A14] text-[#FEFDFB]"
                 : "bg-transparent border border-[#3C2F1A]/10 text-[#787774] hover:bg-[#FAF7F2]"
@@ -64,10 +62,10 @@ function MarketplaceContent() {
 
         <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6">
           <div>
-            <h2 className="font-serif-display text-4xl md:text-5xl text-[#1E1A14] mb-3">
+            <h2 className="font-serif-display text-4xl md:text-5xl text-[#1E1A14] mb-3 tracking-tight">
               {marketView === "stays" ? "Farm Stays" : "Equipment Exchange"}
             </h2>
-            <p className="text-sm text-[#787774] max-w-lg">
+            <p className="text-sm text-[#787774] max-w-lg leading-relaxed">
               {marketView === "stays"
                 ? "Authentic agrotourism provisions across the Namibian landscape."
                 : "Peer-to-peer machinery rentals secured via escrow protocol."}
@@ -84,41 +82,51 @@ function MarketplaceContent() {
         </div>
       </div>
 
-      {/* Loading indicator */}
+      {/* Loading skeleton */}
       {isLoading && (
-        <div className="mb-8 flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-[#E8C96A] animate-pulse" />
-          <span className="font-mono-feorm text-[10px] text-[#787774] uppercase tracking-widest">
-            Loading marketplace...
-          </span>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="bento-card flex flex-col">
+              <div className="h-64 p-2">
+                <div className="w-full h-full skeleton-shimmer rounded-[4px]" />
+              </div>
+              <div className="p-6 md:p-8 border-t border-[#3C2F1A]/5">
+                <div className="h-3 w-20 skeleton-shimmer mb-4" />
+                <div className="h-6 w-3/4 skeleton-shimmer mb-3" />
+                <div className="h-4 w-1/3 skeleton-shimmer mt-6" />
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
-      {/* Bento Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-        {listings?.map((item: any) => (
-          <ListingCard
-            key={item._id}
-            item={{
-              id: item._id,
-              title: item.title,
-              region: item.region,
-              price: item.price,
-              type: item.type,
-              category: item.category,
-              description: item.description,
-              imageUrl: item.image,
-              features: Array.isArray(item.features)
-                ? item.features.join(",")
-                : item.features,
-              hostId: "",
-              hostName: item.hostName,
-              hostPhone: item.hostPhone,
-              available: item.available,
-            }}
-          />
-        ))}
-      </div>
+      {/* Bento Grid with stagger reveal */}
+      {!isLoading && listings && listings.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 stagger-reveal">
+          {listings.map((item: any) => (
+            <ListingCard
+              key={item._id}
+              item={{
+                id: item._id,
+                title: item.title,
+                region: item.region,
+                price: item.price,
+                type: item.type,
+                category: item.category,
+                description: item.description,
+                imageUrl: item.image,
+                features: Array.isArray(item.features)
+                  ? item.features.join(",")
+                  : item.features,
+                hostId: "",
+                hostName: item.hostName,
+                hostPhone: item.hostPhone,
+                available: item.available,
+              }}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Empty state */}
       {listings?.length === 0 && !isLoading && (

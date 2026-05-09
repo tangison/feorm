@@ -3,7 +3,7 @@
 import { useFeorm } from "@/context/feorm-context";
 import { useRouter } from "next/navigation";
 import { useBookings } from "@/hooks/use-bookings";
-import { Clock, ArrowRight } from "lucide-react";
+import { Clock, ArrowRight, MapPin } from "lucide-react";
 import Link from "next/link";
 import { formatPrice } from "@/components/feorm/listing-card";
 
@@ -11,14 +11,18 @@ export default function JourneysPage() {
   const { user, phone } = useFeorm();
   const router = useRouter();
 
-  // Convex real-time query with REST fallback — bookings update automatically when status changes
-  const { data: bookings, isLoading: bookingsLoading } = useBookings(user?.phone || `+264${phone.replace(/\s/g, "")}` || "demo");
+  const { data: bookings, isLoading: bookingsLoading } = useBookings(
+    user?.phone || `+264${phone.replace(/\s/g, "")}` || "demo"
+  );
 
   return (
     <div className="flex-grow w-full max-w-4xl mx-auto px-6 py-12 md:py-24">
       <div className="mb-12">
-        <h2 className="font-serif-display text-4xl md:text-5xl text-[#1E1A14] mb-3">
+        <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-2">
           My Journeys
+        </p>
+        <h2 className="font-serif-display text-4xl md:text-5xl text-[#1E1A14] mb-3 tracking-tight">
+          Bookings
         </h2>
         <p className="text-sm text-[#787774]">
           Active, upcoming, and past bookings on the Feorm network.{" "}
@@ -30,15 +34,21 @@ export default function JourneysPage() {
       </div>
 
       {bookingsLoading && (
-        <div className="flex items-center gap-2 mb-8">
-          <div className="w-2 h-2 rounded-full bg-[#E8C96A] animate-pulse" />
-          <span className="font-mono-feorm text-[10px] text-[#787774] uppercase tracking-widest">
-            Syncing with Network...
-          </span>
+        <div className="space-y-4">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="bento-card p-6">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="h-5 w-16 skeleton-shimmer rounded-full" />
+                <div className="h-4 w-28 skeleton-shimmer" />
+              </div>
+              <div className="h-6 w-3/4 skeleton-shimmer mb-2" />
+              <div className="h-4 w-1/3 skeleton-shimmer" />
+            </div>
+          ))}
         </div>
       )}
 
-      {bookings?.length === 0 && (
+      {!bookingsLoading && bookings?.length === 0 && (
         <div className="border border-dashed border-[#D4C4A0]/50 bg-[#FEFDFB] rounded-[8px] p-12 text-center">
           <Clock size={32} className="text-[#D4C4A0] mx-auto mb-4" />
           <p className="text-sm text-[#787774] mb-6">
@@ -53,17 +63,21 @@ export default function JourneysPage() {
         </div>
       )}
 
-      {bookings && bookings.length > 0 && (
-        <div className="space-y-4 max-h-[600px] overflow-y-auto">
+      {!bookingsLoading && bookings && bookings.length > 0 && (
+        <div className="space-y-4">
           {bookings.map((b) => (
             <div
               key={b._id}
-              className="bento-card p-6 flex flex-col md:flex-row md:items-center gap-4"
+              className="bento-card p-5 flex flex-col md:flex-row md:items-center gap-4 cursor-pointer hover:border-[#3C2F1A]/20 transition-colors"
+              onClick={() => router.push(`/listing/${b.listingId}`)}
+              role="button"
+              tabIndex={0}
+              aria-label={`View ${b.listing?.title || "listing"}`}
             >
               <div className="flex-grow">
                 <div className="flex items-center gap-3 mb-2">
                   <span
-                    className={`text-[10px] uppercase font-medium px-2.5 py-1 rounded-full ${
+                    className={`text-[9px] uppercase font-semibold px-2 py-0.5 rounded-full tracking-wider ${
                       b.status === "confirmed"
                         ? "tag-verified"
                         : b.status === "pending"
@@ -73,24 +87,30 @@ export default function JourneysPage() {
                   >
                     {b.status}
                   </span>
-                  <span className="font-mono-feorm text-[10px] text-[#787774]">
+                  <span className="font-mono-feorm text-[9px] text-[#787774] uppercase tracking-widest">
                     {b.reference}
                   </span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#346538] animate-pulse" />
+                  {b.status === "confirmed" && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#346538] animate-pulse" />
+                  )}
                 </div>
-                <h3 className="font-serif-display text-xl text-[#1E1A14]">
+                <h3 className="font-serif-display text-lg text-[#1E1A14]">
                   {b.listing?.title || "Listing"}
                 </h3>
-                <p className="text-xs text-[#787774] mt-1">
-                  {b.startDate} → {b.endDate}
+                <p className="text-xs text-[#787774] mt-1 font-mono-feorm flex items-center gap-1">
+                  <MapPin size={10} aria-hidden="true" />
+                  {b.listing?.region || "Namibia"} — {b.startDate} to {b.endDate}
+                  {b.withOperator && (
+                    <span className="tag-machinery text-[8px] px-1.5 py-0.5 ml-2">w/ Operator</span>
+                  )}
                 </p>
               </div>
-              <div className="text-right">
+              <div className="text-right shrink-0">
                 <p className="font-mono-feorm text-lg font-medium text-[#1E1A14]">
                   {formatPrice(b.totalPrice)}
                 </p>
-                <p className="text-[10px] text-[#787774] font-mono-feorm uppercase">
-                  incl. escrow
+                <p className="text-[9px] text-[#787774] font-mono-feorm uppercase tracking-wider">
+                  incl. N$ {(b.escrowAmount / 100).toLocaleString()} escrow
                 </p>
               </div>
             </div>
