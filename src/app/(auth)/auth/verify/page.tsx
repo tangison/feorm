@@ -13,7 +13,7 @@ export default function VerifyPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  // Auth mutations with Convex primary + REST fallback
+  // Auth mutations with REST primary + demo fallback
   const { verifyOtp } = useAuthMutations();
 
   const handleVerifyOtp = async () => {
@@ -25,10 +25,10 @@ export default function VerifyPage() {
     setOtpError("");
     try {
       const fullPhone = `+264${phone.replace(/\s/g, "")}`;
-      const result = await verifyOtp({ phone: fullPhone, otp });
+      const result = await verifyOtp(fullPhone, otp);
       if (result.success) {
         setUser({
-          id: result.userId,
+          id: result.userId || "demo-user",
           phone: fullPhone,
           role: "explorer",
           verified: false,
@@ -39,6 +39,8 @@ export default function VerifyPage() {
           router.push("/marketplace");
         }
         return;
+      } else {
+        setOtpError(result.error || "Verification failed");
       }
     } catch (err: any) {
       setOtpError(err.message || "Verification failed");
@@ -101,6 +103,12 @@ export default function VerifyPage() {
             {loading ? "Verifying..." : "Verify & Enter"}
             <ArrowRight size={14} />
           </button>
+        </div>
+
+        <div className="mt-6 p-4 bg-[#FBF3DB]/30 border border-[#E8C96A]/20 rounded-[4px]" role="note">
+          <p className="text-[10px] text-[#956400] font-mono-feorm uppercase tracking-wide">
+            Demo Mode: Use OTP <strong>123456</strong>
+          </p>
         </div>
       </div>
     </div>

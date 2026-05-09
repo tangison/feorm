@@ -4,8 +4,24 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const type = searchParams.get("type"); // stay | equipment
+  const id = searchParams.get("id"); // single listing by ID
 
   try {
+    // Single listing lookup by ID
+    if (id) {
+      const listing = await db.listing.findUnique({
+        where: { id },
+      });
+      if (!listing) {
+        return NextResponse.json(
+          { error: "Listing not found" },
+          { status: 404 }
+        );
+      }
+      return NextResponse.json(listing);
+    }
+
+    // List all by type
     const listings = await db.listing.findMany({
       where: {
         ...(type ? { type } : {}),

@@ -245,3 +245,42 @@ Stage Summary:
 - Zustand removed from dependencies
 - 6 new premium editorial images generated
 - Design vision implemented: "Provision of the Land" tagline, Harvest gold CTAs, scale-in transitions
+
+---
+Task ID: 6
+Agent: Main Agent
+Task: Make Feorm MVP fully accessible in demo mode (no Convex dependency)
+
+Work Log:
+- Analyzed the complete project state: all 15+ page files, 4 hooks, 3 API routes, context, layouts
+- Identified critical demo mode blocker: Convex hooks had 3-second timeout before REST fallback, causing blank screens when Convex server isn't running
+- Rewrote all 3 data hooks to use REST API as primary data source (instant loading, no Convex dependency):
+  - use-listings.ts: REST primary with static demo data as ultimate fallback (6 listings hardcoded)
+  - use-auth.ts: REST primary with demo mode fallback (OTP 123456 always works)
+  - use-bookings.ts: REST primary with demo mode fallback (new useCreateBooking hook added)
+- Fixed verifyOtp call signature bug (was passing object {phone, otp} instead of two arguments)
+- Removed NEXT_PUBLIC_CONVEX_URL from .env.local so ConvexProviderWrapper deactivates gracefully
+- Added DATABASE_URL to .env.local for Prisma
+- Added single-listing lookup to /api/listings API (id search param)
+- Updated useListing hook to use direct ID lookup instead of fetching all listings
+- Fixed listing detail page to handle notFound state from useListing
+- Updated marketplace page with proper pill toggle buttons (Farm Stays/Equipment)
+- Added Suspense boundary to marketplace page (fixes useSearchParams SSR issue)
+- Added listing count display and pipe separator per design spec
+- Fixed image URL extensions (.jpg → .png) in both hook demo data and seed route
+- Regenerated 6 premium editorial images with detailed Namibian prompts (1344x768)
+- Verified complete API flow end-to-end:
+  - Auth: request-otp → verify-otp (OTP: 123456) ✅
+  - Listings: 3 stays + 3 equipment from Prisma/SQLite ✅
+  - Single listing by ID ✅
+  - Booking creation with reference number ✅
+- All 11 routes verified returning HTTP 200
+- Lint passes cleanly
+
+Stage Summary:
+- Feorm MVP is now fully accessible in demo mode without any external service dependency
+- REST API (Prisma/SQLite) is the primary data source — no Convex server needed
+- Static demo data hardcoded in hooks as ultimate fallback if REST API also fails
+- Complete user flow works: Auth → OTP → Identity → Role → Onboarding → Terms → Marketplace → Detail → Booking
+- Demo credentials: Any phone number + OTP 123456
+- All design elements preserved: Harvest CTAs, pill toggles, bento grid, editorial serif typography

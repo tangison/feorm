@@ -10,8 +10,8 @@ export default function ListingDetailPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
 
-  // Convex real-time query with REST fallback for single listing
-  const { data: listing, isLoading } = useListing(params.id);
+  // REST API query for single listing
+  const { data: listing, isLoading, notFound } = useListing(params.id);
 
   const triggerWhatsApp = (title: string) => {
     const msg = encodeURIComponent(
@@ -26,14 +26,14 @@ export default function ListingDetailPage() {
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-[#E8C96A] animate-pulse" />
           <p className="text-sm text-[#787774] font-mono-feorm">
-            Syncing with Network...
+            Loading listing...
           </p>
         </div>
       </div>
     );
   }
 
-  if (listing === null) {
+  if (notFound || listing === null) {
     return (
       <div className="flex-grow flex items-center justify-center min-h-[60vh]">
         <div className="text-center">

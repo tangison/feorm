@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useMutation } from "convex/react";
-import { api } from "@/lib/convex";
 import { useListing } from "@/hooks/use-listings";
+import { useCreateBooking } from "@/hooks/use-bookings";
 import { formatPrice } from "@/components/feorm/listing-card";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
@@ -16,11 +15,11 @@ export default function BookPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  // Convex real-time query with REST fallback for listing details
+  // REST API query for listing details
   const { data: listing, isLoading: listingLoading } = useListing(params.id);
 
-  // Convex mutation for creating booking
-  const createBooking = useMutation(api.bookings.create);
+  // REST API booking creation
+  const { createBooking } = useCreateBooking();
 
   const days =
     startDate && endDate
@@ -43,7 +42,7 @@ export default function BookPage() {
     try {
       const result = await createBooking({
         listingId: listing._id,
-        userId: "demo-user", // Will be replaced with actual phone from context
+        userId: "demo-user",
         startDate,
         endDate,
         totalPrice,
@@ -68,7 +67,7 @@ export default function BookPage() {
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-[#E8C96A] animate-pulse" />
           <p className="text-sm text-[#787774] font-mono-feorm">
-            Syncing with Network...
+            Loading listing details...
           </p>
         </div>
       </div>
