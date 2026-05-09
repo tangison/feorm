@@ -44,3 +44,50 @@ Stage Summary:
 - All screens implemented as single-page React app with state management
 - WhatsApp bridge using wa.me deep links (zero cost)
 - Images generated with authentic Namibian documentary aesthetic
+
+---
+Task ID: 2
+Agent: Main Agent
+Task: Refactor Feorm from SPA to multi-page Next.js App Router application (remove Zustand, add proper routes)
+
+Work Log:
+- Copied uploaded logo (Screenshot_2026-05-05_131302-removebg-preview.png) to public/feorm-logo.png
+- Created FeormProvider context (src/context/feorm-context.tsx) using React Context + useState
+  - Lazy state initialization from localStorage for session persistence
+  - No Zustand dependency — pure React state management
+- Created shared components:
+  - src/components/feorm/nav.tsx — Responsive navigation with mobile menu
+  - src/components/feorm/footer.tsx — Design system showcase footer
+  - src/components/feorm/listing-card.tsx — Reusable listing card component
+- Created route group layouts:
+  - (auth)/layout.tsx — Clean layout without nav/footer for auth flow
+  - (marketplace)/layout.tsx — Full layout with nav + footer
+- Converted all SPA screens to proper Next.js pages:
+  - / → (auth)/page.tsx — Landing/Auth page
+  - /auth/verify → OTP verification
+  - /auth/identity → Name, surname, region setup
+  - /auth/role → Explorer vs Lister role selection
+  - /auth/onboarding → 3-slide Communal Ethic carousel
+  - /auth/terms → Terms of service with acceptance
+  - /auth/verify-id → ID verification upload
+  - /marketplace → Dual marketplace (stays/equipment toggle)
+  - /listing/[id] → Dynamic listing detail view
+  - /listing/[id]/book → Order configuration with price breakdown
+  - /booking/success → Payment success with WhatsApp connect
+  - /journeys → My Journeys (booking history)
+  - /dashboard → Host Dashboard
+  - /profile → User profile with verification status
+  - /support → Support center with WhatsApp + FAQ
+- Updated root layout.tsx with FeormProvider wrapper and new logo
+- Removed old SPA page.tsx
+- Fixed lint error: replaced useEffect-based localStorage init with lazy useState initializer
+- All 13 routes verified returning HTTP 200
+- Lint passes cleanly
+
+Stage Summary:
+- Fully refactored from SPA to multi-page Next.js App Router
+- Zustand removed — using React Context (FeormProvider) for shared state
+- 13 distinct routes with proper URL-based navigation
+- Route groups separate auth and marketplace layouts
+- Session persistence via localStorage with lazy initialization
+- Uploaded logo integrated as favicon and nav branding

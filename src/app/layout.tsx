@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DM_Sans, DM_Serif_Display, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import { FeormProvider } from "@/context/feorm-context";
 
 const dmSerif = DM_Serif_Display({
   variable: "--font-dm-serif",
@@ -39,7 +40,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Feorm Network" }],
   icons: {
-    icon: "/logo.svg",
+    icon: "/feorm-logo.png",
   },
 };
 
@@ -53,8 +54,10 @@ export default function RootLayout({
       <body
         className={`${dmSerif.variable} ${dmSans.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        {children}
-        <Toaster />
+        <FeormProvider>
+          {children}
+          <Toaster />
+        </FeormProvider>
       </body>
     </html>
   );
