@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  phone     String   @unique
+  name      String?
+  surname   String?
+  region    String?
+  role      String   @default("explorer")
+  verified  Boolean  @default(false)
+  avatarUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  listings Listing[] @relation("UserListings")
+  bookings Booking[] @relation("UserBookings")
+}
+
+model Listing {
+  id          String   @id @default(cuid())
+  title       String
+  region      String
+  price       Int
+  type        String
+  category    String
+  description String
+  imageUrl    String
+  features    String
+  hostId      String
+  hostName    String
+  hostPhone   String   @default("+264810000000")
+  available   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  host    User     @relation("UserListings", fields: [hostId], references: [id])
+  bookings Booking[] @relation("ListingBookings")
+}
+
+model Booking {
+  id              String   @id @default(cuid())
+  userId          String
+  listingId       String
+  startDate       String
+  endDate         String
+  totalPrice      Int
+  escrowAmount    Int      @default(150000)
+  serviceFee      Int
+  status          String   @default("pending")
+  referenceNumber String   @unique
+  withOperator    Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user    User    @relation("UserBookings", fields: [userId], references: [id])
+  listing Listing @relation("ListingBookings", fields: [listingId], references: [id])
+}
