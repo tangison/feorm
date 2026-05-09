@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState, useMemo, Suspense } from "react";
+import { useEffect, useState, useMemo, useCallback, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useFeorm } from "@/context/feorm-context";
+import { useFeormMarket } from "@/context/feorm-context";
 import ListingCard from "@/components/feorm/listing-card";
 import { useListings } from "@/hooks/use-listings";
 import { ChevronDown, X } from "lucide-react";
@@ -25,8 +25,27 @@ const NAMIBIAN_REGIONS = [
   "Omaheke",
 ];
 
+// Stable item transformation — avoids creating new objects on every render
+function transformItem(item: any) {
+  return {
+    id: item._id,
+    title: item.title,
+    region: item.region,
+    price: item.price,
+    type: item.type,
+    category: item.category,
+    description: item.description,
+    imageUrl: item.image,
+    features: Array.isArray(item.features) ? item.features.join(",") : item.features,
+    hostId: "",
+    hostName: item.hostName,
+    hostPhone: item.hostPhone,
+    available: item.available,
+  };
+}
+
 function MarketplaceContent() {
-  const { marketView, setMarketView } = useFeorm();
+  const { marketView, setMarketView } = useFeormMarket();
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -236,23 +255,7 @@ function MarketplaceContent() {
           {filteredListings.map((item: any) => (
             <ListingCard
               key={item._id}
-              item={{
-                id: item._id,
-                title: item.title,
-                region: item.region,
-                price: item.price,
-                type: item.type,
-                category: item.category,
-                description: item.description,
-                imageUrl: item.image,
-                features: Array.isArray(item.features)
-                  ? item.features.join(",")
-                  : item.features,
-                hostId: "",
-                hostName: item.hostName,
-                hostPhone: item.hostPhone,
-                available: item.available,
-              }}
+              item={transformItem(item)}
             />
           ))}
         </div>

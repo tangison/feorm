@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useFeorm } from "@/context/feorm-context";
+import { useFeormAuth } from "@/context/feorm-context";
 import {
   ShieldCheck,
   Upload,
@@ -19,7 +19,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 
 export default function VerificationPage() {
-  const { user } = useFeorm();
+  const { user } = useFeormAuth();
 
   const [idUploaded, setIdUploaded] = useState(false);
   const [aiLoading, setAiLoading] = useState(false);
@@ -252,7 +252,7 @@ export default function VerificationPage() {
           Verification Benefits
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div className="bento-card p-5 flex items-start gap-3">
+          <div className="bento-card p-6 flex items-start gap-3">
             <div className="w-9 h-9 rounded-full bg-[#EDF3EC] flex items-center justify-center shrink-0">
               <Award size={14} className="text-[#346538]" />
             </div>
@@ -266,7 +266,7 @@ export default function VerificationPage() {
             </div>
           </div>
 
-          <div className="bento-card p-5 flex items-start gap-3">
+          <div className="bento-card p-6 flex items-start gap-3">
             <div className="w-9 h-9 rounded-full bg-[#FBF3DB] flex items-center justify-center shrink-0">
               <Zap size={14} className="text-[#956400]" />
             </div>
@@ -280,7 +280,7 @@ export default function VerificationPage() {
             </div>
           </div>
 
-          <div className="bento-card p-5 flex items-start gap-3">
+          <div className="bento-card p-6 flex items-start gap-3">
             <div className="w-9 h-9 rounded-full bg-[#F2EDE2] flex items-center justify-center shrink-0">
               <Lock size={14} className="text-[#5C4A2A]" />
             </div>
@@ -294,7 +294,7 @@ export default function VerificationPage() {
             </div>
           </div>
 
-          <div className="bento-card p-5 flex items-start gap-3">
+          <div className="bento-card p-6 flex items-start gap-3">
             <div className="w-9 h-9 rounded-full bg-[#F2EDE2] flex items-center justify-center shrink-0">
               <Eye size={14} className="text-[#5C4A2A]" />
             </div>
@@ -356,7 +356,7 @@ export default function VerificationPage() {
           )}
 
           {aiTips && !aiLoading && (
-            <div className="mt-5 bento-card p-5 bg-[#EDF3EC]/30">
+            <div className="mt-5 bento-card p-6 bg-[#EDF3EC]/30">
               <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#346538] mb-4">
                 AI Verification Tips
               </p>

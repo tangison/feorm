@@ -145,6 +145,8 @@
     border-radius: 8px;
     box-shadow: none;
     transition: box-shadow 0.2s ease, transform 0.2s ease;
+    /* CSS Containment — isolates layout recalculation per card */
+    contain: layout style paint;
   }
 
   .bento-card:hover {

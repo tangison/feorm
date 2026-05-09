@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useFeorm } from "@/context/feorm-context";
+import { useFeormAuth } from "@/context/feorm-context";
 import { useAuthMutations } from "@/hooks/use-auth";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 export default function VerifyPage() {
-  const { phone, setUser } = useFeorm();
+  const { phone, setUser } = useFeormAuth();
   const [otp, setOtp] = useState("");
   const [otpError, setOtpError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -53,7 +53,7 @@ export default function VerifyPage() {
       <div className="max-w-md w-full">
         <button
           onClick={() => router.push("/")}
-          className="mb-8 flex items-center gap-2 text-sm text-[#787774] hover:text-[#1E1A14] transition-colors min-h-[44px]"
+          className="mb-8 flex items-center gap-2 px-3 py-2 text-sm text-[#787774] hover:text-[#1E1A14] transition-colors min-h-[44px] rounded-full hover:bg-[#1E1A14]/5"
         >
           <ArrowLeft size={16} /> Back
         </button>

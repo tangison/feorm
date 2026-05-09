@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useFeorm } from "@/context/feorm-context";
+import { useFeormAuth } from "@/context/feorm-context";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function AuthPage() {
-  const { phone, setPhone } = useFeorm();
+  const { phone, setPhone } = useFeormAuth();
   const [loading, setLoading] = useState(false);
   const [transitioning, setTransitioning] = useState(false);
   const router = useRouter();
@@ -48,6 +48,7 @@ export default function AuthPage() {
           src="/images/hero-gateway.png"
           alt="Namibian horizon"
           fill
+          sizes="(max-width: 768px) 100vw, 50vw"
           className="object-cover opacity-60 saturate-[0.6]"
           priority
         />

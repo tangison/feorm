@@ -1,6 +1,6 @@
 import FeormNav from "@/components/feorm/nav";
 import FeormFooter from "@/components/feorm/footer";
-import TangisonChat from "@/components/feorm/tangison-chat";
+import LazyTangisonChat from "@/components/feorm/lazy-tangison-chat";
 
 export default function MarketplaceLayout({
   children,
@@ -20,7 +20,7 @@ export default function MarketplaceLayout({
       <div className="lg:ml-[260px]">
         <FeormFooter />
       </div>
-      <TangisonChat />
+      <LazyTangisonChat />
     </div>
   );
 }

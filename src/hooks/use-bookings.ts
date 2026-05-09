@@ -1,73 +1,11 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { DEMO_BOOKINGS } from "@/data/demo-bookings";
 
-// ─── Demo Bookings (Fallback) ──────────────────────────────
-const DEMO_BOOKINGS = [
-  {
-    _id: "demo-booking-1",
-    listingId: "demo-stay-1",
-    userId: "demo-user",
-    startDate: "2026-03-15",
-    endDate: "2026-03-20",
-    totalPrice: 425000,
-    escrowAmount: 150000,
-    serviceFee: 42500,
-    status: "confirmed",
-    reference: "FE-M4K7R2-PQ8N",
-    withOperator: false,
-    listing: {
-      id: "demo-stay-1",
-      title: "Zambezi Floodplain Lodge",
-      type: "stay",
-      category: "Eco Lodge",
-      region: "Zambezi Region",
-      imageUrl: "/images/stay-wetlands-lodge.png",
-    },
-  },
-  {
-    _id: "demo-booking-2",
-    listingId: "demo-equip-1",
-    userId: "demo-user",
-    startDate: "2026-04-01",
-    endDate: "2026-04-04",
-    totalPrice: 600000,
-    escrowAmount: 150000,
-    serviceFee: 60000,
-    status: "pending",
-    reference: "FE-H9B3X1-KL4V",
-    withOperator: true,
-    listing: {
-      id: "demo-equip-1",
-      title: "John Deere 5075E",
-      type: "equipment",
-      category: "Machinery",
-      region: "Khomas Region",
-      imageUrl: "/images/equip-tractor.png",
-    },
-  },
-  {
-    _id: "demo-booking-3",
-    listingId: "demo-stay-4",
-    userId: "demo-user",
-    startDate: "2026-05-10",
-    endDate: "2026-05-14",
-    totalPrice: 475000,
-    escrowAmount: 150000,
-    serviceFee: 47500,
-    status: "pending",
-    reference: "FE-W2D8Y5-TJ3M",
-    withOperator: false,
-    listing: {
-      id: "demo-stay-8",
-      title: "Kunene Desert Pasture Camp",
-      type: "stay",
-      category: "Tent Camp",
-      region: "Kunene Region",
-      imageUrl: "/images/stay-river-camp.png",
-    },
-  },
-];
+// ─── Request Deduplication Cache ────────────────────────────────
+const bookingCache = new Map<string, { data: any[]; timestamp: number }>();
+const CACHE_TTL = 30_000; // 30 seconds
 
 interface BookingData {
   _id: string;
@@ -86,6 +24,7 @@ interface BookingData {
 
 // Hook for user's bookings — REST API primary, demo fallback
 export function useBookings(userId: string) {
+  // Initialize with demo data so there's no loading flash
   const [data, setData] = useState<BookingData[] | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -98,12 +37,24 @@ export function useBookings(userId: string) {
       return () => cancelAnimationFrame(id);
     }
 
-    let cancelled = false;
+    const controller = new AbortController();
 
     async function fetchBookings() {
+      // Check cache first
+      const cacheKey = `bookings-${userId}`;
+      const cached = bookingCache.get(cacheKey);
+      if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+        setData(cached.data);
+        setIsLoading(false);
+        return;
+      }
+
       try {
-        const res = await fetch(`/api/bookings?userId=${encodeURIComponent(userId)}`);
-        if (res.ok && !cancelled) {
+        const res = await fetch(
+          `/api/bookings?userId=${encodeURIComponent(userId)}`,
+          { signal: controller.signal }
+        );
+        if (res.ok) {
           const raw = await res.json();
           const mapped = Array.isArray(raw)
             ? raw.map((b: any) => ({
@@ -121,26 +72,29 @@ export function useBookings(userId: string) {
                 listing: b.listing,
               }))
             : [];
-          if (!cancelled) {
-            setData(mapped);
-            setIsLoading(false);
-          }
+          // Cache the result
+          bookingCache.set(cacheKey, {
+            data: mapped,
+            timestamp: Date.now(),
+          });
+          setData(mapped);
+          setIsLoading(false);
           return;
         }
-      } catch {
+      } catch (err: any) {
+        // AbortError means cancelled — don't fall back
+        if (err?.name === "AbortError") return;
         // REST failed
       }
       // Demo mode: return demo bookings
-      if (!cancelled) {
-        setData(DEMO_BOOKINGS);
-        setIsLoading(false);
-      }
+      setData(DEMO_BOOKINGS as BookingData[]);
+      setIsLoading(false);
     }
 
     fetchBookings();
 
     return () => {
-      cancelled = true;
+      controller.abort();
     };
   }, [userId]);
 
@@ -161,12 +115,15 @@ export function useBookingByReference(reference: string) {
       return () => cancelAnimationFrame(id);
     }
 
-    let cancelled = false;
+    const controller = new AbortController();
 
     async function fetchBooking() {
       try {
-        const res = await fetch(`/api/bookings?reference=${encodeURIComponent(reference)}`);
-        if (res.ok && !cancelled) {
+        const res = await fetch(
+          `/api/bookings?reference=${encodeURIComponent(reference)}`,
+          { signal: controller.signal }
+        );
+        if (res.ok) {
           const raw = await res.json();
           if (raw && !raw.error) {
             setData({
@@ -180,31 +137,30 @@ export function useBookingByReference(reference: string) {
             return;
           }
         }
-      } catch {
+      } catch (err: any) {
+        if (err?.name === "AbortError") return;
         // REST failed
       }
       // Demo fallback
-      if (!cancelled) {
-        const demoBooking = DEMO_BOOKINGS.find(
-          (b) => b.reference === reference
-        );
-        setData(
-          demoBooking || {
-            _id: reference,
-            reference,
-            status: "confirmed",
-            totalPrice: 0,
-            listing: null,
-          }
-        );
-        setIsLoading(false);
-      }
+      const demoBooking = DEMO_BOOKINGS.find(
+        (b) => b.reference === reference
+      );
+      setData(
+        demoBooking || {
+          _id: reference,
+          reference,
+          status: "confirmed",
+          totalPrice: 0,
+          listing: null,
+        }
+      );
+      setIsLoading(false);
     }
 
     fetchBooking();
 
     return () => {
-      cancelled = true;
+      controller.abort();
     };
   }, [reference]);
 

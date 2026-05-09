@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
@@ -9,7 +10,7 @@ function formatPrice(cents: number): string {
   return `N$ ${(cents / 100).toLocaleString()}`;
 }
 
-export default function ListingCard({ item }: { item: Listing }) {
+function ListingCard({ item }: { item: Listing }) {
   return (
     <Link
       href={`/listing/${item.id}`}
@@ -22,6 +23,7 @@ export default function ListingCard({ item }: { item: Listing }) {
             alt={item.title}
             width={400}
             height={300}
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 opacity-90"
             loading="lazy"
           />
@@ -62,5 +64,8 @@ export default function ListingCard({ item }: { item: Listing }) {
     </Link>
   );
 }
+
+// Memoize to prevent re-renders when parent state changes but item hasn't
+export default React.memo(ListingCard);
 
 export { formatPrice };

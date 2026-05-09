@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useFeorm } from "@/context/feorm-context";
+import { useFeormAuth } from "@/context/feorm-context";
 import { ArrowRight } from "lucide-react";
 
 export default function TermsPage() {
-  const { setUser } = useFeorm();
+  const { setUser } = useFeormAuth();
   const [accepted, setAccepted] = useState(false);
   const router = useRouter();
 

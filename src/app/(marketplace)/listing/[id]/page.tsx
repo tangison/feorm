@@ -118,6 +118,7 @@ export default function ListingDetailPage() {
               alt={listing.title}
               width={600}
               height={450}
+              sizes="(max-width: 768px) 100vw, 50vw"
               className="w-full h-full object-cover opacity-90 p-2 md:p-4"
               loading="lazy"
             />
@@ -181,7 +182,7 @@ export default function ListingDetailPage() {
                     </span>
                     <button
                       onClick={() => setRewrittenDesc(null)}
-                      className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#E8C96A] hover:text-[#1E1A14] transition-colors underline underline-offset-2"
+                      className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#E8C96A] hover:text-[#1E1A14] transition-colors underline underline-offset-2 px-2 py-1 rounded-full min-h-[36px]"
                     >
                       Show Original
                     </button>
@@ -195,7 +196,7 @@ export default function ListingDetailPage() {
                   <button
                     onClick={handleRewriteDescription}
                     disabled={rewriting}
-                    className="text-[10px] uppercase tracking-widest text-[#787774] hover:text-[#1E1A14] font-mono-feorm flex items-center gap-1 mt-2 transition-colors disabled:opacity-50"
+                    className="text-[10px] uppercase tracking-widest text-[#787774] hover:text-[#1E1A14] font-mono-feorm flex items-center gap-1 mt-2 transition-colors disabled:opacity-50 rounded-full px-3 py-1.5 border border-[#3C2F1A]/10 bg-[#FAF7F2] hover:border-[#3C2F1A]/30 min-h-[36px]"
                     aria-label="AI Enhance description"
                   >
                     {rewriting ? (
@@ -281,7 +282,7 @@ export default function ListingDetailPage() {
                     {suggestions.slice(0, 3).map((s, i) => (
                       <div
                         key={i}
-                        className="border border-[#3C2F1A]/10 rounded-lg p-3 bg-[#FAF7F2]"
+                        className="border border-[#3C2F1A]/10 rounded-[8px] p-3 bg-[#FAF7F2]"
                       >
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-sm font-medium text-[#1E1A14]">

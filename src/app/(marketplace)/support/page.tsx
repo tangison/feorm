@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useFeorm } from "@/context/feorm-context";
+import { useFeormOnboarding } from "@/context/feorm-context";
 import {
   MessageCircle,
   Phone,
@@ -20,7 +20,7 @@ interface Suggestion {
 }
 
 export default function SupportPage() {
-  const { selectedRole } = useFeorm();
+  const { selectedRole } = useFeormOnboarding();
   const [aiLoading, setAiLoading] = useState(false);
   const [aiSuggestions, setAiSuggestions] = useState<Suggestion[] | null>(null);
   const [aiError, setAiError] = useState<string | null>(null);
@@ -178,7 +178,7 @@ export default function SupportPage() {
           <button
             onClick={handleAiHelp}
             disabled={aiLoading}
-            className="btn-primary-feorm flex items-center gap-2 px-5 py-3 min-h-[44px]"
+            className="btn-primary-feorm flex items-center gap-2 px-5 py-3 text-xs uppercase tracking-widest min-h-[44px]"
             aria-labelledby="ai-support-heading"
           >
             {aiLoading ? (
@@ -186,9 +186,7 @@ export default function SupportPage() {
             ) : (
               <Sparkles size={16} />
             )}
-            <span className="font-mono-feorm text-[11px] uppercase tracking-[0.05em]">
-              {aiLoading ? "Thinking..." : "Get AI-Powered Help"}
-            </span>
+            {aiLoading ? "Thinking..." : "Get AI-Powered Help"}
           </button>
 
           {/* Loading skeleton */}
@@ -203,7 +201,7 @@ export default function SupportPage() {
           {/* Error state */}
           {aiError && (
             <div
-              className="mt-4 p-4 rounded-lg border border-[#9F2F2D]/20 bg-[#FDEBEC]"
+              className="mt-4 p-4 rounded-[8px] border border-[#9F2F2D]/20 bg-[#FDEBEC]"
               role="alert"
             >
               <p className="text-xs text-[#9F2F2D]">{aiError}</p>
@@ -219,7 +217,7 @@ export default function SupportPage() {
               {aiSuggestions.map((s, i) => (
                 <div
                   key={i}
-                  className="p-4 rounded-lg border border-[#E8C96A]/30 bg-[#E8C96A]/5"
+                  className="p-4 rounded-[8px] border border-[#E8C96A]/30 bg-[#E8C96A]/5"
                 >
                   <h4 className="text-sm font-medium text-[#1E1A14] mb-1">
                     {s.title}

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useFeorm } from "@/context/feorm-context";
+import { useFeormAuth, useFeormOnboarding } from "@/context/feorm-context";
 import {
   Shield,
   Download,
@@ -18,16 +18,8 @@ import { toast } from "@/hooks/use-toast";
 
 export default function SettingsPage() {
   const router = useRouter();
-  const {
-    user,
-    phone,
-    selectedRole,
-    interests,
-    avatarUrl,
-    hasCompletedOnboarding,
-    providerAssets,
-    setHasCompletedOnboarding,
-  } = useFeorm();
+  const { user, phone, avatarUrl } = useFeormAuth();
+  const { selectedRole, interests, hasCompletedOnboarding, providerAssets, setHasCompletedOnboarding } = useFeormOnboarding();
 
   const [aiLoading, setAiLoading] = useState(false);
   const [aiSuggestions, setAiSuggestions] = useState<string[] | null>(null);
@@ -360,7 +352,7 @@ export default function SettingsPage() {
           )}
 
           {aiSuggestions && !aiLoading && (
-            <div className="mt-5 bento-card p-5 bg-[#FBF3DB]/30">
+            <div className="mt-5 bento-card p-6 bg-[#FBF3DB]/30">
               <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#956400] mb-4">
                 AI Suggestions
               </p>

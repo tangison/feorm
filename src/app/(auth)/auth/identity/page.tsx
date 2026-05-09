@@ -1,11 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { useFeorm } from "@/context/feorm-context";
+import { useFeormAuth } from "@/context/feorm-context";
 import { useAuthMutations } from "@/hooks/use-auth";
-import { ArrowLeft, ArrowRight, Sparkles, Upload } from "lucide-react";
+import { ArrowLeft, ArrowRight, Sparkles, Camera, Upload } from "lucide-react";
 import Image from "next/image";
+import {
+  PRESET_AVATARS,
+  isPresetAvatar,
+  getPresetGradient,
+  compressImage,
+} from "@/lib/avatar";
 
 const regions = [
   "Khomas", "Otjozondjupa", "Erongo", "Hardap", "Omaheke",
@@ -14,17 +20,71 @@ const regions = [
 ];
 
 export default function IdentityPage() {
-  const { phone, setUser, setAvatarUrl, avatarUrl } = useFeorm();
+  const { phone, setUser, setAvatarUrl, avatarUrl } = useFeormAuth();
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [region, setRegion] = useState("Khomas");
   const [loading, setLoading] = useState(false);
   const [generatingAvatar, setGeneratingAvatar] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { setupIdentity } = useAuthMutations();
 
-  const handleGenerateAvatar = async () => {
+  // Derived: preview style for current avatar
+  const avatarPreview = useMemo(() => {
+    if (!avatarUrl) return null;
+    if (isPresetAvatar(avatarUrl)) {
+      const gradient = getPresetGradient(avatarUrl);
+      return { type: "preset" as const, gradient };
+    }
+    return { type: "image" as const, url: avatarUrl };
+  }, [avatarUrl]);
+
+  // ── Preset Avatar Selection ──
+  const handleSelectPreset = useCallback(
+    (presetId: string) => {
+      setAvatarUrl(presetId);
+    },
+    [setAvatarUrl]
+  );
+
+  // ── Custom Upload ──
+  const handleFileChange = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      // Validate file type
+      if (!file.type.startsWith("image/")) return;
+
+      // Validate size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) return;
+
+      setUploadingAvatar(true);
+      try {
+        const dataUrl = await compressImage(file, 512, 0.8);
+        setAvatarUrl(dataUrl);
+      } catch {
+        // Fallback: use raw data URL
+        const reader = new FileReader();
+        reader.onload = () => {
+          if (typeof reader.result === "string") {
+            setAvatarUrl(reader.result);
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+      setUploadingAvatar(false);
+      // Reset file input
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    },
+    [setAvatarUrl]
+  );
+
+  // ── AI Generation ──
+  const handleGenerateAvatar = useCallback(async () => {
     if (!name) return;
     setGeneratingAvatar(true);
     try {
@@ -40,13 +100,13 @@ export default function IdentityPage() {
         }
       }
     } catch {
-      // Demo mode: use a placeholder
       setAvatarUrl("/images/avatar-placeholder.png");
     }
     setGeneratingAvatar(false);
-  };
+  }, [name, surname, region, setAvatarUrl]);
 
-  const handleIdentitySetup = async () => {
+  // ── Identity Setup ──
+  const handleIdentitySetup = useCallback(async () => {
     if (!name || !surname) return;
     setLoading(true);
     try {
@@ -77,14 +137,14 @@ export default function IdentityPage() {
       router.push("/auth/role");
     }
     setLoading(false);
-  };
+  }, [name, surname, region, phone, avatarUrl, setupIdentity, setUser, router]);
 
   return (
     <div className="flex-grow flex items-center justify-center p-6 md:p-12 min-h-screen bg-[#FAF7F2]">
       <div className="max-w-md w-full">
         <button
           onClick={() => router.push("/auth/verify")}
-          className="mb-8 flex items-center gap-2 text-sm text-[#787774] hover:text-[#1E1A14] transition-colors min-h-[44px]"
+          className="mb-8 flex items-center gap-2 px-3 py-2 text-sm text-[#787774] hover:text-[#1E1A14] transition-colors min-h-[44px] rounded-full hover:bg-[#1E1A14]/5"
         >
           <ArrowLeft size={16} /> Back
         </button>
@@ -102,49 +162,122 @@ export default function IdentityPage() {
         </div>
 
         <div className="space-y-5">
-          {/* Avatar Creation */}
+          {/* ── Avatar Creation ── */}
           <div className="border border-[#3C2F1A]/10 bg-[#FEFDFB] rounded-[8px] p-6">
-            <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-4">
+            <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-5">
               Avatar Creation
             </p>
-            <div className="flex items-center gap-5">
-              <div className="w-20 h-20 rounded-full bg-[#FAF7F2] border-2 border-dashed border-[#D4C4A0] flex items-center justify-center overflow-hidden shrink-0">
-                {avatarUrl ? (
-                  <Image
-                    src={avatarUrl}
-                    alt="Your avatar"
-                    width={80}
-                    height={80}
-                    className="w-full h-full object-cover"
-                  />
+
+            {/* Preview Circle */}
+            <div className="flex justify-center mb-6">
+              <div className="w-24 h-24 rounded-full border-2 border-dashed border-[#D4C4A0] flex items-center justify-center overflow-hidden shrink-0 relative">
+                {avatarPreview ? (
+                  avatarPreview.type === "preset" ? (
+                    <div
+                      className="w-full h-full"
+                      style={{ background: avatarPreview.gradient }}
+                    />
+                  ) : (
+                    <Image
+                      src={avatarPreview.url}
+                      alt="Your avatar"
+                      width={96}
+                      height={96}
+                      sizes="96px"
+                      className="w-full h-full object-cover"
+                    />
+                  )
                 ) : (
-                  <Upload size={20} className="text-[#D4C4A0]" />
+                  <Camera size={24} className="text-[#D4C4A0]" />
                 )}
               </div>
-              <div className="space-y-2 flex-1">
-                <button
-                  onClick={handleGenerateAvatar}
-                  disabled={!name || generatingAvatar}
-                  className="w-full btn-harvest px-5 py-2.5 text-[10px] uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
-                >
-                  {generatingAvatar ? (
-                    <>
-                      <div className="w-3 h-3 rounded-full bg-[#1E1A14] animate-pulse" />
-                      Generating...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles size={12} /> Generate AI Identity
-                    </>
-                  )}
-                </button>
-                <p className="text-[9px] text-[#787774] font-mono-feorm text-center uppercase tracking-wider">
-                  Editorial portrait, brand-matched
-                </p>
+            </div>
+
+            {/* Option 1: Choose a Preset */}
+            <div className="mb-6">
+              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#D4C4A0] mb-3 text-center">
+                Choose a Preset
+              </p>
+              <div className="grid grid-cols-4 gap-3 justify-items-center">
+                {PRESET_AVATARS.map((preset) => (
+                  <button
+                    key={preset.id}
+                    onClick={() => handleSelectPreset(preset.id)}
+                    className={`w-12 h-12 rounded-full transition-all duration-200 hover:scale-110 active:scale-[0.95] ${
+                      avatarUrl === preset.id
+                        ? "ring-2 ring-[#E8C96A] ring-offset-2 ring-offset-[#FEFDFB]"
+                        : "ring-1 ring-[#3C2F1A]/10"
+                    }`}
+                    style={{ background: preset.gradient }}
+                    aria-label={`Select ${preset.label} avatar`}
+                    title={preset.label}
+                    type="button"
+                  />
+                ))}
               </div>
+            </div>
+
+            {/* Option 2: Upload Your Own */}
+            <div className="mb-5">
+              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#D4C4A0] mb-3 text-center">
+                Or Upload Your Own
+              </p>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="hidden"
+                aria-label="Upload profile image"
+              />
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploadingAvatar}
+                className="w-full btn-secondary-feorm px-5 py-2.5 text-[10px] uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 min-h-[44px]"
+                type="button"
+              >
+                {uploadingAvatar ? (
+                  <>
+                    <div className="w-3 h-3 rounded-full bg-[#1E1A14] animate-pulse" />
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    <Upload size={12} /> Upload Photo
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* Option 3: Generate AI Identity */}
+            <div>
+              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#D4C4A0] mb-3 text-center">
+                Or Generate with AI
+              </p>
+              <button
+                onClick={handleGenerateAvatar}
+                disabled={!name || generatingAvatar}
+                className="w-full btn-harvest px-5 py-2.5 text-[10px] uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
+                type="button"
+              >
+                {generatingAvatar ? (
+                  <>
+                    <div className="w-3 h-3 rounded-full bg-[#1E1A14] animate-pulse" />
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles size={12} /> Generate AI Identity
+                  </>
+                )}
+              </button>
+              <p className="text-[9px] text-[#787774] font-mono-feorm text-center uppercase tracking-wider mt-2">
+                Editorial portrait, brand-matched
+              </p>
             </div>
           </div>
 
+          {/* First Name */}
           <div className="border border-[#3C2F1A]/20 bg-[#FEFDFB] p-4 rounded-[4px] focus-within:border-[#1E1A14] transition-colors">
             <label htmlFor="first-name" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-[#787774]">
               First Name
@@ -160,6 +293,7 @@ export default function IdentityPage() {
             />
           </div>
 
+          {/* Surname */}
           <div className="border border-[#3C2F1A]/20 bg-[#FEFDFB] p-4 rounded-[4px] focus-within:border-[#1E1A14] transition-colors">
             <label htmlFor="surname" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-[#787774]">
               Surname
@@ -175,6 +309,7 @@ export default function IdentityPage() {
             />
           </div>
 
+          {/* Region */}
           <div className="border border-[#3C2F1A]/20 bg-[#FEFDFB] p-4 rounded-[4px] focus-within:border-[#1E1A14] transition-colors">
             <label htmlFor="region-select" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-[#787774]">
               Region
@@ -191,10 +326,12 @@ export default function IdentityPage() {
             </select>
           </div>
 
+          {/* Continue */}
           <button
             onClick={handleIdentitySetup}
             disabled={!name || !surname || loading}
             className="w-full btn-primary-feorm px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
+            type="button"
           >
             {loading ? "Saving..." : "Continue"}
             <ArrowRight size={14} />

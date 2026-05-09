@@ -1,6 +1,6 @@
 "use client";
 
-import { useFeorm } from "@/context/feorm-context";
+import { useFeormAuth } from "@/context/feorm-context";
 import { useRouter } from "next/navigation";
 import { useBookings } from "@/hooks/use-bookings";
 import { Clock, ArrowRight, MapPin } from "lucide-react";
@@ -8,7 +8,7 @@ import Link from "next/link";
 import { formatPrice } from "@/components/feorm/listing-card";
 
 export default function JourneysPage() {
-  const { user, phone } = useFeorm();
+  const { user, phone } = useFeormAuth();
   const router = useRouter();
 
   const { data: bookings, isLoading: bookingsLoading } = useBookings(
@@ -68,7 +68,7 @@ export default function JourneysPage() {
           {bookings.map((b) => (
             <div
               key={b._id}
-              className="bento-card bento-card-lift p-5 flex flex-col md:flex-row md:items-center gap-4 cursor-pointer hover:border-[#3C2F1A]/20 transition-colors"
+              className="bento-card bento-card-lift p-6 flex flex-col md:flex-row md:items-center gap-4 cursor-pointer hover:border-[#3C2F1A]/20 transition-colors"
               onClick={() => router.push(`/listing/${b.listingId}`)}
               role="button"
               tabIndex={0}

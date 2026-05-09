@@ -1,6 +1,6 @@
 "use client";
 
-import { useFeorm } from "@/context/feorm-context";
+import { useFeormAuth, useFeormMarket, useFeormOnboarding } from "@/context/feorm-context";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -18,9 +18,12 @@ import {
   Settings,
   Shield,
 } from "lucide-react";
+import { isPresetAvatar, getPresetGradient } from "@/lib/avatar";
 
 export default function FeormNav() {
-  const { user, selectedRole, setMarketView, avatarUrl, setHasCompletedOnboarding } = useFeorm();
+  const { user, avatarUrl } = useFeormAuth();
+  const { setMarketView } = useFeormMarket();
+  const { selectedRole, setHasCompletedOnboarding } = useFeormOnboarding();
   const pathname = usePathname();
   const router = useRouter();
 
@@ -30,6 +33,10 @@ export default function FeormNav() {
     user?.name && user?.surname
       ? `${user.name[0]}${user.surname[0]}`
       : "JD";
+
+  // Determine if avatar is a preset gradient
+  const isPreset = avatarUrl && isPresetAvatar(avatarUrl);
+  const presetGradient = isPreset ? getPresetGradient(avatarUrl) : null;
 
   // Provider-specific nav items
   const providerNavItems = [
@@ -162,6 +169,7 @@ export default function FeormNav() {
             alt=""
             width={28}
             height={28}
+            sizes="28px"
             className="rounded-[4px]"
           />
           <span className="font-serif-display text-2xl italic lowercase">
@@ -220,18 +228,22 @@ export default function FeormNav() {
             href="/profile"
             className="flex items-center gap-3 px-2 mb-4 group"
           >
-            <div className="w-9 h-9 rounded-full bg-[#1E1A14] text-[#FEFDFB] flex items-center justify-center text-xs font-medium font-serif-display overflow-hidden">
-              {avatarUrl ? (
+            <div
+              className="w-9 h-9 rounded-full bg-[#1E1A14] text-[#FEFDFB] flex items-center justify-center text-xs font-medium font-serif-display overflow-hidden"
+              style={presetGradient ? { background: presetGradient } : undefined}
+            >
+              {avatarUrl && !isPreset ? (
                 <Image
                   src={avatarUrl}
                   alt="Avatar"
                   width={36}
                   height={36}
+                  sizes="36px"
                   className="w-full h-full object-cover"
                 />
-              ) : (
+              ) : !avatarUrl ? (
                 userInitials
-              )}
+              ) : null}
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-[#1E1A14] truncate">

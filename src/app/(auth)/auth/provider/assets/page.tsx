@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useFeorm } from "@/context/feorm-context";
+import { useFeormOnboarding } from "@/context/feorm-context";
 import { ArrowLeft, ArrowRight, Tent, Wrench } from "lucide-react";
 
 export default function ProviderAssetsPage() {
-  const { providerAssets, setProviderAssets } = useFeorm();
+  const { providerAssets, setProviderAssets } = useFeormOnboarding();
   const [assets, setAssets] = useState<("stay" | "equipment")[]>(providerAssets);
   const router = useRouter();
 

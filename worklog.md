@@ -230,3 +230,269 @@ Stage Summary:
 - 9 fixes applied across 8 files
 - 0 new lint/type errors introduced
 - Remaining pre-existing TS errors are in nav.tsx (onClick type) and verify-id/page.tsx (verifyUser arg type)
+
+---
+Task ID: 2
+Agent: Avatar Enhancement Agent
+Task: Enhance Avatar Creation with Preset Avatars + Custom Upload
+
+Work Log:
+- Created shared avatar utility module (src/lib/avatar.tsx) with:
+  - PRESET_AVATARS array: 8 earth-toned gradient presets (Amber Dunes, Red Kalahari, Desert Sage, Erongo Stone, Golden Hour, Deep Earth, Savanna Dawn, River Delta)
+  - isPresetAvatar(): detects preset:// prefix in avatarUrl
+  - getPresetGradient(): maps preset ID to CSS gradient string
+  - compressImage(): client-side image compression (max 512x512, quality 0.8) using canvas
+- Enhanced identity page (auth/identity/page.tsx):
+  - Added centered preview circle at top that updates with selected avatar (handles preset gradients, uploaded images, and no-selection state)
+  - Added "Choose a Preset" section with 4-column grid of 8 gradient circles
+  - Selected preset shows border-2 border-[#E8C96A] ring indicator + scale-110 shadow
+  - Added "Or Upload Your Own" section with hidden file input + Upload Photo button
+  - Upload uses compressImage() for client-side compression, with FileReader fallback
+  - Added "Or Generate with AI" section (existing feature preserved)
+  - All sections separated by divider lines with font-mono-feorm labels
+  - All buttons have min-h-[44px], px-5 py-2.5, text-xs uppercase tracking-widest
+  - Used useCallback for all handlers, useMemo for derived state
+- Enhanced profile page (marketplace/profile/page.tsx):
+  - Enlarged avatar display from w-14 h-14 to w-20 h-20
+  - Avatar shows image if avatarUrl exists, handles preset:// gradients as background
+  - Added "Change Avatar" button with chevron indicator
+  - Collapsible avatar picker section (expand/collapse) with all 3 options:
+    - Preset grid (same 8 presets with selection ring)
+    - Upload Photo (same compression logic)
+    - Generate AI Identity
+  - Preserved all existing profile content (details grid, verification CTA, support, sign out)
+  - Used useCallback, useMemo throughout
+- Updated nav component (components/feorm/nav.tsx):
+  - Desktop sidebar avatar now handles preset:// avatars
+  - When avatarUrl starts with preset://, renders div with gradient background instead of <Image>
+  - Falls back to initials when no avatar is set
+
+Files Modified:
+- src/lib/avatar.tsx (NEW — shared avatar utilities)
+- src/app/(auth)/auth/identity/page.tsx (major rewrite of avatar section)
+- src/app/(marketplace)/profile/page.tsx (added avatar display + inline picker)
+- src/components/feorm/nav.tsx (added preset:// gradient support)
+
+Stage Summary:
+- Identity page now offers 3 avatar options: preset gradients, custom upload, AI generation
+- Profile page shows avatar (w-20 h-20) with collapsible change-avatar picker
+- Nav sidebar correctly renders preset gradient avatars
+- Image upload includes client-side compression (512x512 max, JPEG 0.8 quality)
+- All buttons meet 44px touch target and design system requirements
+- Lint passes cleanly, dev server running without errors
+
+---
+Task ID: 3
+Agent: Performance Optimization Agent
+Task: Apply React Performance Optimization Best Practices
+
+Work Log:
+
+## CRITICAL: Context Splitting (Rule 6.3)
+- Split monolithic FeormContext (16 state values) into 4 focused contexts:
+  1. `FeormAuthContext` — user, phone, avatarUrl (src/context/feorm-auth.tsx)
+  2. `FeormMarketContext` — marketView, listings, selectedListing (src/context/feorm-market.tsx)
+  3. `FeormBookingContext` — bookings, latestRef (src/context/feorm-bookings.tsx)
+  4. `FeormOnboardingContext` — onboardingStep, selectedRole, interests, hasCompletedOnboarding, providerAssets (src/context/feorm-onboarding.tsx)
+- Each context has its own provider with independent re-render scope
+- localStorage persistence works per-context (each writes its own fields)
+- Updated feorm-context.tsx to compose all 4 providers + FeormContextAggregator for backward compat
+- `useFeorm()` still works (marked as DISCOURAGED) for any remaining consumers
+- New specific hooks: `useFeormAuth()`, `useFeormMarket()`, `useFeormBookings()`, `useFeormOnboarding()`
+
+## CRITICAL: Lazy Load Heavy Components (Rule 2.5, 2.6)
+- TangisonChat: lazy loaded via `next/dynamic` with `ssr: false` in new LazyTangisonChat wrapper component
+  - Created src/components/feorm/lazy-tangison-chat.tsx (client component wrapper)
+  - Updated marketplace layout to use LazyTangisonChat instead of direct import
+  - Chat UI + message state no longer shipped on every page load
+- RevenueChart: already dynamically imported (kept as is)
+- ConvexProviderWrapper: already lightweight with lazy client creation (kept as is)
+
+## CRITICAL: Optimize Data Hooks (Rule 4.1, 4.2, 4.5)
+- Moved ~370 lines of demo data from use-listings.ts to separate file:
+  - Created src/data/demo-listings.ts (tree-shakeable, code-splittable)
+  - Created src/data/demo-bookings.ts (same treatment)
+- useListings hook optimizations:
+  - Initialize useState with demo data instead of null → no loading flash when offline
+  - Added request deduplication cache (Map with 30s TTL) to avoid duplicate fetches
+  - Added AbortController for stale request cancellation when type changes
+  - isLoading now returns false (since we always have demo data as initial state)
+- useBookings hook optimizations:
+  - Added request deduplication cache (same pattern)
+  - Added AbortController for cancellation
+  - Both useBookingByReference and useBookings benefit
+
+## HIGH: Image Optimization (Rule 5.2)
+- Added responsive `sizes` prop to all next/image components:
+  - ListingCard images: `sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"`
+  - Listing detail images: `sizes="(max-width: 768px) 100vw, 50vw"`
+  - Nav avatar: `sizes="36px"`
+  - Nav logo: `sizes="28px"`
+  - Auth hero image: `sizes="(max-width: 768px) 100vw, 50vw"`
+  - Identity page avatar: `sizes="80px"`
+
+## HIGH: Memoize Expensive Computations (Rule 3.1)
+- Wrapped ListingCard with React.memo to prevent re-renders when parent state changes but item hasn't
+- Extracted `transformItem()` as a stable function outside the component (no inline object creation in map callback)
+- Marketplace page uses transformItem() in the map callback instead of creating new objects inline
+
+## HIGH: CSS Containment (Rule 3.3)
+- Added `contain: layout style paint` to `.bento-card` class in globals.css
+- Isolates layout recalculation per card, preventing layout thrashing
+
+## MEDIUM: Bundle Size - Move Demo Data Out
+- ~370 lines of demo data moved from use-listings.ts to src/data/demo-listings.ts
+- ~70 lines of demo booking data moved to src/data/demo-bookings.ts
+- Both files can be code-split since they're only imported by the hooks
+
+## Updated All Consumers to Specific Context Hooks
+- nav.tsx → useFeormAuth() + useFeormMarket() + useFeormOnboarding()
+- marketplace/page.tsx → useFeormMarket()
+- profile/page.tsx → useFeormAuth()
+- dashboard/page.tsx → useFeormAuth() + useFeormOnboarding()
+- journeys/page.tsx → useFeormAuth()
+- settings/page.tsx → useFeormAuth() + useFeormOnboarding()
+- support/page.tsx → useFeormOnboarding()
+- verification/page.tsx → useFeormAuth()
+- booking/success/page.tsx → useFeormMarket()
+- auth/page.tsx → useFeormAuth()
+- auth/verify-id/page.tsx → useFeormAuth()
+- auth/verify/page.tsx → useFeormAuth()
+- auth/identity/page.tsx → useFeormAuth()
+- auth/terms/page.tsx → useFeormAuth()
+- auth/role/page.tsx → useFeormAuth() + useFeormOnboarding()
+- auth/voyager/interests/page.tsx → useFeormOnboarding()
+- auth/voyager/verify/page.tsx → useFeormAuth() + useFeormOnboarding()
+- auth/provider/assets/page.tsx → useFeormOnboarding()
+- auth/provider/region/page.tsx → useFeormAuth() + useFeormOnboarding()
+
+Files Created:
+- src/context/feorm-auth.tsx (NEW — auth/user context)
+- src/context/feorm-market.tsx (NEW — marketplace context)
+- src/context/feorm-bookings.tsx (NEW — booking context)
+- src/context/feorm-onboarding.tsx (NEW — onboarding context)
+- src/data/demo-listings.ts (NEW — extracted demo listing data)
+- src/data/demo-bookings.ts (NEW — extracted demo booking data)
+- src/components/feorm/lazy-tangison-chat.tsx (NEW — lazy load wrapper)
+
+Files Modified:
+- src/context/feorm-context.tsx (complete rewrite — composes 4 split contexts + backward compat)
+- src/hooks/use-listings.ts (optimized with initial data, dedup cache, AbortController)
+- src/hooks/use-bookings.ts (same optimizations)
+- src/app/(marketplace)/layout.tsx (uses LazyTangisonChat instead of direct import)
+- src/components/feorm/listing-card.tsx (React.memo + sizes prop)
+- src/components/feorm/nav.tsx (specific context hooks + sizes prop)
+- src/app/globals.css (CSS containment on bento-card)
+- src/app/(marketplace)/marketplace/page.tsx (useFeormMarket + transformItem)
+- src/app/(marketplace)/profile/page.tsx (useFeormAuth)
+- src/app/(marketplace)/dashboard/page.tsx (useFeormAuth + useFeormOnboarding)
+- src/app/(marketplace)/journeys/page.tsx (useFeormAuth)
+- src/app/(marketplace)/settings/page.tsx (useFeormAuth + useFeormOnboarding)
+- src/app/(marketplace)/support/page.tsx (useFeormOnboarding)
+- src/app/(marketplace)/verification/page.tsx (useFeormAuth)
+- src/app/(marketplace)/booking/success/page.tsx (useFeormMarket)
+- src/app/(marketplace)/listing/[id]/page.tsx (sizes prop)
+- src/app/(auth)/page.tsx (useFeormAuth + sizes prop)
+- src/app/(auth)/auth/verify-id/page.tsx (useFeormAuth)
+- src/app/(auth)/auth/voyager/interests/page.tsx (useFeormOnboarding)
+- src/app/(auth)/auth/voyager/verify/page.tsx (useFeormAuth + useFeormOnboarding)
+- src/app/(auth)/auth/identity/page.tsx (useFeormAuth + sizes prop)
+- src/app/(auth)/auth/terms/page.tsx (useFeormAuth)
+- src/app/(auth)/auth/verify/page.tsx (useFeormAuth)
+- src/app/(auth)/auth/role/page.tsx (useFeormAuth + useFeormOnboarding)
+- src/app/(auth)/auth/provider/assets/page.tsx (useFeormOnboarding)
+- src/app/(auth)/auth/provider/region/page.tsx (useFeormAuth + useFeormOnboarding)
+
+Stage Summary:
+- Context splitting: 4 focused contexts replace 1 monolithic context — reduces unnecessary re-renders
+- Lazy loading: TangisonChat no longer shipped on every page load
+- Data hooks: Demo data extracted (tree-shakeable), initial data eliminates loading flash, request dedup + AbortController
+- Image optimization: All next/image components have proper responsive sizes
+- CSS containment: bento-card layout isolation prevents thrashing
+- React.memo on ListingCard prevents re-renders from parent state changes
+- All consumers updated to specific context hooks
+- Lint passes cleanly, all pages return 200
+
+---
+Task ID: 4
+Agent: UI Quality Audit Agent
+Task: Fix ALL UI quality issues — button padding, spacing consistency, border radius consistency
+
+Work Log:
+
+## 1. Button Padding Issues Fixed
+
+### verify/page.tsx — Back button missing horizontal padding
+- BEFORE: `className="mb-8 flex items-center gap-2 text-sm text-[#787774] hover:text-[#1E1A14] transition-colors min-h-[44px]"` (no px-*)
+- AFTER: Added `px-3 py-2 rounded-full hover:bg-[#1E1A14]/5` for proper touch target and visual consistency with identity page Back button
+
+### book/page.tsx — Back button had insufficient horizontal padding
+- BEFORE: `className="... px-1 ..."` (only 4px horizontal padding)
+- AFTER: Changed to `px-3 py-2 rounded-full hover:bg-[#1E1A14]/5` for proper touch target
+
+### listing/[id]/page.tsx — "AI Enhance" text button was floating text with no container
+- BEFORE: `className="text-[10px] uppercase tracking-widest text-[#787774] hover:text-[#1E1A14] font-mono-feorm flex items-center gap-1 mt-2 transition-colors disabled:opacity-50"` (no background, no border, no padding)
+- AFTER: Added `rounded-full px-3 py-1.5 border border-[#3C2F1A]/10 bg-[#FAF7F2] hover:border-[#3C2F1A]/30 min-h-[36px]` for proper pill-button container
+
+### listing/[id]/page.tsx — "Show Original" button had no touch target
+- BEFORE: `className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#E8C96A] hover:text-[#1E1A14] transition-colors underline underline-offset-2"` (no padding)
+- AFTER: Added `px-2 py-1 rounded-full min-h-[36px]` for proper touch target
+
+### support/page.tsx — "Get AI-Powered Help" button had inconsistent text styling
+- BEFORE: Used custom `<span className="font-mono-feorm text-[11px] uppercase tracking-[0.05em]">` wrapper inside the button
+- AFTER: Removed span wrapper, added `text-xs uppercase tracking-widest` directly to button className for consistency with all other btn-primary-feorm buttons
+
+## 2. Spacing Consistency Fixed
+
+### bento-card p-5 → p-6 (all section cards now use consistent p-6)
+- dashboard/page.tsx: Stats cards `p-5` → `p-6`
+- dashboard/page.tsx: Pending request cards `p-5` → `p-6`
+- dashboard/page.tsx: Recent activity items `p-5` → `p-6`
+- profile/page.tsx: Verification CTA link `p-5` → `p-6`
+- profile/page.tsx: Support Center link `p-5` → `p-6`
+- profile/page.tsx: Sign Out button `p-5` → `p-6`
+- journeys/page.tsx: Booking cards `p-5` → `p-6`
+- verification/page.tsx: 4 benefit cards `p-5` → `p-6`
+- verification/page.tsx: AI Tips inner card `p-5` → `p-6`
+- settings/page.tsx: AI Suggestions inner card `p-5` → `p-6`
+
+### Section headings mb-6 → mb-4 (consistent with all other sections)
+- dashboard/page.tsx: "Pending Requests" heading `mb-6` → `mb-4`
+- dashboard/page.tsx: "Recent Activity" heading `mb-6` → `mb-4`
+
+## 3. Border Radius Consistency Fixed
+
+### Card-like elements using rounded-lg (10px) changed to rounded-[8px] (matching bento-card)
+- support/page.tsx: Error alert card `rounded-lg` → `rounded-[8px]`
+- support/page.tsx: AI suggestion card `rounded-lg` → `rounded-[8px]`
+- listing/[id]/page.tsx: AI recommendation card `rounded-lg` → `rounded-[8px]`
+
+### Verified correct border radius in design system CSS:
+- btn-primary-feorm: border-radius: 9999px (rounded-full)
+- btn-harvest: border-radius: 9999px (rounded-full)
+- btn-secondary-feorm: border-radius: 9999px (rounded-full)
+- bento-card: border-radius: 8px
+- tag-pastel/tag-verified/tag-machinery/tag-alert: border-radius: 9999px (rounded-full)
+
+## 4. Pre-existing Lint Error Fixed
+- profile/page.tsx: React Compiler error on useCallback dependency array — changed `[user?.name, user?.surname, user?.region, setAvatarUrl]` to `[user, setAvatarUrl]` to match compiler inference
+
+Files Modified:
+- src/app/(auth)/auth/verify/page.tsx (Back button padding + rounded-full)
+- src/app/(marketplace)/listing/[id]/book/page.tsx (Back button padding + rounded-full)
+- src/app/(marketplace)/listing/[id]/page.tsx (AI Enhance container, Show Original touch target)
+- src/app/(marketplace)/support/page.tsx (button text consistency, card border-radius)
+- src/app/(marketplace)/dashboard/page.tsx (card padding p-5→p-6, heading spacing mb-6→mb-4)
+- src/app/(marketplace)/profile/page.tsx (card padding p-5→p-6, useCallback deps fix)
+- src/app/(marketplace)/journeys/page.tsx (card padding p-5→p-6)
+- src/app/(marketplace)/verification/page.tsx (card padding p-5→p-6)
+- src/app/(marketplace)/settings/page.tsx (inner card padding p-5→p-6)
+
+Stage Summary:
+- 5 button padding issues fixed (Back buttons, AI Enhance, Show Original, Support button)
+- 11 bento-card elements standardized to p-6 padding
+- 2 section headings standardized to mb-4 spacing
+- 3 card-like elements corrected to rounded-[8px] border radius
+- 1 pre-existing React Compiler lint error fixed
+- All lint checks pass cleanly
+- No functionality changes — only visual/padding/spacing fixes

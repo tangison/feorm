@@ -1,11 +1,12 @@
 "use client";
 
-import { useFeorm } from "@/context/feorm-context";
+import { useFeormAuth, useFeormOnboarding } from "@/context/feorm-context";
 import { useRouter } from "next/navigation";
 import { Compass, Tractor, ArrowRight } from "lucide-react";
 
 export default function RolePage() {
-  const { setUser, setSelectedRole } = useFeorm();
+  const { setUser } = useFeormAuth();
+  const { setSelectedRole } = useFeormOnboarding();
   const router = useRouter();
 
   const handleRoleSelect = (role: "voyager" | "provider") => {

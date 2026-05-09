@@ -88,7 +88,7 @@ export default function BookPage() {
       <div className="max-w-lg w-full">
         <button
           onClick={() => router.push(`/listing/${params.id}`)}
-          className="mb-8 flex items-center gap-2 text-sm text-[#787774] hover:text-[#1E1A14] transition-colors min-h-[44px] px-1"
+          className="mb-8 flex items-center gap-2 px-3 py-2 text-sm text-[#787774] hover:text-[#1E1A14] transition-colors min-h-[44px] rounded-full hover:bg-[#1E1A14]/5"
         >
           <ArrowLeft size={16} /> Back to Listing
         </button>

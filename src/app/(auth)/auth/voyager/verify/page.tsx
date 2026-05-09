@@ -1,11 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useFeorm } from "@/context/feorm-context";
+import { useFeormAuth, useFeormOnboarding } from "@/context/feorm-context";
 import { ArrowLeft, ArrowRight, CheckCircle, SkipForward, Download } from "lucide-react";
 
 export default function VoyagerVerifyPage() {
-  const { setHasCompletedOnboarding, user, selectedRole, interests, avatarUrl } = useFeorm();
+  const { setHasCompletedOnboarding, user, avatarUrl } = useFeormAuth();
+  const { selectedRole, interests } = useFeormOnboarding();
   const router = useRouter();
 
   const handleComplete = (verified: boolean) => {

@@ -1,12 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useFeorm } from "@/context/feorm-context";
+import { useFeormAuth } from "@/context/feorm-context";
 import { useAuthMutations } from "@/hooks/use-auth";
 import { Upload } from "lucide-react";
 
 export default function VerifyIdPage() {
-  const { user, phone, setUser } = useFeorm();
+  const { user, phone, setUser } = useFeormAuth();
   const router = useRouter();
   const { verifyUser } = useAuthMutations();
 

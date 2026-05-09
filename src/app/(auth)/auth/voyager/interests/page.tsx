@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useFeorm } from "@/context/feorm-context";
+import { useFeormOnboarding } from "@/context/feorm-context";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 const INTEREST_OPTIONS = [
@@ -21,7 +21,7 @@ const INTEREST_OPTIONS = [
 ];
 
 export default function VoyagerInterestsPage() {
-  const { interests, setInterests } = useFeorm();
+  const { interests, setInterests } = useFeormOnboarding();
   const [selected, setSelected] = useState<string[]>(interests);
   const router = useRouter();
 

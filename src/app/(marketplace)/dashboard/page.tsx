@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
-import { useFeorm } from "@/context/feorm-context";
+import { useFeormAuth, useFeormOnboarding } from "@/context/feorm-context";
 import { formatPrice } from "@/components/feorm/listing-card";
 import {
   Sparkles,
@@ -78,7 +78,8 @@ const recentActivity = [
 ];
 
 export default function DashboardPage() {
-  const { user, providerAssets } = useFeorm();
+  const { user } = useFeormAuth();
+  const { providerAssets } = useFeormOnboarding();
 
   const [aiLoading, setAiLoading] = useState(false);
   const [aiInsights, setAiInsights] = useState<string[] | null>(null);
@@ -251,7 +252,7 @@ export default function DashboardPage() {
       {/* ─── Stats ──────────────────────────────────────────── */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
         {stats.map((s) => (
-          <div key={s.label} className="bento-card p-5">
+          <div key={s.label} className="bento-card p-6">
             <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#787774] mb-2">
               {s.label}
             </p>
@@ -344,7 +345,7 @@ export default function DashboardPage() {
       <section className="mb-10" aria-labelledby="pending-heading">
         <h3
           id="pending-heading"
-          className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-6"
+          className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-4"
         >
           Pending Requests
         </h3>
@@ -352,7 +353,7 @@ export default function DashboardPage() {
           {pendingRequests.map((req) => (
             <div
               key={req.id}
-              className="bento-card bento-card-lift p-5 flex flex-col md:flex-row md:items-center gap-4"
+              className="bento-card bento-card-lift p-6 flex flex-col md:flex-row md:items-center gap-4"
             >
               <div className="flex-grow">
                 <div className="flex items-center gap-3 mb-2">
@@ -412,7 +413,7 @@ export default function DashboardPage() {
       <section className="mb-10" aria-labelledby="activity-heading">
         <h3
           id="activity-heading"
-          className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-6"
+          className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-4"
         >
           Recent Activity
         </h3>
@@ -420,7 +421,7 @@ export default function DashboardPage() {
           {recentActivity.map((item, i) => (
             <div
               key={i}
-              className={`flex items-center justify-between p-5 ${
+              className={`flex items-center justify-between p-6 ${
                 i < recentActivity.length - 1
                   ? "border-b border-[#3C2F1A]/5"
                   : ""

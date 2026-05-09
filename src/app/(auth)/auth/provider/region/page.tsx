@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useFeorm } from "@/context/feorm-context";
+import { useFeormAuth, useFeormOnboarding } from "@/context/feorm-context";
 import { ArrowLeft, ArrowRight, MapPin, Download } from "lucide-react";
 
 const NAMIBIA_REGIONS = [
@@ -23,7 +23,8 @@ const NAMIBIA_REGIONS = [
 ];
 
 export default function ProviderRegionPage() {
-  const { setUser, setHasCompletedOnboarding, user, selectedRole, providerAssets, avatarUrl } = useFeorm();
+  const { setUser, avatarUrl } = useFeormAuth();
+  const { setHasCompletedOnboarding, user, selectedRole, providerAssets } = useFeormOnboarding();
   const [selectedRegion, setSelectedRegion] = useState("");
   const router = useRouter();
 
