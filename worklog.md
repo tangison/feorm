@@ -192,3 +192,42 @@ Stage Summary:
 - 3 files fixed: dashboard, settings, verification pages
 - Rendering now shows title + category badge + description for each suggestion instead of raw object
 - All catch fallbacks updated to match the object structure
+
+---
+Task ID: 9
+Agent: Main Agent (Deployment Fix — Systematic Debug)
+Task: Fix deployment failure — "it still not deploying and or publishing"
+
+Root Cause Investigation (Phase 1):
+- Ran `next build` to reproduce the exact failure
+- Build failed with: `Cannot find module 'convex/values'` in `convex/auth.ts:2:19`
+- The `convex/` directory with 9 source files still existed on disk, but the `convex` npm package had been uninstalled in a previous session
+- `tsconfig.json` includes `**/*.ts` which catches the convex directory in type-checking
+- Dev server (Turbopack) does NOT type-check → worked fine, masking the build failure
+- Production build DOES type-check → fails
+
+Additional failures found after fixing convex:
+1. `examples/websocket/frontend.tsx` imports `socket.io-client` — not installed, included via `**/*.ts`
+2. `skills/` directory has SDK scripts with their own deps — same inclusion issue
+3. `avatarPreview.gradient` is `string | null` but React style `background` doesn't accept `null` (identity page + profile page)
+4. `verify-id/page.tsx` passes `{ phone: fullPhone }` object to `verifyUser(phone: string)` — wrong arg shape
+5. `voyager/verify/page.tsx` destructures `setHasCompletedOnboarding` from `useFeormAuth()` — it's on `useFeormOnboarding()`
+6. `provider/region/page.tsx` same wrong context destructuring for `user`
+7. `nav.tsx` accesses `item.onClick` on union type where only some items have it
+8. 16 Radix UI packages missing — uninstalled during optimization but component files still import them
+
+Implementation (Phase 4):
+- Deleted `convex/` directory entirely (orphaned, no runtime references)
+- Removed `@/convex/*` path alias from tsconfig.json
+- Added `examples` and `skills` to tsconfig `exclude` array
+- Fixed `avatarPreview.gradient` → `avatarPreview.gradient ?? undefined` in identity + profile pages
+- Fixed `verifyUser({ phone: fullPhone })` → `verifyUser(fullPhone)` in verify-id page
+- Fixed context destructuring: moved `setHasCompletedOnboarding` to `useFeormOnboarding()` in voyager/verify page
+- Fixed context destructuring: moved `user` from `useFeormOnboarding()` to `useFeormAuth()` in provider/region page
+- Fixed `item.onClick` → `(item as { onClick?: () => void }).onClick` in nav.tsx
+- Installed 16 missing Radix UI packages
+
+Verification:
+- `next build` succeeds: 32 routes, all pages generated, TypeScript passed
+- `bun run lint` clean
+- Dev server: all routes 200

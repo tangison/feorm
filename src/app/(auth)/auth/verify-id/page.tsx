@@ -13,7 +13,7 @@ export default function VerifyIdPage() {
   const handleVerify = async () => {
     try {
       const fullPhone = user?.phone || `+264${phone.replace(/\s/g, "")}`;
-      await verifyUser({ phone: fullPhone });
+      await verifyUser(fullPhone);
     } catch {
       // Continue anyway for demo
     }

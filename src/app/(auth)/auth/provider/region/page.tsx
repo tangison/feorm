@@ -23,8 +23,8 @@ const NAMIBIA_REGIONS = [
 ];
 
 export default function ProviderRegionPage() {
-  const { setUser, avatarUrl } = useFeormAuth();
-  const { setHasCompletedOnboarding, user, selectedRole, providerAssets } = useFeormOnboarding();
+  const { setUser, avatarUrl, user } = useFeormAuth();
+  const { setHasCompletedOnboarding, selectedRole, providerAssets } = useFeormOnboarding();
   const [selectedRegion, setSelectedRegion] = useState("");
   const router = useRouter();
 

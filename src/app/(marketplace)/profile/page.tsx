@@ -131,7 +131,7 @@ export default function ProfilePage() {
                 avatarPreview.type === "preset" ? (
                   <div
                     className="w-full h-full"
-                    style={{ background: avatarPreview.gradient }}
+                    style={{ background: avatarPreview.gradient ?? undefined }}
                   />
                 ) : (
                   <Image

@@ -197,7 +197,7 @@ export default function FeormNav() {
               <Link
                 key={item.label}
                 href={item.href}
-                onClick={item.onClick}
+                onClick={(item as { onClick?: () => void }).onClick}
                 className={`flex items-center gap-3 rounded-full px-5 py-3 transition-all duration-200 min-h-[44px] group ${
                   isActive
                     ? "bg-[#1E1A14] text-[#FEFDFB]"
