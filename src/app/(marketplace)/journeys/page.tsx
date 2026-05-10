@@ -22,10 +22,10 @@ export default function JourneysPage() {
           My Journeys
         </p>
         <h1 className="font-serif-display text-4xl md:text-5xl text-[#1E1A14] mb-3 tracking-tight">
-          Bookings
+          Your Bookings
         </h1>
         <p className="text-sm text-[#787774]">
-          Active, upcoming, and past bookings on the Feorm network.{" "}
+          Active, upcoming, and past bookings.{" "}
           <span className="inline-flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-[#346538] animate-pulse" />
             <span className="font-mono-feorm text-[9px] uppercase tracking-widest">Live</span>
@@ -52,7 +52,7 @@ export default function JourneysPage() {
         <div className="border border-dashed border-[#D4C4A0]/50 bg-[#FEFDFB] rounded-[8px] p-12 text-center">
           <Clock size={32} className="text-[#D4C4A0] mx-auto mb-4" />
           <p className="text-sm text-[#787774] mb-6">
-            No bookings yet. Explore the marketplace to begin.
+            No bookings yet. Browse the marketplace to make your first one.
           </p>
           <Link
             href="/marketplace"

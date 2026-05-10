@@ -23,7 +23,7 @@ export default function ListingDetailPage() {
 
   const triggerWhatsApp = (title: string) => {
     const msg = encodeURIComponent(
-      `System Alert: Initiating inquiry for [${title}] via Feorm network.`
+      `Hi, I'm interested in [${title}] on Feorm. Can you tell me more?`
     );
     window.open(`https://wa.me/264853411522?text=${msg}`, "_blank");
   };
@@ -178,7 +178,7 @@ export default function ListingDetailPage() {
                   )}
                   <div className="flex items-center gap-3 mt-2">
                     <span className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#787774]">
-                      AI Enhanced
+                      Enhanced
                     </span>
                     <button
                       onClick={() => setRewrittenDesc(null)}
@@ -207,7 +207,7 @@ export default function ListingDetailPage() {
                     ) : (
                       <>
                         <Sparkles size={12} />
-                        AI Enhance
+                        Enhance Description
                       </>
                     )}
                   </button>
@@ -255,7 +255,7 @@ export default function ListingDetailPage() {
               {/* AI Recommendations */}
               <div className="mt-8 pt-8 border-t border-[#3C2F1A]/10">
                 <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-3">
-                  AI Recommendations
+                  Smart Suggestions
                 </h4>
                 {suggestions === null && !loadingSuggestions && (
                   <button

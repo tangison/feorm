@@ -261,7 +261,7 @@ export default function ProfilePage() {
                     </>
                   ) : (
                     <>
-                      <Sparkles size={12} /> Generate AI Identity
+                      <Sparkles size={12} /> Generate Portrait
                     </>
                   )}
                 </button>

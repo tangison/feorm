@@ -19,7 +19,7 @@ function SuccessContent() {
 
   const triggerWhatsApp = () => {
     const msg = encodeURIComponent(
-      `Hi, I've just booked [${listingTitle}] on Feorm. Looking forward to it! My Ref is: ${ref}`
+      `Hi, I just booked [${listingTitle}] on Feorm. My ref: ${ref}. When can we arrange the details?`
     );
     window.open(`https://wa.me/264853411522?text=${msg}`, "_blank");
   };
@@ -32,11 +32,10 @@ function SuccessContent() {
         </div>
 
         <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-[#1E1A14]">
-          Contract Initialized
+          Booking Confirmed
         </h1>
         <p className="text-sm text-[#787774] mb-8">
-          Your booking reference has been generated. Connect with the owner to
-          finalize details.
+          Your booking is confirmed. Contact the host on WhatsApp to arrange the details.
         </p>
 
         {ref && (

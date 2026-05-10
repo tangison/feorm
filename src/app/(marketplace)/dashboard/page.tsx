@@ -201,10 +201,10 @@ export default function DashboardPage() {
                   id="ai-insights-heading"
                   className="font-serif-display text-lg text-[#1E1A14]"
                 >
-                  AI Insights
+                  Listing Tips
                 </h3>
                 <p className="text-xs text-[#787774]">
-                  Optimization suggestions for your listings
+                  Suggestions to help you get more bookings
                 </p>
               </div>
             </div>
@@ -476,7 +476,7 @@ export default function DashboardPage() {
               type="button"
             >
               <Sparkles size={14} />
-              {rewriteLoading ? "Optimizing..." : "AI Optimize Descriptions"}
+              {rewriteLoading ? "Optimizing..." : "Improve My Descriptions"}
             </button>
           </div>
 

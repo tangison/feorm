@@ -7,18 +7,18 @@ import { Shield, CheckCircle, Star, ArrowRight } from "lucide-react";
 const onboardingSlides = [
   {
     icon: <Shield size={32} className="text-[#956400]" />,
-    title: "Escrow Protection",
-    desc: "Every transaction is secured via an N$1,500 escrow deposit. Funds are held in trust until both parties confirm the condition of the asset.",
+    title: "Your N$1,500 Deposit, Held in Trust",
+    desc: "Every equipment rental includes a refundable N$1,500 escrow deposit. The money is held until both you and the owner confirm the asset came back in good condition.",
   },
   {
     icon: <CheckCircle size={32} className="text-[#346538]" />,
     title: "N$10,000 Damage Cover",
-    desc: "In the event of equipment damage, the Feorm communal insurance provides up to N$10,000 in coverage. Verified identities only.",
+    desc: "If something goes wrong, the Feorm communal insurance covers up to N$10,000 in damage. Only available for verified members.",
   },
   {
     icon: <Star size={32} className="text-[#E8C96A]" />,
-    title: "The Sharing Economy",
-    desc: "Feorm is built on the principle that idle assets should work for the community. Your farm, your tractor, your land — all nodes in the network.",
+    title: "Your Farm, Your Terms",
+    desc: "Idle tractors, empty guest rooms, unused pasture — they can all earn income. Feorm connects your assets with people who need them.",
   },
 ];
 

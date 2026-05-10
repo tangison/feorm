@@ -25,13 +25,13 @@ export default function RolePage() {
       <div className="max-w-3xl w-full">
         <div className="mb-12 text-center">
           <kbd className="font-mono-feorm text-[10px] border border-[#3C2F1A]/20 bg-[#FEFDFB] px-2 py-1 rounded text-[#787774] mb-6 inline-block">
-            PERSONA SELECTION
+            CHOOSE YOUR ROLE
           </kbd>
           <h1 className="font-serif-display text-3xl md:text-5xl mb-4 text-[#1E1A14] tracking-tight">
             How will you use the land?
           </h1>
           <p className="text-sm text-[#787774] max-w-md mx-auto leading-relaxed">
-            Your role shapes your entire marketplace experience. Choose the path that matches your intent.
+            Pick the role that fits. You can change it later in Settings. 
           </p>
         </div>
 
@@ -51,12 +51,11 @@ export default function RolePage() {
               Guest / Traveler
             </p>
             <p className="text-sm text-[#787774] leading-relaxed mb-8">
-              Discover farm stays, rent equipment, and experience authentic
-              Namibian agrotourism. Curated discovery, trusted escrow, seamless booking.
+              Find farm stays, rent equipment, and experience real Namibian agrotourism. Your booking is protected by escrow and N$10,000 damage cover.
             </p>
             <div className="flex items-center gap-2 text-[#787774] group-hover:text-[#1E1A14] transition-colors">
               <span className="font-mono-feorm text-[10px] uppercase tracking-widest font-medium">
-                Explore the land
+                Explore listings
               </span>
               <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-200" />
             </div>
@@ -77,12 +76,11 @@ export default function RolePage() {
               Host / Farmer
             </p>
             <p className="text-sm text-[#787774] leading-relaxed mb-8">
-              List your farmland, accommodation, or machinery. Earn from your
-              assets with escrow protection and verified bookings.
+              List your farmland, accommodation, or machinery and earn income. Escrow protection and verified bookings keep every transaction safe.
             </p>
             <div className="flex items-center gap-2 text-[#787774] group-hover:text-[#1E1A14] transition-colors">
               <span className="font-mono-feorm text-[10px] uppercase tracking-widest font-medium">
-                Manage your assets
+                Start earning
               </span>
               <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-200" />
             </div>

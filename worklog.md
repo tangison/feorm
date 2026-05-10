@@ -137,3 +137,38 @@ Stage Summary:
 - Prototype runs entirely on REST API routes + Prisma/SQLite + demo data fallbacks
 - No external backend dependency — demo works standalone
 - All routes 200, lint clean, zero runtime errors
+
+---
+Task ID: 7
+Agent: Main Agent (Copywriting)
+Task: Apply copywriting principles across all pages — clarity over cleverness, benefits over features, specificity, strong CTAs
+
+Work Log:
+- Auth/Landing page: "Provision of the Land" → "Stay on a Farm. Rent a Tractor." (specific value prop)
+- Auth/Landing subheadline: abstract description → "Book farm stays and rent farming equipment from Namibian landowners. Escrow-protected. N$10,000 damage cover. Verified hosts only." (specific benefits)
+- Auth/Landing KBD: "SECURE GATEWAY" → "STEP 1 OF 2" (clear progress indicator)
+- Auth/Landing headline: "Initialize Connection" → "Enter Your Number" (clarity over cleverness)
+- Auth/Landing sub: "Access the communal marketplace via verified mobile credential" → "We will send a 6-digit code to verify your number. No password needed."
+- Auth/Landing CTA: "Initialize Connection" → "Send Verification Code" (action-oriented)
+- Auth/Landing terms link: "Communal Ethic" → "Terms of Service" (plain English)
+- Verify page: "VERIFICATION PROTOCOL" → "STEP 2 OF 2", "Trust Layer" → "Verify Your Number", CTA "Verify & Enter" → "Verify & Continue"
+- Identity page: "IDENTITY PROTOCOL" → "YOUR PROFILE", "Establish Profile" → "Tell Us About Yourself", CTA "Continue" → "Save & Continue"
+- Role page: "PERSONA SELECTION" → "CHOOSE YOUR ROLE", removed jargon from descriptions, CTAs "Explore the land" → "Explore listings", "Manage your assets" → "Start earning"
+- Onboarding: "Escrow Protection" → "Your N$1,500 Deposit, Held in Trust" (specific benefit), "The Sharing Economy" → "Your Farm, Your Terms"
+- Terms page: "LEGAL PROTOCOL" → "TERMS OF SERVICE", "The Communal Ethic" → "Your Rights & Responsibilities", CTA "I Accept — Continue" → "I Accept — Continue to Marketplace"
+- Marketplace: "Authentic agrotourism provisions" → "Find farm stays across Namibia — from bushveld camps to lodge rooms.", "Peer-to-peer machinery rentals secured via escrow protocol" → "Rent tractors, pumps, and more from local owners. Escrow-protected."
+- Journeys: "Bookings" → "Your Bookings", empty state copy simplified
+- Booking success: "Contract Initialized" → "Booking Confirmed", clearer WhatsApp message
+- Footer: "A decentralized marketplace..." → "Book farm stays and rent farming equipment from Namibian landowners. Escrow-protected, verified hosts, N$10,000 damage cover.", "Network" → "Explore"
+- Removed all "AI-Powered" slop: "AI-Powered Help" → "Smart Help", "AI-Powered Verification" → "Smart Verification", "AI-Powered" → "Smart Tools", "AI Optimize Descriptions" → "Improve My Descriptions", "AI Insights" → "Listing Tips", "Generate AI Identity" → "Generate Portrait"
+- WhatsApp inquiry message: "System Alert: Initiating inquiry..." → "Hi, I'm interested in..."
+- Listing detail: "AI Recommendations" → "Smart Suggestions", "AI Enhance" → "Enhance Description"
+- All routes verified: 200 OK, lint clean
+
+Stage Summary:
+- 14 files updated with clearer, benefit-driven copy
+- Eliminated abstract jargon: "Initialize Connection", "Trust Layer", "Identity Protocol", "Communal Ethic", "Legal Protocol", "Persona Selection" all replaced with plain English
+- Headlines now communicate value: "Stay on a Farm. Rent a Tractor." instead of "Provision of the Land."
+- CTAs are action-oriented: "Send Verification Code", "Save & Continue", "Get Smart Help"
+- AI slop language removed across all pages: "AI-Powered" → "Smart", "AI Insights" → "Listing Tips"
+- Specificity added: escrow amounts, damage cover amounts, and concrete outcomes instead of vague claims

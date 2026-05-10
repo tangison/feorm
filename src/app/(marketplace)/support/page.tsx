@@ -169,11 +169,10 @@ export default function SupportPage() {
             className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-5"
             id="ai-support-heading"
           >
-            AI-Powered Help
+            Smart Help
           </h3>
           <p className="text-xs text-[#787774] mb-4 leading-relaxed">
-            Get instant, context-aware assistance powered by Feorm&apos;s
-            intelligence engine.
+            Get instant answers to common questions about Feorm.
           </p>
           <button
             onClick={handleAiHelp}
@@ -186,7 +185,7 @@ export default function SupportPage() {
             ) : (
               <Sparkles size={16} />
             )}
-            {aiLoading ? "Thinking..." : "Get AI-Powered Help"}
+            {aiLoading ? "Thinking..." : "Get Smart Help"}
           </button>
 
           {/* Loading skeleton */}

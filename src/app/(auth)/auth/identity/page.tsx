@@ -151,13 +151,13 @@ export default function IdentityPage() {
 
         <div className="mb-10">
           <kbd className="font-mono-feorm text-[10px] border border-[#3C2F1A]/20 bg-[#FEFDFB] px-2 py-1 rounded text-[#787774] mb-6 inline-block">
-            IDENTITY PROTOCOL
+            YOUR PROFILE
           </kbd>
           <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-[#1E1A14] tracking-tight">
-            Establish Profile
+            Tell Us About Yourself
           </h1>
           <p className="text-sm text-[#787774] leading-relaxed">
-            Your identity strengthens the communal trust network.
+            Hosts want to know who they are welcoming. Add your name and region to build trust.
           </p>
         </div>
 
@@ -267,12 +267,12 @@ export default function IdentityPage() {
                   </>
                 ) : (
                   <>
-                    <Sparkles size={12} /> Generate AI Identity
+                    <Sparkles size={12} /> Generate Portrait
                   </>
                 )}
               </button>
               <p className="text-[9px] text-[#787774] font-mono-feorm text-center uppercase tracking-wider mt-2">
-                Editorial portrait, brand-matched
+                Editorial-style portrait for your profile
               </p>
             </div>
           </div>
@@ -333,7 +333,7 @@ export default function IdentityPage() {
             className="w-full btn-primary-feorm px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
             type="button"
           >
-            {loading ? "Saving..." : "Continue"}
+            {loading ? "Saving..." : "Save & Continue"}
             <ArrowRight size={14} />
           </button>
         </div>

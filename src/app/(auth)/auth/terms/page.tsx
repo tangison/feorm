@@ -15,13 +15,13 @@ export default function TermsPage() {
       <div className="max-w-lg w-full">
         <div className="mb-10">
           <kbd className="font-mono-feorm text-[10px] border border-[#3C2F1A]/20 bg-[#FEFDFB] px-2 py-1 rounded text-[#787774] mb-6 inline-block">
-            LEGAL PROTOCOL
+            TERMS OF SERVICE
           </kbd>
           <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-[#1E1A14]">
-            The Communal Ethic
+            Your Rights & Responsibilities
           </h1>
           <p className="text-sm text-[#787774]">
-            A plain-English summary of your rights and responsibilities.
+            A plain-English summary of the rules for using Feorm.
           </p>
         </div>
 
@@ -85,8 +85,7 @@ export default function TermsPage() {
             className="mt-1 w-4 h-4 accent-[#1E1A14]"
           />
           <span className="text-sm text-[#3C2F1A]">
-            I accept the Communal Ethic and acknowledge the terms of service as
-            binding for all transactions on the Feorm network.
+            I accept the terms of service and acknowledge the escrow and insurance policies as binding for all transactions on Feorm.
           </span>
         </label>
 
@@ -98,7 +97,7 @@ export default function TermsPage() {
           disabled={!accepted}
           className="w-full btn-primary-feorm px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
         >
-          I Accept — Continue
+          I Accept — Continue to Marketplace
           <ArrowRight size={14} />
         </button>
       </div>

@@ -24,14 +24,14 @@ export default function FeormFooter() {
               </span>
             </Link>
             <p className="text-sm text-[#787774] leading-relaxed max-w-[260px]">
-              A decentralized marketplace connecting Namibian farmland with those who require its provisions and equipment.
+              Book farm stays and rent farming equipment from Namibian landowners. Escrow-protected, verified hosts, N$10,000 damage cover.
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
             <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-4">
-              Network
+              Explore
             </h4>
             <div className="space-y-3">
               <Link href="/marketplace?view=stays" className="block text-sm text-[#3C2F1A] hover:text-[#1E1A14] transition-colors">

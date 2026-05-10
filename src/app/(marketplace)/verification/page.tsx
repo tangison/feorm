@@ -316,7 +316,7 @@ export default function VerificationPage() {
           id="ai-verify-heading"
           className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-4"
         >
-          AI-Powered Verification
+          Smart Verification
         </h2>
         <div className="bento-card p-6">
           <div className="flex items-center gap-3 mb-5">
@@ -325,10 +325,10 @@ export default function VerificationPage() {
             </div>
             <div>
               <p className="text-sm font-medium text-[#1E1A14]">
-                Verify Identity with AI
+                Speed Up Your Verification
               </p>
               <p className="text-xs text-[#787774]">
-                Get personalized tips to speed up your verification
+                Get personalized tips to verify faster
               </p>
             </div>
           </div>
@@ -340,7 +340,7 @@ export default function VerificationPage() {
             type="button"
           >
             <Sparkles size={14} />
-            {aiLoading ? "Analyzing..." : "Verify Identity with AI"}
+            {aiLoading ? "Analyzing..." : "Get Verification Tips"}
           </button>
 
           {/* AI Tips */}
@@ -358,7 +358,7 @@ export default function VerificationPage() {
           {aiTips && !aiLoading && (
             <div className="mt-5 bento-card p-6 bg-[#EDF3EC]/30">
               <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#346538] mb-4">
-                AI Verification Tips
+                Verification Tips
               </p>
               <div className="space-y-3">
                 {aiTips.map((tip, i) => (

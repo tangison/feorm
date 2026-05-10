@@ -59,16 +59,16 @@ export default function AuthPage() {
               feorm<span className="text-[#E8C96A]">.</span>
             </h1>
             <p className="text-[10px] uppercase tracking-[0.2em] text-[#D4C4A0] font-mono-feorm">
-              Network 0.1
+Namibian Farmland Marketplace
             </p>
           </div>
           <div className="reveal delay-1">
             <h1 className="font-serif-display text-3xl md:text-5xl mb-4 text-[#FEFDFB] leading-tight max-w-md">
-              Provision of the Land.
+              Stay on a Farm. Rent a Tractor.
             </h1>
             <p className="text-sm text-[#D4C4A0] max-w-sm leading-relaxed">
-              A decentralized marketplace connecting Namibian farmland with those
-              who require its provisions and equipment.
+              Book farm stays and rent farming equipment from Namibian landowners.
+              Escrow-protected. N$10,000 damage cover. Verified hosts only.
             </p>
           </div>
         </div>
@@ -79,13 +79,13 @@ export default function AuthPage() {
         <div className="w-full max-w-sm reveal delay-2">
           <div className="mb-12">
             <kbd className="font-mono-feorm text-[10px] border border-[#3C2F1A]/20 bg-[#FEFDFB] px-2 py-1 rounded text-[#787774] mb-6 inline-block">
-              SECURE GATEWAY
+              STEP 1 OF 2
             </kbd>
             <h1 className="font-serif-display text-3xl mb-3 text-[#1E1A14] tracking-tight">
-              Initialize Connection
+              Enter Your Number
             </h1>
             <p className="text-sm text-[#787774] leading-relaxed">
-              Access the communal marketplace via verified mobile credential.
+              We will send a 6-digit code to verify your number. No password needed.
             </p>
           </div>
 
@@ -117,7 +117,7 @@ export default function AuthPage() {
               disabled={!phone || phone.length < 8 || loading}
               className="w-full btn-primary-feorm px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
             >
-              {loading ? "Requesting..." : "Initialize Connection"}
+              {loading ? "Sending..." : "Send Verification Code"}
               <ArrowRight size={14} aria-hidden="true" />
             </button>
           </div>
@@ -134,9 +134,9 @@ export default function AuthPage() {
               href="/auth/terms"
               className="border-b border-[#787774] pb-0.5 hover:text-[#1E1A14] transition-colors"
             >
-              Communal Ethic
+              Terms of Service
             </Link>{" "}
-            and standard terms of service.
+            to continue.
           </p>
         </div>
       </div>

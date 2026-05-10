@@ -312,7 +312,7 @@ export default function SettingsPage() {
           id="ai-heading"
           className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-4"
         >
-          AI-Powered
+          Smart Tools
         </h2>
         <div className="bento-card p-6">
           <div className="flex items-center gap-3 mb-5">
@@ -321,10 +321,10 @@ export default function SettingsPage() {
             </div>
             <div>
               <p className="text-sm font-medium text-[#1E1A14]">
-                Smart Profile Enhancement
+                Profile Tips
               </p>
               <p className="text-xs text-[#787774]">
-                Get AI-powered suggestions to optimize your profile
+                Get suggestions to improve your profile and attract more bookings
               </p>
             </div>
           </div>
@@ -336,7 +336,7 @@ export default function SettingsPage() {
             type="button"
           >
             <Sparkles size={14} />
-            {aiLoading ? "Analyzing..." : "Enhance My Profile"}
+            {aiLoading ? "Analyzing..." : "Get Profile Tips"}
           </button>
 
           {/* AI Suggestions */}
@@ -354,7 +354,7 @@ export default function SettingsPage() {
           {aiSuggestions && !aiLoading && (
             <div className="mt-5 bento-card p-6 bg-[#FBF3DB]/30">
               <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#956400] mb-4">
-                AI Suggestions
+                Suggestions
               </p>
               <div className="space-y-3">
                 {aiSuggestions.map((suggestion, i) => (

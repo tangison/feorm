@@ -163,8 +163,8 @@ function MarketplaceContent() {
             </h1>
             <p className="text-sm text-[#787774] max-w-lg leading-relaxed">
               {marketView === "stays"
-                ? "Authentic agrotourism provisions across the Namibian landscape."
-                : "Peer-to-peer machinery rentals secured via escrow protocol."}
+                ? "Find farm stays across Namibia — from bushveld camps to lodge rooms."
+                : "Rent tractors, pumps, and more from local owners. Escrow-protected."}
             </p>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
@@ -277,7 +277,7 @@ function MarketplaceContent() {
         <div className="border border-dashed border-[#D4C4A0]/50 bg-[#FEFDFB] rounded-[8px] p-12 text-center">
           <p className="text-sm text-[#787774] mb-4">
             No listings found{selectedRegion !== "All Regions" ? ` in ${selectedRegion}` : ""}.
-            The network is still growing.
+            Try removing a filter or check back soon.
           </p>
           {hasActiveFilters && (
             <button
