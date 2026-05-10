@@ -46,3 +46,22 @@ Stage Summary:
 - Instant listing detail render → no loading spinner flash
 - Zero CLS → skeleton matches card dimensions
 - Chat FAB no longer overlaps mobile bottom nav
+
+---
+Task ID: 3
+Agent: Main Agent (Hydration Fix)
+Task: Fix hydration mismatch error on auth page — button disabled attribute differs between SSR and client
+
+Work Log:
+- Diagnosed root cause: `loadAuthSession()` in FeormAuthProvider returns `phone=""` on server but reads localStorage on client, causing `disabled` prop to differ
+- Server: `phone=""` → `disabled={true}` → renders `disabled=""` in HTML
+- Client: `phone="81..."` (from localStorage) → `disabled={false}` → no disabled attribute
+- Refactored FeormAuthProvider to use `useSyncExternalStore` for localStorage reads
+- `getServerSnapshot` returns empty defaults (matches SSR), `getSnapshot` reads localStorage (client-only)
+- This guarantees first render always matches server output, then React reconciles from external store after hydration
+- Lint clean, dev server 200
+
+Stage Summary:
+- Hydration mismatch eliminated: useSyncExternalStore ensures SSR/client consistency
+- localStorage persistence preserved via subscribe/notify pattern
+- No setState-in-effect violations (lint clean)
