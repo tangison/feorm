@@ -12,7 +12,7 @@ function SuccessContent() {
   const router = useRouter();
   const ref = searchParams.get("ref") || "";
 
-  // Try to look up booking from Convex by reference (with REST fallback)
+  // Look up booking by reference via REST API (demo fallback)
   const { data: booking } = useBookingByReference(ref);
 
   const listingTitle = booking?.listing?.title || selectedListing?.title || "Feorm Booking";

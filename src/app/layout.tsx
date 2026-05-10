@@ -3,7 +3,6 @@ import { DM_Sans, DM_Serif_Display, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { FeormProvider } from "@/context/feorm-context";
-import { ConvexProviderWrapper } from "@/components/feorm/convex-provider";
 
 const dmSerif = DM_Serif_Display({
   variable: "--font-dm-serif",
@@ -62,12 +61,10 @@ export default function RootLayout({
         <a href="#main-content" className="skip-link">
           Skip to content
         </a>
-        <ConvexProviderWrapper>
-          <FeormProvider>
-            {children}
-            <Toaster />
-          </FeormProvider>
-        </ConvexProviderWrapper>
+        <FeormProvider>
+          {children}
+          <Toaster />
+        </FeormProvider>
       </body>
     </html>
   );

@@ -115,3 +115,25 @@ Stage Summary:
 - `getServerSnapshot` returns frozen defaults (immutable reference)
 - Cross-module cache invalidation: each module manages its own cache; when one writes to shared localStorage key, the other's cache naturally invalidates on next getSnapshot call
 - No more "Maximum update depth exceeded" or "getSnapshot should be cached" errors
+
+---
+Task ID: 6
+Agent: Main Agent (Convex Removal)
+Task: Remove Convex provider and dependencies — prototype must work without external backend
+
+Work Log:
+- Removed `ConvexProviderWrapper` import and wrapper from `src/app/layout.tsx`
+- Deleted `src/components/feorm/convex-provider.tsx`
+- Deleted `src/lib/convex.ts` (re-exported `api` from `convex/_generated/api`)
+- Removed `convex` package via `bun remove convex`
+- Updated comment in booking success page: "Convex by reference" → "REST API (demo fallback)"
+- Verified all hooks (`use-bookings.ts`) already use REST API with demo fallbacks — no Convex dependency in runtime code
+- All 7 main routes tested: 200 OK
+- Lint clean
+- Auth flow, API calls, Prisma queries all working in demo mode
+
+Stage Summary:
+- Convex fully removed from layout, components, lib, and package.json
+- Prototype runs entirely on REST API routes + Prisma/SQLite + demo data fallbacks
+- No external backend dependency — demo works standalone
+- All routes 200, lint clean, zero runtime errors
