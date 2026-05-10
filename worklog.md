@@ -92,3 +92,26 @@ Stage Summary:
 - Proper h1 headings on all pages for SEO and accessibility
 - Loading boundaries for smoother route transitions
 - Lint clean, all routes 200
+
+---
+Task ID: 5
+Agent: Main Agent (useSyncExternalStore Cache Fix)
+Task: Fix infinite loop caused by uncached getSnapshot in useSyncExternalStore — "Maximum update depth exceeded" and "getSnapshot should be cached" errors
+
+Work Log:
+- Diagnosed root cause: `getSnapshot()` in both `feorm-auth.tsx` and `feorm-onboarding.tsx` returned a new object literal on every call, violating `useSyncExternalStore`'s requirement that getSnapshot returns the same reference when data hasn't changed
+- React detects new reference → triggers re-render → getSnapshot returns new object again → infinite loop
+- Implemented cached snapshot pattern in `feorm-auth.tsx`:
+  - Added `cachedRaw: string | null` and `cachedSnapshot: FeormAuthState` module-level variables
+  - `getSnapshot()` compares `localStorage.getItem(STORAGE_KEY)` with `cachedRaw` — returns `cachedSnapshot` if unchanged
+  - `persistToStorage()` updates both `cachedRaw` and `cachedSnapshot` atomically
+  - `getServerSnapshot()` returns `Object.freeze(SERVER_DEFAULTS)` for guaranteed reference stability
+- Applied identical cached snapshot pattern to `feorm-onboarding.tsx`
+- Lint clean, all routes 200, dev server stable
+
+Stage Summary:
+- Infinite loop eliminated in both auth and onboarding providers
+- `getSnapshot` now returns stable references (same object when data unchanged)
+- `getServerSnapshot` returns frozen defaults (immutable reference)
+- Cross-module cache invalidation: each module manages its own cache; when one writes to shared localStorage key, the other's cache naturally invalidates on next getSnapshot call
+- No more "Maximum update depth exceeded" or "getSnapshot should be cached" errors

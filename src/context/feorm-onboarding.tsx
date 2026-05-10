@@ -35,12 +35,12 @@ const FeormOnboardingContext = createContext<FeormOnboardingContextType | null>(
 );
 
 // Server-safe defaults — must match what SSR produces
-const SERVER_DEFAULTS: OnboardingState = {
+const SERVER_DEFAULTS: OnboardingState = Object.freeze({
   selectedRole: null,
   interests: [],
   hasCompletedOnboarding: false,
   providerAssets: [],
-};
+});
 
 const STORAGE_KEY = "feorm-session";
 let listeners: Array<() => void> = [];
@@ -58,22 +58,31 @@ function subscribe(listener: () => void) {
   };
 }
 
+// ─── Cached snapshot to prevent infinite loops ──────────────────
+let cachedRaw: string | null = null;
+let cachedSnapshot: OnboardingState = SERVER_DEFAULTS;
+
 function getSnapshot(): OnboardingState {
   try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      const session = JSON.parse(saved);
-      return {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw === cachedRaw) return cachedSnapshot;
+
+    if (raw) {
+      const session = JSON.parse(raw);
+      cachedSnapshot = {
         selectedRole: session.selectedRole || null,
         interests: session.interests || [],
         hasCompletedOnboarding: session.hasCompletedOnboarding || false,
         providerAssets: session.providerAssets || [],
       };
+    } else {
+      cachedSnapshot = { ...SERVER_DEFAULTS };
     }
+    cachedRaw = raw;
+    return cachedSnapshot;
   } catch {
-    // Ignore localStorage errors
+    return cachedSnapshot;
   }
-  return SERVER_DEFAULTS;
 }
 
 function getServerSnapshot(): OnboardingState {
@@ -84,10 +93,18 @@ function persistToStorage(patch: Partial<OnboardingState>) {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     const session = saved ? JSON.parse(saved) : {};
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify({ ...session, ...patch })
-    );
+    const merged = { ...session, ...patch };
+    const json = JSON.stringify(merged);
+    localStorage.setItem(STORAGE_KEY, json);
+    // Invalidate cache so next getSnapshot() returns fresh data
+    cachedRaw = json;
+    // Rebuild onboarding portion of the snapshot
+    cachedSnapshot = {
+      selectedRole: merged.selectedRole || null,
+      interests: merged.interests || [],
+      hasCompletedOnboarding: merged.hasCompletedOnboarding || false,
+      providerAssets: merged.providerAssets || [],
+    };
     emitChange();
   } catch {
     // Ignore localStorage errors

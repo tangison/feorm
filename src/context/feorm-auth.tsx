@@ -38,11 +38,11 @@ interface FeormAuthContextType extends FeormAuthState {
 const FeormAuthContext = createContext<FeormAuthContextType | null>(null);
 
 // Server-safe defaults — must match what SSR produces
-const SERVER_DEFAULTS: FeormAuthState = {
+const SERVER_DEFAULTS: FeormAuthState = Object.freeze({
   user: null,
   phone: "",
   avatarUrl: "",
-};
+});
 
 const STORAGE_KEY = "feorm-session";
 let listeners: Array<() => void> = [];
@@ -60,21 +60,33 @@ function subscribe(listener: () => void) {
   };
 }
 
+// ─── Cached snapshot to prevent infinite loops ──────────────────
+// useSyncExternalStore requires getSnapshot to return the same
+// reference when data hasn't changed. Without caching, every call
+// creates a new object → React detects a change → infinite re-render.
+let cachedRaw: string | null = null;
+let cachedSnapshot: FeormAuthState = SERVER_DEFAULTS;
+
 function getSnapshot(): FeormAuthState {
   try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      const session = JSON.parse(saved);
-      return {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw === cachedRaw) return cachedSnapshot;
+
+    if (raw) {
+      const session = JSON.parse(raw);
+      cachedSnapshot = {
         user: session.user || null,
         phone: session.phone || "",
         avatarUrl: session.avatarUrl || "",
       };
+    } else {
+      cachedSnapshot = { ...SERVER_DEFAULTS };
     }
+    cachedRaw = raw;
+    return cachedSnapshot;
   } catch {
-    // Ignore localStorage errors
+    return cachedSnapshot;
   }
-  return SERVER_DEFAULTS;
 }
 
 function getServerSnapshot(): FeormAuthState {
@@ -83,7 +95,11 @@ function getServerSnapshot(): FeormAuthState {
 
 function persistToStorage(state: FeormAuthState) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    const json = JSON.stringify(state);
+    localStorage.setItem(STORAGE_KEY, json);
+    // Invalidate cache so next getSnapshot() returns fresh data
+    cachedRaw = json;
+    cachedSnapshot = state;
     emitChange();
   } catch {
     // Ignore localStorage errors
@@ -112,8 +128,6 @@ export function FeormAuthProvider({ children }: { children: ReactNode }) {
 
   const setPhone = useCallback((value: string) => {
     setPhoneRaw(value);
-    // Read current user/avatarUrl from state at call time isn't possible,
-    // so we read from localStorage for the other fields
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       const session = saved ? JSON.parse(saved) : {};
