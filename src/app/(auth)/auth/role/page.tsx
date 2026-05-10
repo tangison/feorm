@@ -27,9 +27,9 @@ export default function RolePage() {
           <kbd className="font-mono-feorm text-[10px] border border-[#3C2F1A]/20 bg-[#FEFDFB] px-2 py-1 rounded text-[#787774] mb-6 inline-block">
             PERSONA SELECTION
           </kbd>
-          <h2 className="font-serif-display text-3xl md:text-5xl mb-4 text-[#1E1A14] tracking-tight">
+          <h1 className="font-serif-display text-3xl md:text-5xl mb-4 text-[#1E1A14] tracking-tight">
             How will you use the land?
-          </h2>
+          </h1>
           <p className="text-sm text-[#787774] max-w-md mx-auto leading-relaxed">
             Your role shapes your entire marketplace experience. Choose the path that matches your intent.
           </p>

@@ -147,9 +147,9 @@ export default function ListingDetailPage() {
                 </span>
               </div>
 
-              <h2 className="font-serif-display text-3xl md:text-4xl mb-5 text-[#1E1A14] leading-[1.1] tracking-tight">
+              <h1 className="font-serif-display text-3xl md:text-4xl mb-5 text-[#1E1A14] leading-[1.1] tracking-tight">
                 {listing.title}
-              </h2>
+              </h1>
 
               <div className="text-[#1E1A14] mb-8 pb-8 border-b border-[#3C2F1A]/10">
                 <span className="text-2xl font-medium font-mono-feorm">

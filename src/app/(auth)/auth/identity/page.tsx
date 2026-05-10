@@ -153,9 +153,9 @@ export default function IdentityPage() {
           <kbd className="font-mono-feorm text-[10px] border border-[#3C2F1A]/20 bg-[#FEFDFB] px-2 py-1 rounded text-[#787774] mb-6 inline-block">
             IDENTITY PROTOCOL
           </kbd>
-          <h2 className="font-serif-display text-3xl md:text-4xl mb-4 text-[#1E1A14] tracking-tight">
+          <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-[#1E1A14] tracking-tight">
             Establish Profile
-          </h2>
+          </h1>
           <p className="text-sm text-[#787774] leading-relaxed">
             Your identity strengthens the communal trust network.
           </p>

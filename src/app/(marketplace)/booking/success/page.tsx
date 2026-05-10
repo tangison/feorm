@@ -31,9 +31,9 @@ function SuccessContent() {
           <CheckCircle size={32} className="text-[#346538]" />
         </div>
 
-        <h2 className="font-serif-display text-3xl md:text-4xl mb-4 text-[#1E1A14]">
+        <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-[#1E1A14]">
           Contract Initialized
-        </h2>
+        </h1>
         <p className="text-sm text-[#787774] mb-8">
           Your booking reference has been generated. Connect with the owner to
           finalize details.

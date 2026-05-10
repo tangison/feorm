@@ -33,9 +33,9 @@ export default function OnboardingPage() {
           <div className="w-16 h-16 rounded-full bg-[#FBF3DB] flex items-center justify-center mx-auto mb-8">
             {onboardingSlides[step].icon}
           </div>
-          <h2 className="font-serif-display text-3xl md:text-4xl mb-6 text-[#1E1A14]">
+          <h1 className="font-serif-display text-3xl md:text-4xl mb-6 text-[#1E1A14]">
             {onboardingSlides[step].title}
-          </h2>
+          </h1>
           <p className="text-sm text-[#787774] leading-relaxed max-w-md mx-auto">
             {onboardingSlides[step].desc}
           </p>

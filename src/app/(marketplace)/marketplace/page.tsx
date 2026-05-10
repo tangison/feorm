@@ -54,6 +54,16 @@ function MarketplaceContent() {
   const [regionDropdownOpen, setRegionDropdownOpen] = useState(false);
   const [showAvailableOnly, setShowAvailableOnly] = useState(false);
 
+  // Close dropdown on Escape key
+  useEffect(() => {
+    if (!regionDropdownOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setRegionDropdownOpen(false);
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [regionDropdownOpen]);
+
   useEffect(() => {
     const view = searchParams.get("view");
     if (view === "stays" || view === "equipment") {
@@ -148,9 +158,9 @@ function MarketplaceContent() {
 
         <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6">
           <div>
-            <h2 className="font-serif-display text-4xl md:text-5xl text-[#1E1A14] mb-3 tracking-tight">
+            <h1 className="font-serif-display text-4xl md:text-5xl text-[#1E1A14] mb-3 tracking-tight">
               {marketView === "stays" ? "Farm Stays" : "Equipment Exchange"}
-            </h2>
+            </h1>
             <p className="text-sm text-[#787774] max-w-lg leading-relaxed">
               {marketView === "stays"
                 ? "Authentic agrotourism provisions across the Namibian landscape."

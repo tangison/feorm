@@ -25,9 +25,9 @@ export default function VerifyIdPage() {
     <div className="flex-grow flex items-center justify-center p-6 md:p-12 min-h-screen bg-[#FAF7F2]">
       <div className="max-w-lg w-full">
         <div className="mb-10">
-          <h2 className="font-serif-display text-3xl md:text-4xl mb-4 text-[#1E1A14]">
+          <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-[#1E1A14]">
             Trust Layer Protocol
-          </h2>
+          </h1>
           <p className="text-sm text-[#787774] leading-relaxed">
             Verified farmers. Protected assets. Escrow security requires formal
             identification prior to marketplace entry.

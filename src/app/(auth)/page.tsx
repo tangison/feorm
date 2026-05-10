@@ -63,9 +63,9 @@ export default function AuthPage() {
             </p>
           </div>
           <div className="reveal delay-1">
-            <h2 className="font-serif-display text-3xl md:text-5xl mb-4 text-[#FEFDFB] leading-tight max-w-md">
+            <h1 className="font-serif-display text-3xl md:text-5xl mb-4 text-[#FEFDFB] leading-tight max-w-md">
               Provision of the Land.
-            </h2>
+            </h1>
             <p className="text-sm text-[#D4C4A0] max-w-sm leading-relaxed">
               A decentralized marketplace connecting Namibian farmland with those
               who require its provisions and equipment.
@@ -81,9 +81,9 @@ export default function AuthPage() {
             <kbd className="font-mono-feorm text-[10px] border border-[#3C2F1A]/20 bg-[#FEFDFB] px-2 py-1 rounded text-[#787774] mb-6 inline-block">
               SECURE GATEWAY
             </kbd>
-            <h2 className="font-serif-display text-3xl mb-3 text-[#1E1A14] tracking-tight">
+            <h1 className="font-serif-display text-3xl mb-3 text-[#1E1A14] tracking-tight">
               Initialize Connection
-            </h2>
+            </h1>
             <p className="text-sm text-[#787774] leading-relaxed">
               Access the communal marketplace via verified mobile credential.
             </p>

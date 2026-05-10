@@ -146,7 +146,7 @@ export function FeormAuthProvider({ children }: { children: ReactNode }) {
 export function useFeormAuth() {
   const ctx = useContext(FeormAuthContext);
   if (!ctx) {
-    throw new Error("useFeormAuth must be useFeormAuth must be used within a FeormAuthProvider");
+    throw new Error("useFeormAuth must be used within a FeormAuthProvider");
   }
   return ctx;
 }

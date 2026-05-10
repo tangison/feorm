@@ -62,9 +62,9 @@ export default function VerifyPage() {
           <kbd className="font-mono-feorm text-[10px] border border-[#3C2F1A]/20 bg-[#FEFDFB] px-2 py-1 rounded text-[#787774] mb-6 inline-block">
             VERIFICATION PROTOCOL
           </kbd>
-          <h2 className="font-serif-display text-3xl md:text-4xl mb-4 text-[#1E1A14]">
+          <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-[#1E1A14]">
             Trust Layer
-          </h2>
+          </h1>
           <p className="text-sm text-[#787774] leading-relaxed">
             Enter the 6-digit code sent to +264{phone}
           </p>

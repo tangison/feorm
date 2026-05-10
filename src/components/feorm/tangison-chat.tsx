@@ -155,7 +155,12 @@ export default function TangisonChat() {
       </div>
 
       {/* Messages */}
-      <div className="flex-grow max-h-[360px] overflow-y-auto p-4 space-y-3 bg-[#FAF7F2]">
+      <div
+        className="flex-grow max-h-[360px] overflow-y-auto p-4 space-y-3 bg-[#FAF7F2]"
+        role="log"
+        aria-live="polite"
+        aria-label="Chat messages"
+      >
         {messages.map((msg, i) => (
           <div
             key={i}

@@ -35,9 +35,9 @@ export default function ProviderAssetsPage() {
           <kbd className="font-mono-feorm text-[10px] border border-[#3C2F1A]/20 bg-[#FEFDFB] px-2 py-1 rounded text-[#787774] mb-6 inline-block">
             PROVIDER SETUP
           </kbd>
-          <h2 className="font-serif-display text-3xl md:text-4xl mb-4 text-[#1E1A14] tracking-tight">
+          <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-[#1E1A14] tracking-tight">
             Asset Inventory
-          </h2>
+          </h1>
           <p className="text-sm text-[#787774] leading-relaxed">
             What will you be providing to the Feorm network? Select all that apply.
           </p>

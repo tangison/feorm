@@ -58,9 +58,9 @@ export default function SupportPage() {
         <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-2">
           Help
         </p>
-        <h2 className="font-serif-display text-4xl md:text-5xl text-[#1E1A14] mb-3 tracking-tight">
+        <h1 className="font-serif-display text-4xl md:text-5xl text-[#1E1A14] mb-3 tracking-tight">
           Support Center
-        </h2>
+        </h1>
         <p className="text-sm text-[#787774]">
           Get help with your Feorm experience.
         </p>

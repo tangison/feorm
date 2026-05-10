@@ -21,9 +21,9 @@ export default function JourneysPage() {
         <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-2">
           My Journeys
         </p>
-        <h2 className="font-serif-display text-4xl md:text-5xl text-[#1E1A14] mb-3 tracking-tight">
+        <h1 className="font-serif-display text-4xl md:text-5xl text-[#1E1A14] mb-3 tracking-tight">
           Bookings
-        </h2>
+        </h1>
         <p className="text-sm text-[#787774]">
           Active, upcoming, and past bookings on the Feorm network.{" "}
           <span className="inline-flex items-center gap-1">
@@ -66,12 +66,10 @@ export default function JourneysPage() {
       {!bookingsLoading && bookings && bookings.length > 0 && (
         <div className="space-y-4">
           {bookings.map((b) => (
-            <div
+            <Link
               key={b._id}
+              href={`/listing/${b.listingId}`}
               className="bento-card bento-card-lift p-6 flex flex-col md:flex-row md:items-center gap-4 cursor-pointer hover:border-[#3C2F1A]/20 transition-colors"
-              onClick={() => router.push(`/listing/${b.listingId}`)}
-              role="button"
-              tabIndex={0}
               aria-label={`View ${b.listing?.title || "listing"}`}
             >
               <div className="flex-grow">
@@ -113,7 +111,7 @@ export default function JourneysPage() {
                   incl. N$ {(b.escrowAmount / 100).toLocaleString()} escrow
                 </p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}
