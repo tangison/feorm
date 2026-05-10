@@ -23,7 +23,7 @@ export default function VerificationPage() {
 
   const [idUploaded, setIdUploaded] = useState(false);
   const [aiLoading, setAiLoading] = useState(false);
-  const [aiTips, setAiTips] = useState<string[] | null>(null);
+  const [aiTips, setAiTips] = useState<Array<{ title: string; description: string; category: string }> | null>(null);
 
   const isVerified = user?.verified ?? false;
   const trustScore = 4.8;
@@ -54,9 +54,9 @@ export default function VerificationPage() {
       setAiTips(data.suggestions || []);
     } catch {
       setAiTips([
-        "Ensure your ID document is clear and all four corners are visible in the scan",
-        "Use natural lighting when photographing your ID to avoid glare and shadows",
-        "Complete your profile with your full legal name matching your ID for faster verification",
+        { title: "Clear Document Scan", description: "Ensure your ID document is clear and all four corners are visible in the scan.", category: "optimization" },
+        { title: "Natural Lighting", description: "Use natural lighting when photographing your ID to avoid glare and shadows.", category: "optimization" },
+        { title: "Match Legal Name", description: "Complete your profile with your full legal name matching your ID for faster verification.", category: "optimization" },
       ]);
     } finally {
       setAiLoading(false);
@@ -370,9 +370,19 @@ export default function VerificationPage() {
                       size={14}
                       className="text-[#346538] shrink-0 mt-0.5"
                     />
-                    <p className="text-sm text-[#1E1A14] leading-relaxed">
-                      {tip}
-                    </p>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <p className="text-sm font-medium text-[#1E1A14] leading-relaxed">
+                          {tip.title}
+                        </p>
+                        <span className="text-[9px] uppercase tracking-widest text-[#787774] font-mono-feorm border border-[#3C2F1A]/10 rounded-full px-2 py-0.5 shrink-0">
+                          {tip.category}
+                        </span>
+                      </div>
+                      <p className="text-xs text-[#787774] leading-relaxed">
+                        {tip.description}
+                      </p>
+                    </div>
                   </div>
                 ))}
               </div>

@@ -22,7 +22,7 @@ export default function SettingsPage() {
   const { selectedRole, interests, hasCompletedOnboarding, providerAssets, setHasCompletedOnboarding } = useFeormOnboarding();
 
   const [aiLoading, setAiLoading] = useState(false);
-  const [aiSuggestions, setAiSuggestions] = useState<string[] | null>(null);
+  const [aiSuggestions, setAiSuggestions] = useState<Array<{ title: string; description: string; category: string }> | null>(null);
   const [brandLoading, setBrandLoading] = useState(false);
 
   // ─── Session Management ─────────────────────────────────────
@@ -130,9 +130,9 @@ export default function SettingsPage() {
       setAiSuggestions(data.suggestions || []);
     } catch {
       setAiSuggestions([
-        "Optimize your listing titles with specific location names for better search visibility",
-        "Add high-quality photos during golden hour to showcase your property authentically",
-        "Respond to booking requests within 2 hours to improve your response rate ranking",
+        { title: "Optimize Listing Titles", description: "Use specific location names in your listing titles for better search visibility.", category: "optimization" },
+        { title: "Golden Hour Photos", description: "Add high-quality photos during golden hour to showcase your property authentically.", category: "optimization" },
+        { title: "Fast Response Rate", description: "Respond to booking requests within 2 hours to improve your response rate ranking.", category: "optimization" },
       ]);
     } finally {
       setAiLoading(false);
@@ -366,9 +366,19 @@ export default function SettingsPage() {
                       size={14}
                       className="text-[#E8C96A] shrink-0 mt-0.5"
                     />
-                    <p className="text-sm text-[#1E1A14] leading-relaxed">
-                      {suggestion}
-                    </p>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <p className="text-sm font-medium text-[#1E1A14] leading-relaxed">
+                          {suggestion.title}
+                        </p>
+                        <span className="text-[9px] uppercase tracking-widest text-[#787774] font-mono-feorm border border-[#3C2F1A]/10 rounded-full px-2 py-0.5 shrink-0">
+                          {suggestion.category}
+                        </span>
+                      </div>
+                      <p className="text-xs text-[#787774] leading-relaxed">
+                        {suggestion.description}
+                      </p>
+                    </div>
                   </div>
                 ))}
               </div>

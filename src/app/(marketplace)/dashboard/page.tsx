@@ -82,7 +82,7 @@ export default function DashboardPage() {
   const { providerAssets } = useFeormOnboarding();
 
   const [aiLoading, setAiLoading] = useState(false);
-  const [aiInsights, setAiInsights] = useState<string[] | null>(null);
+  const [aiInsights, setAiInsights] = useState<Array<{ title: string; description: string; category: string }> | null>(null);
   const [rewriteLoading, setRewriteLoading] = useState(false);
   const [rewriteResults, setRewriteResults] = useState<
     Array<{ original: string; rewritten: string }> | null
@@ -110,9 +110,9 @@ export default function DashboardPage() {
       setAiInsights(data.suggestions || []);
     } catch {
       setAiInsights([
-        "Your tractor listing could attract 40% more bookings by adding operator-included pricing options",
-        "Consider offering weekly rates for the Solar Panel Array — extended rentals are trending in your region",
-        "Adding river access photos to your Kunene listing would differentiate it from similar camps",
+        { title: "Add Operator Pricing", description: "Your tractor listing could attract 40% more bookings by adding operator-included pricing options.", category: "optimization" },
+        { title: "Weekly Rate Opportunity", description: "Consider offering weekly rates for the Solar Panel Array — extended rentals are trending in your region.", category: "optimization" },
+        { title: "Photo Differentiation", description: "Adding river access photos to your Kunene listing would differentiate it from similar camps.", category: "optimization" },
       ]);
     } finally {
       setAiLoading(false);
@@ -239,9 +239,19 @@ export default function DashboardPage() {
                     size={14}
                     className="text-[#E8C96A] shrink-0 mt-0.5"
                   />
-                  <p className="text-sm text-[#1E1A14] leading-relaxed">
-                    {insight}
-                  </p>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <p className="text-sm font-medium text-[#1E1A14] leading-relaxed">
+                        {insight.title}
+                      </p>
+                      <span className="text-[9px] uppercase tracking-widest text-[#787774] font-mono-feorm border border-[#3C2F1A]/10 rounded-full px-2 py-0.5 shrink-0">
+                        {insight.category}
+                      </span>
+                    </div>
+                    <p className="text-xs text-[#787774] leading-relaxed">
+                      {insight.description}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>

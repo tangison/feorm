@@ -172,3 +172,23 @@ Stage Summary:
 - CTAs are action-oriented: "Send Verification Code", "Save & Continue", "Get Smart Help"
 - AI slop language removed across all pages: "AI-Powered" → "Smart", "AI Insights" → "Listing Tips"
 - Specificity added: escrow amounts, damage cover amounts, and concrete outcomes instead of vague claims
+
+---
+Task ID: 8
+Agent: Main Agent (Bug Fix)
+Task: Fix "Objects are not valid as a React child (found: object with keys {title, description, category})" runtime error
+
+Work Log:
+- Diagnosed root cause: `/api/ai/suggest` returns `Array<{title, description, category}>` objects, but three pages stored them in `string[]` state and rendered them directly as `{insight}` / `{suggestion}` / `{tip}` in JSX
+- Fixed `src/app/(marketplace)/dashboard/page.tsx`: Changed `aiInsights` state from `string[] | null` to `Array<{ title, string; description: string; category: string }> | null`, updated rendering to show `insight.title`, `insight.description`, `insight.category` with proper layout, updated catch fallback to use object format
+- Fixed `src/app/(marketplace)/settings/page.tsx`: Same pattern — `aiSuggestions` state type corrected, rendering updated to destructure object, catch fallback uses object format
+- Fixed `src/app/(marketplace)/verification/page.tsx`: Same pattern — `aiTips` state type corrected, rendering updated, catch fallback uses object format
+- Confirmed `src/app/(marketplace)/support/page.tsx` already had correct `Suggestion` interface and proper rendering — no fix needed
+- Confirmed `src/app/(marketplace)/listing/[id]/page.tsx` already correctly typed as `Array<{ title: string; description: string; category: string }>` — no fix needed
+- Lint clean, all routes 200
+
+Stage Summary:
+- Runtime error eliminated: all AI suggestion results now properly destructured before rendering
+- 3 files fixed: dashboard, settings, verification pages
+- Rendering now shows title + category badge + description for each suggestion instead of raw object
+- All catch fallbacks updated to match the object structure
