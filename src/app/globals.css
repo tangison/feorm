@@ -120,8 +120,8 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 9999;
-  background: #1E1A14;
-  color: #FEFDFB;
+  background: var(--color-earth);
+  color: var(--color-white-feorm);
   padding: 12px 24px;
   border-radius: 0 0 8px 8px;
   font-size: 14px;
@@ -150,7 +150,7 @@
 
   /* Card System — premium minimal */
   .bento-card {
-    background: #FEFDFB;
+    background: var(--color-white-feorm);
     border: 1px solid rgba(60, 47, 26, 0.06);
     border-radius: 8px;
     box-shadow: none;
@@ -168,8 +168,8 @@
 
   /* Buttons */
   .btn-primary-feorm {
-    background-color: #1E1A14;
-    color: #FEFDFB;
+    background-color: var(--color-earth);
+    color: var(--color-white-feorm);
     border-radius: 9999px;
     font-weight: 500;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -177,28 +177,28 @@
 
   .btn-primary-feorm:active {
     transform: scale(0.97);
-    background-color: #333333;
+    background-color: var(--color-bark);
   }
 
   .btn-harvest {
-    background-color: #E8C96A;
-    color: #1E1A14;
+    background-color: var(--color-harvest);
+    color: var(--color-earth);
     border-radius: 9999px;
     font-weight: 600;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .btn-harvest:hover {
-    background-color: #d4b55a;
+    background-color: color-mix(in srgb, var(--color-harvest) 85%, #000);
   }
   .btn-harvest:active {
     transform: scale(0.97);
-    background-color: #c0a34a;
+    background-color: color-mix(in srgb, var(--color-harvest) 70%, #000);
   }
 
   .btn-secondary-feorm {
     background-color: transparent;
     border: 1px solid rgba(60, 47, 26, 0.08);
-    color: #1E1A14;
+    color: var(--color-earth);
     border-radius: 9999px;
     font-weight: 500;
     transition: all 0.2s ease;
@@ -210,8 +210,8 @@
 
   /* Tags */
   .tag-pastel {
-    background-color: #FBF3DB;
-    color: #956400;
+    background-color: var(--accent);
+    color: var(--accent-foreground);
     border-radius: 9999px;
     letter-spacing: 0.05em;
   }
@@ -232,7 +232,7 @@
 
   .tag-alert {
     background-color: #FDEBEC;
-    color: #9F2F2D;
+    color: var(--destructive);
     border-radius: 9999px;
     letter-spacing: 0.05em;
   }
@@ -242,7 +242,7 @@
     font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: #787774;
+    color: var(--muted-foreground);
   }
 
   /* Page transition */
@@ -259,11 +259,11 @@
 /* Custom Scrollbar — minimal */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #D4C4A0; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #b8a880; }
+::-webkit-scrollbar-thumb { background: var(--color-sand); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--color-sand) 80%, #000); }
 * {
   scrollbar-width: thin;
-  scrollbar-color: #D4C4A0 transparent;
+  scrollbar-color: var(--color-sand) transparent;
 }
 
 /* Skeleton */

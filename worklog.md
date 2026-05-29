@@ -293,3 +293,132 @@ Stage Summary:
 - 3 P0 bugs fixed: chat FAB position, mobile sign-out, provider nav toggle
 - 6 P1 issues fixed: design token alignment, viewport meta, color consistency
 - All routes 200, lint clean, compilation stable
+
+---
+Task ID: 3-b
+Agent: Color Migration (Marketplace Pages + Components)
+Task: Replace hardcoded hex colors with design tokens in marketplace pages and components
+
+Work Log:
+- dashboard/page.tsx: Replaced text-[#787774]→text-muted-foreground, text-[#1E1A14]→text-earth, text-[#956400]→text-accent-foreground, text-[#E8C96A]→text-harvest, text-[#9F2F2D]→text-destructive, text-[#5C4A2A]→text-bark, border-[#3C2F1A]/10→border-soil/10, border-[#3C2F1A]/5→border-soil/5. Converted inline style hex colors to CSS custom properties: "#E8C96A"→"var(--color-harvest)", "#9F2F2D"→"var(--destructive)". Kept #346538 in style object and Tailwind classes per instructions. Kept bg-[#EDF3EC], bg-[#FDEBEC] per instructions.
+- marketplace/page.tsx: Already mostly migrated from prior work. Only hover:bg-[#FDEBEC] remains, kept per instructions.
+- journeys/page.tsx: Replaced text-[#787774]→text-muted-foreground, text-[#1E1A14]→text-earth, border-[#D4C4A0]/50→border-sand/50, bg-[#FEFDFB]→bg-white-feorm, text-[#D4C4A0]→text-sand, hover:border-[#3C2F1A]/20→hover:border-soil/20. Kept bg-[#346538] per instructions.
+- profile/page.tsx: Replaced border-[#3C2F1A]/10→border-soil/10, hover:bg-[#FAF7F2]→hover:bg-fog, text-[#D4C4A0]→text-sand, ring-[#E8C96A]→ring-harvest, ring-offset-[#FEFDFB]→ring-offset-white-feorm, ring-[#3C2F1A]/10→ring-soil/10, text-[#E8C96A]→text-harvest, text-[#956400]→text-accent-foreground, hover:border-[#1E1A14]/30→hover:border-earth/30, text-[#9F2F2D]→text-destructive, hover:border-[#9F2F2D]/30→hover:border-destructive/30.
+- settings/page.tsx: Replaced bg-[#FEFDFB]→bg-white-feorm, text-[#E8C96A]→text-harvest, border-[#3C2F1A]/10→border-soil/10, text-[#5C4A2A]→text-bark, border-[#3C2F1A]/5→border-soil/5. Kept bg-[#FDEBEC], bg-[#FDEBEC]/50, hover:bg-[#FDEBEC], hover:bg-[#8a2826], bg-[#346538] per instructions.
+- support/page.tsx: Already mostly migrated from prior work. Only #25D366 (WhatsApp green) and bg-[#FDEBEC] remain, kept per instructions.
+- verification/page.tsx: Replaced bg-[#F2EDE2]/50→bg-cream/50, hover:bg-[#FBF3DB]/20→hover:bg-accent/20, bg-[#F2EDE2]→bg-cream, bg-[#FBF3DB]→bg-accent, text-[#787774]→text-muted-foreground, text-[#1E1A14]→text-earth, text-[#956400]→text-accent-foreground, text-[#E8C96A]→text-harvest, text-[#5C4A2A]→text-bark, border-[#3C2F1A]/20→border-soil/20, hover:border-[#E8C96A]→hover:border-harvest, bg-[#FEFDFB]→bg-white-feorm, bg-[#3C2F1A]/10→bg-soil/10, border-[#3C2F1A]/10→border-soil/10. Kept bg-[#EDF3EC], bg-[#EDF3EC]/30, text-[#346538], bg-[#346538]/30 per instructions.
+- booking/success/page.tsx: Replaced bg-[#FAF7F2]→bg-fog, text-[#1E1A14]→text-earth, text-[#787774]→text-muted-foreground, border-[#3C2F1A]/10→border-soil/10, bg-[#FEFDFB]→bg-white-feorm. Kept bg-[#EDF3EC], text-[#346538], #25D366 per instructions.
+- listing/[id]/page.tsx: Replaced hover:border-[#3C2F1A]/30→hover:border-soil/30, border-[#787774]/40→border-muted-foreground/40, border-t-[#787774]→border-t-muted-foreground, bg-[#1E1A14]→bg-earth, text-[#FEFDFB]→text-white-feorm. Kept #25D366 per instructions.
+- listing/[id]/book/page.tsx: Replaced bg-[#E8C96A]→bg-harvest, text-[#787774]→text-muted-foreground, bg-[#FAF7F2]→bg-fog, hover:text-[#1E1A14]→hover:text-earth, hover:bg-[#1E1A14]/5→hover:bg-earth/5, border-[#3C2F1A]/20→border-soil/20, bg-[#FEFDFB]→bg-white-feorm, text-[#1E1A14]→text-earth, focus-within:border-[#1E1A14]→focus-within:border-earth, border-[#3C2F1A]/10→border-soil/10, accent-[#1E1A14]→accent-earth, text-[#9F2F2D]→text-destructive. Kept bg-[#FDEBEC] per instructions.
+- footer.tsx: Converted hex color strip data array to use CSS custom properties (var(--color-earth), var(--color-soil), etc.) instead of hardcoded hex values.
+- listing-card.tsx: Already fully migrated, no changes needed.
+- lazy-tangison-chat.tsx: No hex colors, just a dynamic import wrapper. No changes needed.
+- tangison-chat.tsx: Already fully migrated from prior work.
+- revenue-chart.tsx: Replaced text-[#787774]→text-muted-foreground, text-[#1E1A14]→text-earth. Converted recharts fill props to CSS custom properties: fill:"#787774"→fill:"var(--muted-foreground)", fill="#E8C96A"→fill="var(--color-harvest)".
+- loading.tsx: Replaced bg-[#E8C96A]→bg-harvest, text-[#787774]→text-muted-foreground.
+- Lint clean after all changes.
+
+Stage Summary:
+- 16 files processed across marketplace pages and shared components
+- ~120+ individual hex color replacements made
+- All Feorm palette hex colors (#1E1A14, #3C2F1A, #5C4A2A, #E8C96A, #D4C4A0, #F2EDE2, #FAF7F2, #FEFDFB, #787774, #9F2F2D, #956400) replaced with design tokens
+- Inline style hex colors converted to CSS custom properties (var(--color-harvest), var(--destructive), var(--muted-foreground))
+- Kept explicitly allowed exceptions: #346538 (verified green), #EDF3EC (verified bg), #FDEBEC (alert bg), #25D366 (WhatsApp brand), and custom hover variants (#8a2826, #dde9dd, #f5d5d6)
+- Footer color strip now uses CSS custom properties instead of hardcoded hex values for design system consistency
+- Lint clean, zero errors
+
+---
+Task ID: 4+5
+Agent: Component Cleanup + Utility Deduplication
+Task: Remove unused shadcn components and deduplicate utility functions
+
+Work Log:
+- Searched entire src/ directory for imports from @/components/ui/ using Grep
+- Found only 2 external imports: Toaster (layout.tsx) and toast types (use-toast.ts)
+- Mapped all internal dependency chains within ui/ directory (sidebar → button/input/separator/sheet/skeleton/tooltip, command → dialog, etc.)
+- Confirmed none of the 21 "KNOWN used" components are imported from outside ui/ except toast and toaster — but kept all 21 per task instructions
+- Deleted 27 unused shadcn/ui component files: accordion, alert, alert-dialog, aspect-ratio, breadcrumb, calendar, carousel, chart, collapsible, command, context-menu, drawer, hover-card, input-otp, menubar, navigation-menu, pagination, radio-group, resizable, sidebar, slider, sonner, switch, table, toggle, toggle-group, tooltip
+- Created /src/lib/format.ts with shared formatPrice function
+- Created /src/lib/regions.ts with shared NAMIBIAN_REGIONS constant (14 regions) and NAMIBIAN_REGIONS_WITH_CODES (with ISO codes)
+- Updated listing-card.tsx: removed local formatPrice definition, added import from @/lib/format, removed export of formatPrice
+- Updated booking/success/page.tsx: removed duplicate formatPrice definition, added import from @/lib/format
+- Updated revenue-chart.tsx: changed import from @/components/feorm/listing-card to @/lib/format
+- Updated journeys/page.tsx: changed import from @/components/feorm/listing-card to @/lib/format
+- Updated dashboard/page.tsx: changed import from @/components/feorm/listing-card to @/lib/format
+- Updated listing/[id]/page.tsx: changed import from @/components/feorm/listing-card to @/lib/format
+- Updated listing/[id]/book/page.tsx: changed import from @/components/feorm/listing-card to @/lib/format
+- Updated marketplace/page.tsx: replaced local NAMIBIAN_REGIONS array with import from @/lib/regions, created REGION_OPTIONS = ["All Regions", ...NAMIBIAN_REGIONS]
+- Updated identity/page.tsx: replaced local regions array with import of NAMIBIAN_REGIONS from @/lib/regions
+- Updated provider/region/page.tsx: replaced local NAMIBIA_REGIONS array with import of NAMIBIAN_REGIONS_WITH_CODES from @/lib/regions
+- Searched for other duplicated utility functions — none found beyond formatPrice and regions
+- Lint clean, dev server stable
+
+Stage Summary:
+- 27 unused shadcn/ui component files deleted (from 48 → 21 remaining)
+- 2 shared utility files created: lib/format.ts and lib/regions.ts
+- formatPrice consolidated from 2 local definitions → 1 shared export, 7 import sites updated
+- NAMIBIAN_REGIONS consolidated from 3 local definitions → 1 shared export (with codes variant), 3 files updated
+- No functionality changes — only structural deduplication
+
+---
+Task ID: 3-a
+Agent: Color Migration (Auth Pages)
+Task: Replace hardcoded hex colors with design tokens in auth pages
+
+Work Log:
+- Processed `(auth)/page.tsx`: 22 replacements — bg-[#1E1A14]→bg-earth, from/via/to-[#1E1A14]→earth, text-[#FEFDFB]→text-white-feorm, text-[#E8C96A]→text-harvest, text-[#D4C4A0]→text-sand, bg-[#FAF7F2]→bg-fog, border-[#3C2F1A]/20→border-soil/20, bg-[#FEFDFB]→bg-white-feorm, text-[#787774]→text-muted-foreground, text-[#1E1A14]→text-earth, focus-within:border-[#1E1A14]→focus-within:border-earth, text-[#3C2F1A]→text-soil, placeholder-[#D4C4A0]→placeholder-sand, bg-[#FBF3DB]/30→bg-accent/30, border-[#E8C96A]/20→border-harvest/20, text-[#956400]→text-accent-foreground, border-[#787774]→border-muted-foreground, hover:text-[#1E1A14]→hover:text-earth, md:via-[#1E1A14]/40→md:via-earth/40
+- Processed `(auth)/auth/verify/page.tsx`: 13 replacements — bg-[#FAF7F2]→bg-fog, text-[#787774]→text-muted-foreground, hover:text-[#1E1A14]→hover:text-earth, hover:bg-[#1E1A14]/5→hover:bg-earth/5, border-[#3C2F1A]/20→border-soil/20, bg-[#FEFDFB]→bg-white-feorm, text-[#1E1A14]→text-earth, focus-within:border-[#1E1A14]→focus-within:border-earth, placeholder-[#D4C4A0]→placeholder-sand, text-[#9F2F2D]→text-destructive, bg-[#FBF3DB]/30→bg-accent/30, border-[#E8C96A]/20→border-harvest/20, text-[#956400]→text-accent-foreground
+- Processed `(auth)/auth/terms/page.tsx`: 8 replacements — bg-[#FAF7F2]→bg-fog, border-[#3C2F1A]/20→border-soil/20, bg-[#FEFDFB]→bg-white-feorm, text-[#787774]→text-muted-foreground, text-[#1E1A14]→text-earth, border-[#3C2F1A]/10→border-soil/10, text-[#3C2F1A]→text-soil, accent-[#1E1A14]→accent-earth
+- Processed `(auth)/auth/role/page.tsx`: 12 replacements — bg-[#FAF7F2]→bg-fog, border-[#3C2F1A]/20→border-soil/20, bg-[#FEFDFB]→bg-white-feorm, text-[#787774]→text-muted-foreground, text-[#1E1A14]→text-earth, border-[#3C2F1A]/10→border-soil/10, hover:border-[#E8C96A]→hover:border-harvest, bg-[#FBF3DB]→bg-accent, group-hover:bg-[#E8C96A]→group-hover:bg-harvest, text-[#956400]→text-accent-foreground, group-hover:text-[#1E1A14]→group-hover:text-earth, text-[#E8C96A]→text-harvest, group-hover:text-[#FEFDFB]→group-hover:text-white-feorm
+- Processed `(auth)/auth/verify-id/page.tsx`: 6 replacements — bg-[#FAF7F2]→bg-fog, text-[#1E1A14]→text-earth, text-[#787774]→text-muted-foreground, bg-[#FEFDFB]→bg-white-feorm, hover:bg-[#FAF7F2]→hover:bg-fog, border-[#D4C4A0]/50→border-sand/50
+- Processed `(auth)/auth/voyager/interests/page.tsx`: 9 replacements — bg-[#FAF7F2]→bg-fog, text-[#787774]→text-muted-foreground, hover:text-[#1E1A14]→hover:text-earth, border-[#3C2F1A]/20→border-soil/20, bg-[#FEFDFB]→bg-white-feorm, text-[#1E1A14]→text-earth, bg-[#1E1A14]→bg-earth, text-[#FEFDFB]→text-white-feorm, border-[#3C2F1A]/10→border-soil/10
+- Processed `(auth)/auth/voyager/verify/page.tsx`: 8 replacements — bg-[#FAF7F2]→bg-fog, text-[#787774]→text-muted-foreground, hover:text-[#1E1A14]→hover:text-earth, border-[#3C2F1A]/20→border-soil/20, bg-[#FEFDFB]→bg-white-feorm, text-[#1E1A14]→text-earth, group-hover:text-[#FEFDFB]→group-hover:text-white-feorm, border-[#3C2F1A]/10→border-soil/10, hover:border-[#3C2F1A]/20→hover:border-soil/20
+- Processed `(auth)/auth/onboarding/page.tsx`: 8 replacements — bg-[#FAF7F2]→bg-fog, bg-[#FBF3DB]→bg-accent, text-[#1E1A14]→text-earth, text-[#787774]→text-muted-foreground, bg-[#1E1A14]→bg-earth, bg-[#D4C4A0]→bg-sand, text-[#956400]→text-accent-foreground, text-[#E8C96A]→text-harvest
+- Processed `(auth)/auth/identity/page.tsx`: 16 replacements — bg-[#FAF7F2]→bg-fog, text-[#787774]→text-muted-foreground, hover:text-[#1E1A14]→hover:text-earth, hover:bg-[#1E1A14]/5→hover:bg-earth/5, border-[#3C2F1A]/20→border-soil/20, bg-[#FEFDFB]→bg-white-feorm, text-[#1E1A14]→text-earth, focus-within:border-[#1E1A14]→focus-within:border-earth, placeholder-[#D4C4A0]→placeholder-sand, border-[#3C2F1A]/10→border-soil/10, border-[#D4C4A0]→border-sand, text-[#D4C4A0]→text-sand, ring-[#E8C96A]→ring-harvest, ring-offset-[#FEFDFB]→ring-offset-white-feorm, bg-[#1E1A14]→bg-earth, ring-[#3C2F1A]/10→ring-soil/10
+- Processed `(auth)/auth/provider/assets/page.tsx`: 10 replacements — bg-[#FAF7F2]→bg-fog, text-[#787774]→text-muted-foreground, hover:text-[#1E1A14]→hover:text-earth, border-[#3C2F1A]/20→border-soil/20, bg-[#FEFDFB]→bg-white-feorm, text-[#1E1A14]→text-earth, border-[#3C2F1A]/10→border-soil/10, border-[#E8C96A]→border-harvest, bg-[#E8C96A]→bg-harvest, bg-[#FBF3DB]/30→bg-accent/30, hover:border-[#3C2F1A]/20→hover:border-soil/20, bg-[#1E1A14]→bg-earth
+- Processed `(auth)/auth/provider/region/page.tsx`: 11 replacements — bg-[#FAF7F2]→bg-fog, text-[#787774]→text-muted-foreground, hover:text-[#1E1A14]→hover:text-earth, border-[#3C2F1A]/20→border-soil/20, bg-[#FEFDFB]→bg-white-feorm, text-[#1E1A14]→text-earth, bg-[#1E1A14]→bg-earth, text-[#FEFDFB]→text-white-feorm, border-[#3C2F1A]/10→border-soil/10, text-[#E8C96A]→text-harvest, border-[#1E1A14]→border-earth, text-[#3C2F1A]→text-soil, border-[#3C2F1A]/5→border-soil/5
+- Processed `(auth)/loading.tsx` (bonus): 3 replacements — bg-[#FAF7F2]→bg-fog, bg-[#E8C96A]→bg-harvest, text-[#787774]→text-muted-foreground
+- Layout file `(auth)/layout.tsx`: No hex colors found — already clean
+- Lint clean after all changes
+
+Intentional exceptions (no Tailwind token available, kept as inline hex per mapping):
+- `#346538` (green/verified) — used in role, voyager/verify, onboarding for verified icon containers and text; mapping says "Use custom tag class" but these are non-tag contexts
+- `#EDF3EC` (verified green bg) — used in role, voyager/verify for icon container backgrounds; mapping says "Use tag-verified class" but that adds unwanted border-radius/letter-spacing
+- `#1F6C9F` (machinery blue) — used in provider/assets; mapping says "Keep or use inline"
+- `#E1F3FE` (machinery blue bg) — used in provider/assets; mapping says "Use tag-machinery class" but non-tag contexts
+
+Stage Summary:
+- 13 files processed (12 task files + 1 bonus loading.tsx)
+- ~126 total hex-to-token replacements made
+- All standard Feorm palette colors (#1E1A14, #3C2F1A, #5C4A2A, #E8C96A, #D4C4A0, #F2EDE2, #FAF7F2, #FEFDFB, #787774, #9F2F2D, #956400, #FBF3DB) fully migrated to tokens
+- 4 specialty colors (#346538, #EDF3EC, #1F6C9F, #E1F3FE) kept as inline hex — no Tailwind tokens exist and tag classes inappropriate for their contexts
+- Zero functionality changes, only color reference updates
+- Lint clean
+
+---
+Task ID: 12
+Agent: Main Agent (Full Audit & Fix — Final Round)
+Task: Fix all remaining P1/P2 issues from audit: monolith page.tsx, hardcoded hex colors, unused shadcn components, duplicate utilities
+
+Work Log:
+- Replaced 1200+ line monolith page.tsx at / route with 30-line redirect component (checks auth state, redirects to /auth or /marketplace)
+- Fixed route conflict: (auth)/page.tsx mapped to / conflicting with root page.tsx — moved auth page to (auth)/auth/page.tsx so it serves /auth
+- Migrated hardcoded hex colors in error.tsx and not-found.tsx to design tokens
+- Migrated all CSS utility classes in globals.css to use var() references instead of hardcoded hex values
+- Launched 3 parallel subagents for remaining fixes:
+  - 3-a: Color migration in auth pages (126 replacements across 13 files)
+  - 3-b: Color migration in marketplace pages + components (120+ replacements across 16 files)
+  - 4+5: Component cleanup (27 unused shadcn components deleted) + utility deduplication (2 shared lib files created)
+- Fixed duplicate className attributes in error.tsx and not-found.tsx caused by automated replacement
+- All routes verified: / /auth /auth/verify /auth/terms /auth/role /auth/identity /marketplace /dashboard /journeys /profile /settings /support /verification → all 200
+- Lint clean
+
+Stage Summary:
+- Monolith page.tsx eliminated: 1200+ lines → 30-line redirect
+- 246+ hex-to-token replacements across 29 files (auth + marketplace + CSS + error pages)
+- 27 unused shadcn components deleted (48 → 21 remaining)
+- 2 shared utility files created: lib/format.ts, lib/regions.ts
+- 7 import sites updated for formatPrice consolidation
+- 3 import sites updated for NAMIBIAN_REGIONS consolidation
+- /auth route now properly serves the auth landing page (was 404 before)
+- All routes 200, lint clean, zero runtime errors

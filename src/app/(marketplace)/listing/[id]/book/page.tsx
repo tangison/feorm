@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useListing } from "@/hooks/use-listings";
 import { useCreateBooking } from "@/hooks/use-bookings";
-import { formatPrice } from "@/components/feorm/listing-card";
+import { formatPrice } from "@/lib/format";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 export default function BookPage() {
@@ -74,8 +74,8 @@ export default function BookPage() {
     return (
       <div className="flex-grow flex items-center justify-center min-h-[60vh]">
         <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-[#E8C96A] animate-pulse" />
-          <p className="text-sm text-[#787774] font-mono-feorm">
+          <div className="w-2 h-2 rounded-full bg-harvest animate-pulse" />
+          <p className="text-sm text-muted-foreground font-mono-feorm">
             Loading listing details...
           </p>
         </div>
@@ -84,23 +84,23 @@ export default function BookPage() {
   }
 
   return (
-    <div className="flex-grow flex items-center justify-center p-6 md:p-12 min-h-[60vh] bg-[#FAF7F2]">
+    <div className="flex-grow flex items-center justify-center p-6 md:p-12 min-h-[60vh] bg-fog">
       <div className="max-w-lg w-full">
         <button
           onClick={() => router.push(`/listing/${params.id}`)}
-          className="mb-8 flex items-center gap-2 px-3 py-2 text-sm text-[#787774] hover:text-[#1E1A14] transition-colors min-h-[44px] rounded-full hover:bg-[#1E1A14]/5"
+          className="mb-8 flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-earth transition-colors min-h-[44px] rounded-full hover:bg-earth/5"
         >
           <ArrowLeft size={16} /> Back to Listing
         </button>
 
         <div className="mb-10">
-          <kbd className="font-mono-feorm text-[10px] border border-[#3C2F1A]/20 bg-[#FEFDFB] px-2 py-1 rounded text-[#787774] mb-6 inline-block">
+          <kbd className="font-mono-feorm text-[10px] border border-soil/20 bg-white-feorm px-2 py-1 rounded text-muted-foreground mb-6 inline-block">
             ORDER CONFIGURATION
           </kbd>
-          <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-[#1E1A14]">
+          <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-earth">
             {listing.title}
           </h1>
-          <p className="text-sm text-[#787774]">
+          <p className="text-sm text-muted-foreground">
             Configure your{" "}
             {listing.type === "stay" ? "stay" : "rental"} dates and options.
           </p>
@@ -108,8 +108,8 @@ export default function BookPage() {
 
         <div className="space-y-5">
           <div className="grid grid-cols-2 gap-4">
-            <div className="border border-[#3C2F1A]/20 bg-[#FEFDFB] p-4 rounded-[4px] focus-within:border-[#1E1A14] transition-colors">
-              <label htmlFor="start-date" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-[#787774]">
+            <div className="border border-soil/20 bg-white-feorm p-4 rounded-[4px] focus-within:border-earth transition-colors">
+              <label htmlFor="start-date" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-muted-foreground">
                 Start Date
               </label>
               <input
@@ -117,11 +117,11 @@ export default function BookPage() {
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="w-full bg-transparent outline-none text-base text-[#1E1A14] min-h-[44px]"
+                className="w-full bg-transparent outline-none text-base text-earth min-h-[44px]"
               />
             </div>
-            <div className="border border-[#3C2F1A]/20 bg-[#FEFDFB] p-4 rounded-[4px] focus-within:border-[#1E1A14] transition-colors">
-              <label htmlFor="end-date" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-[#787774]">
+            <div className="border border-soil/20 bg-white-feorm p-4 rounded-[4px] focus-within:border-earth transition-colors">
+              <label htmlFor="end-date" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-muted-foreground">
                 End Date
               </label>
               <input
@@ -129,24 +129,24 @@ export default function BookPage() {
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="w-full bg-transparent outline-none text-base text-[#1E1A14] min-h-[44px]"
+                className="w-full bg-transparent outline-none text-base text-earth min-h-[44px]"
               />
             </div>
           </div>
 
           {listing.type === "equipment" && (
-            <label className="flex items-start gap-3 p-4 border border-[#3C2F1A]/10 bg-[#FEFDFB] rounded-[4px] cursor-pointer">
+            <label className="flex items-start gap-3 p-4 border border-soil/10 bg-white-feorm rounded-[4px] cursor-pointer">
               <input
                 type="checkbox"
                 checked={withOperator}
                 onChange={(e) => setWithOperator(e.target.checked)}
-                className="mt-1 w-4 h-4 accent-[#1E1A14]"
+                className="mt-1 w-4 h-4 accent-earth"
               />
               <div>
-                <p className="text-sm font-medium text-[#1E1A14]">
+                <p className="text-sm font-medium text-earth">
                   Operator Required
                 </p>
-                <p className="text-xs text-[#787774]">
+                <p className="text-xs text-muted-foreground">
                   Include a trained operator for this equipment (+N$ 500/day)
                 </p>
               </div>
@@ -155,47 +155,47 @@ export default function BookPage() {
         </div>
 
         {startDate && endDate && (startDateInvalid || endDateInvalid) && (
-          <div className="mt-4 p-4 rounded-[4px] bg-[#FDEBEC] text-[#9F2F2D] text-sm">
+          <div className="mt-4 p-4 rounded-[4px] bg-[#FDEBEC] text-destructive text-sm">
             {startDateInvalid && <p>Start date must be today or later.</p>}
             {endDateInvalid && <p>End date must be after start date.</p>}
           </div>
         )}
 
         {startDate && endDate && !startDateInvalid && !endDateInvalid && (
-          <div className="mt-8 border border-[#3C2F1A]/10 bg-[#FEFDFB] rounded-[8px] p-6">
-            <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-4">
+          <div className="mt-8 border border-soil/10 bg-white-feorm rounded-[8px] p-6">
+            <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-4">
               Price Breakdown
             </h4>
             <div className="space-y-3 text-sm">
               <div className="flex justify-between">
-                <span className="text-[#787774]">
+                <span className="text-muted-foreground">
                   Rental ({formatPrice(listing.price)} x {days} days)
                 </span>
-                <span className="font-mono-feorm text-[#1E1A14]">
+                <span className="font-mono-feorm text-earth">
                   {formatPrice(rentalPrice)}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#787774]">Service Fee (10%)</span>
-                <span className="font-mono-feorm text-[#1E1A14]">
+                <span className="text-muted-foreground">Service Fee (10%)</span>
+                <span className="font-mono-feorm text-earth">
                   {formatPrice(serviceFee)}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#787774]">Security Escrow</span>
-                <span className="font-mono-feorm text-[#1E1A14]">N$ 1,500</span>
+                <span className="text-muted-foreground">Security Escrow</span>
+                <span className="font-mono-feorm text-earth">N$ 1,500</span>
               </div>
               {withOperator && (
                 <div className="flex justify-between">
-                  <span className="text-[#787774]">Operator Fee (N$ 500 x {days} days)</span>
-                  <span className="font-mono-feorm text-[#1E1A14]">
+                  <span className="text-muted-foreground">Operator Fee (N$ 500 x {days} days)</span>
+                  <span className="font-mono-feorm text-earth">
                     {formatPrice(operatorFee)}
                   </span>
                 </div>
               )}
-              <div className="flex justify-between pt-3 border-t border-[#3C2F1A]/10 font-medium">
-                <span className="text-[#1E1A14]">Total to Pay</span>
-                <span className="font-mono-feorm text-[#1E1A14] text-lg">
+              <div className="flex justify-between pt-3 border-t border-soil/10 font-medium">
+                <span className="text-earth">Total to Pay</span>
+                <span className="font-mono-feorm text-earth text-lg">
                   {formatPrice(totalPrice)}
                 </span>
               </div>

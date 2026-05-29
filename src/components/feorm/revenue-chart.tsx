@@ -8,7 +8,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { formatPrice } from "@/components/feorm/listing-card";
+import { formatPrice } from "@/lib/format";
 
 const revenueData = [
   { month: "Oct", revenue: 420000 },
@@ -31,10 +31,10 @@ function CustomTooltip({
   if (!active || !payload || !payload.length) return null;
   return (
     <div className="bento-card px-3 py-2 !shadow-md">
-      <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#787774] mb-1">
+      <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-muted-foreground mb-1">
         {label}
       </p>
-      <p className="font-serif-display text-sm text-[#1E1A14]">
+      <p className="font-serif-display text-sm text-earth">
         {formatPrice(payload[0].value)}
       </p>
     </div>
@@ -55,7 +55,7 @@ export default function RevenueChart() {
           axisLine={false}
           tickLine={false}
           tick={{
-            fill: "#787774",
+            fill: "var(--muted-foreground)",
             fontSize: 10,
             fontFamily: "var(--font-jetbrains-mono), monospace",
           }}
@@ -65,7 +65,7 @@ export default function RevenueChart() {
           content={<CustomTooltip />}
           cursor={{ fill: "rgba(60,47,26,0.03)" }}
         />
-        <Bar dataKey="revenue" fill="#E8C96A" radius={[4, 4, 0, 0]} barSize={32} />
+        <Bar dataKey="revenue" fill="var(--color-harvest)" radius={[4, 4, 0, 0]} barSize={32} />
       </BarChart>
     </ResponsiveContainer>
   );

@@ -39,23 +39,23 @@ export default function VoyagerInterestsPage() {
   };
 
   return (
-    <div className="flex-grow flex items-center justify-center p-6 md:p-12 min-h-screen bg-[#FAF7F2]">
+    <div className="flex-grow flex items-center justify-center p-6 md:p-12 min-h-screen bg-fog">
       <div className="max-w-lg w-full">
         <button
           onClick={() => router.push("/auth/role")}
-          className="mb-8 flex items-center gap-2 text-sm text-[#787774] hover:text-[#1E1A14] transition-colors min-h-[44px]"
+          className="mb-8 flex items-center gap-2 text-sm text-muted-foreground hover:text-earth transition-colors min-h-[44px]"
         >
           <ArrowLeft size={16} /> Back
         </button>
 
         <div className="mb-10">
-          <kbd className="font-mono-feorm text-[10px] border border-[#3C2F1A]/20 bg-[#FEFDFB] px-2 py-1 rounded text-[#787774] mb-6 inline-block">
+          <kbd className="font-mono-feorm text-[10px] border border-soil/20 bg-white-feorm px-2 py-1 rounded text-muted-foreground mb-6 inline-block">
             VOYAGER SETUP
           </kbd>
-          <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-[#1E1A14] tracking-tight">
+          <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-earth tracking-tight">
             Map Your Interests
           </h1>
-          <p className="text-sm text-[#787774] leading-relaxed">
+          <p className="text-sm text-muted-foreground leading-relaxed">
             Select the experiences that draw you to the land. We will curate your discovery feed accordingly.
           </p>
         </div>
@@ -70,8 +70,8 @@ export default function VoyagerInterestsPage() {
                 onClick={() => toggleInterest(interest)}
                 className={`px-4 py-2.5 rounded-full text-xs uppercase tracking-widest font-medium transition-all duration-200 min-h-[44px] ${
                   isSelected
-                    ? "bg-[#1E1A14] text-[#FEFDFB]"
-                    : "bg-transparent border border-[#3C2F1A]/10 text-[#787774] hover:bg-[#FAF7F2] hover:text-[#1E1A14]"
+                    ? "bg-earth text-white-feorm"
+                    : "bg-transparent border border-soil/10 text-muted-foreground hover:bg-fog hover:text-earth"
                 }`}
               >
                 {interest}
@@ -81,7 +81,7 @@ export default function VoyagerInterestsPage() {
         </div>
 
         {selected.length > 0 && (
-          <p className="font-mono-feorm text-[10px] text-[#787774] uppercase tracking-widest mb-6">
+          <p className="font-mono-feorm text-[10px] text-muted-foreground uppercase tracking-widest mb-6">
             {selected.length} interest{selected.length !== 1 ? "s" : ""} selected
           </p>
         )}

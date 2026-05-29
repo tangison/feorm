@@ -12,12 +12,7 @@ import {
   getPresetGradient,
   compressImage,
 } from "@/lib/avatar";
-
-const regions = [
-  "Khomas", "Otjozondjupa", "Erongo", "Hardap", "Omaheke",
-  "Karas", "Kunene", "Ohangwena", "Oshana", "Omusati", "Oshikoto",
-  "Zambezi", "Kavango East", "Kavango West",
-];
+import { NAMIBIAN_REGIONS } from "@/lib/regions";
 
 export default function IdentityPage() {
   const { phone, setUser, setAvatarUrl, avatarUrl } = useFeormAuth();
@@ -140,37 +135,37 @@ export default function IdentityPage() {
   }, [name, surname, region, phone, avatarUrl, setupIdentity, setUser, router]);
 
   return (
-    <div className="flex-grow flex items-center justify-center p-6 md:p-12 min-h-screen bg-[#FAF7F2]">
+    <div className="flex-grow flex items-center justify-center p-6 md:p-12 min-h-screen bg-fog">
       <div className="max-w-md w-full">
         <button
           onClick={() => router.push("/auth/verify")}
-          className="mb-8 flex items-center gap-2 px-3 py-2 text-sm text-[#787774] hover:text-[#1E1A14] transition-colors min-h-[44px] rounded-full hover:bg-[#1E1A14]/5"
+          className="mb-8 flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-earth transition-colors min-h-[44px] rounded-full hover:bg-earth/5"
         >
           <ArrowLeft size={16} /> Back
         </button>
 
         <div className="mb-10">
-          <kbd className="font-mono-feorm text-[10px] border border-[#3C2F1A]/20 bg-[#FEFDFB] px-2 py-1 rounded text-[#787774] mb-6 inline-block">
+          <kbd className="font-mono-feorm text-[10px] border border-soil/20 bg-white-feorm px-2 py-1 rounded text-muted-foreground mb-6 inline-block">
             YOUR PROFILE
           </kbd>
-          <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-[#1E1A14] tracking-tight">
+          <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-earth tracking-tight">
             Tell Us About Yourself
           </h1>
-          <p className="text-sm text-[#787774] leading-relaxed">
+          <p className="text-sm text-muted-foreground leading-relaxed">
             Hosts want to know who they are welcoming. Add your name and region to build trust.
           </p>
         </div>
 
         <div className="space-y-5">
           {/* ── Avatar Creation ── */}
-          <div className="border border-[#3C2F1A]/10 bg-[#FEFDFB] rounded-[8px] p-6">
-            <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-5">
+          <div className="border border-soil/10 bg-white-feorm rounded-[8px] p-6">
+            <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-5">
               Avatar Creation
             </p>
 
             {/* Preview Circle */}
             <div className="flex justify-center mb-6">
-              <div className="w-24 h-24 rounded-full border-2 border-dashed border-[#D4C4A0] flex items-center justify-center overflow-hidden shrink-0 relative">
+              <div className="w-24 h-24 rounded-full border-2 border-dashed border-sand flex items-center justify-center overflow-hidden shrink-0 relative">
                 {avatarPreview ? (
                   avatarPreview.type === "preset" ? (
                     <div
@@ -188,14 +183,14 @@ export default function IdentityPage() {
                     />
                   )
                 ) : (
-                  <Camera size={24} className="text-[#D4C4A0]" />
+                  <Camera size={24} className="text-sand" />
                 )}
               </div>
             </div>
 
             {/* Option 1: Choose a Preset */}
             <div className="mb-6">
-              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#D4C4A0] mb-3 text-center">
+              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-sand mb-3 text-center">
                 Choose a Preset
               </p>
               <div className="grid grid-cols-4 gap-3 justify-items-center">
@@ -205,8 +200,8 @@ export default function IdentityPage() {
                     onClick={() => handleSelectPreset(preset.id)}
                     className={`w-12 h-12 rounded-full transition-all duration-200 hover:scale-110 active:scale-[0.95] ${
                       avatarUrl === preset.id
-                        ? "ring-2 ring-[#E8C96A] ring-offset-2 ring-offset-[#FEFDFB]"
-                        : "ring-1 ring-[#3C2F1A]/10"
+                        ? "ring-2 ring-harvest ring-offset-2 ring-offset-white-feorm"
+                        : "ring-1 ring-soil/10"
                     }`}
                     style={{ background: preset.gradient }}
                     aria-label={`Select ${preset.label} avatar`}
@@ -219,7 +214,7 @@ export default function IdentityPage() {
 
             {/* Option 2: Upload Your Own */}
             <div className="mb-5">
-              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#D4C4A0] mb-3 text-center">
+              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-sand mb-3 text-center">
                 Or Upload Your Own
               </p>
               <input
@@ -238,7 +233,7 @@ export default function IdentityPage() {
               >
                 {uploadingAvatar ? (
                   <>
-                    <div className="w-3 h-3 rounded-full bg-[#1E1A14] animate-pulse" />
+                    <div className="w-3 h-3 rounded-full bg-earth animate-pulse" />
                     Processing...
                   </>
                 ) : (
@@ -251,7 +246,7 @@ export default function IdentityPage() {
 
             {/* Option 3: Generate AI Identity */}
             <div>
-              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#D4C4A0] mb-3 text-center">
+              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-sand mb-3 text-center">
                 Or Generate with AI
               </p>
               <button
@@ -262,7 +257,7 @@ export default function IdentityPage() {
               >
                 {generatingAvatar ? (
                   <>
-                    <div className="w-3 h-3 rounded-full bg-[#1E1A14] animate-pulse" />
+                    <div className="w-3 h-3 rounded-full bg-earth animate-pulse" />
                     Generating...
                   </>
                 ) : (
@@ -271,15 +266,15 @@ export default function IdentityPage() {
                   </>
                 )}
               </button>
-              <p className="text-[9px] text-[#787774] font-mono-feorm text-center uppercase tracking-wider mt-2">
+              <p className="text-[9px] text-muted-foreground font-mono-feorm text-center uppercase tracking-wider mt-2">
                 Editorial-style portrait for your profile
               </p>
             </div>
           </div>
 
           {/* First Name */}
-          <div className="border border-[#3C2F1A]/20 bg-[#FEFDFB] p-4 rounded-[4px] focus-within:border-[#1E1A14] transition-colors">
-            <label htmlFor="first-name" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-[#787774]">
+          <div className="border border-soil/20 bg-white-feorm p-4 rounded-[4px] focus-within:border-earth transition-colors">
+            <label htmlFor="first-name" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-muted-foreground">
               First Name
             </label>
             <input
@@ -289,13 +284,13 @@ export default function IdentityPage() {
               onChange={(e) => setName(e.target.value)}
               placeholder="Johan"
               autoComplete="given-name"
-              className="w-full bg-transparent outline-none text-lg text-[#1E1A14] placeholder-[#D4C4A0] min-h-[44px]"
+              className="w-full bg-transparent outline-none text-lg text-earth placeholder-sand min-h-[44px]"
             />
           </div>
 
           {/* Surname */}
-          <div className="border border-[#3C2F1A]/20 bg-[#FEFDFB] p-4 rounded-[4px] focus-within:border-[#1E1A14] transition-colors">
-            <label htmlFor="surname" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-[#787774]">
+          <div className="border border-soil/20 bg-white-feorm p-4 rounded-[4px] focus-within:border-earth transition-colors">
+            <label htmlFor="surname" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-muted-foreground">
               Surname
             </label>
             <input
@@ -305,22 +300,22 @@ export default function IdentityPage() {
               onChange={(e) => setSurname(e.target.value)}
               placeholder="Deetlefs"
               autoComplete="family-name"
-              className="w-full bg-transparent outline-none text-lg text-[#1E1A14] placeholder-[#D4C4A0] min-h-[44px]"
+              className="w-full bg-transparent outline-none text-lg text-earth placeholder-sand min-h-[44px]"
             />
           </div>
 
           {/* Region */}
-          <div className="border border-[#3C2F1A]/20 bg-[#FEFDFB] p-4 rounded-[4px] focus-within:border-[#1E1A14] transition-colors">
-            <label htmlFor="region-select" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-[#787774]">
+          <div className="border border-soil/20 bg-white-feorm p-4 rounded-[4px] focus-within:border-earth transition-colors">
+            <label htmlFor="region-select" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-muted-foreground">
               Region
             </label>
             <select
               id="region-select"
               value={region}
               onChange={(e) => setRegion(e.target.value)}
-              className="w-full bg-transparent outline-none text-lg text-[#1E1A14] min-h-[44px]"
+              className="w-full bg-transparent outline-none text-lg text-earth min-h-[44px]"
             >
-              {regions.map((r) => (
+              {NAMIBIAN_REGIONS.map((r) => (
                 <option key={r} value={r}>{r}</option>
               ))}
             </select>

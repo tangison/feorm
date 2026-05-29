@@ -79,19 +79,19 @@ export default function FeormFooter() {
         <div className="mb-8">
           <div className="flex gap-0.5">
             {[
-              "#1E1A14",
-              "#3C2F1A",
-              "#5C4A2A",
-              "#E8C96A",
-              "#D4C4A0",
-              "#F2EDE2",
-              "#FAF7F2",
-              "#FEFDFB",
-            ].map((hex) => (
+              { name: "earth", css: "var(--color-earth)" },
+              { name: "soil", css: "var(--color-soil)" },
+              { name: "bark", css: "var(--color-bark)" },
+              { name: "harvest", css: "var(--color-harvest)" },
+              { name: "sand", css: "var(--color-sand)" },
+              { name: "cream", css: "var(--color-cream)" },
+              { name: "fog", css: "var(--color-fog)" },
+              { name: "white-feorm", css: "var(--color-white-feorm)" },
+            ].map((color) => (
               <div
-                key={hex}
+                key={color.name}
                 className="h-1 flex-1 rounded-full"
-                style={{ backgroundColor: hex }}
+                style={{ backgroundColor: color.css }}
               />
             ))}
           </div>

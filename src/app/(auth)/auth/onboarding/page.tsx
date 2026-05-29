@@ -6,7 +6,7 @@ import { Shield, CheckCircle, Star, ArrowRight } from "lucide-react";
 
 const onboardingSlides = [
   {
-    icon: <Shield size={32} className="text-[#956400]" />,
+    icon: <Shield size={32} className="text-accent-foreground" />,
     title: "Your N$1,500 Deposit, Held in Trust",
     desc: "Every equipment rental includes a refundable N$1,500 escrow deposit. The money is held until both you and the owner confirm the asset came back in good condition.",
   },
@@ -16,7 +16,7 @@ const onboardingSlides = [
     desc: "If something goes wrong, the Feorm communal insurance covers up to N$10,000 in damage. Only available for verified members.",
   },
   {
-    icon: <Star size={32} className="text-[#E8C96A]" />,
+    icon: <Star size={32} className="text-harvest" />,
     title: "Your Farm, Your Terms",
     desc: "Idle tractors, empty guest rooms, unused pasture — they can all earn income. Feorm connects your assets with people who need them.",
   },
@@ -27,16 +27,16 @@ export default function OnboardingPage() {
   const router = useRouter();
 
   return (
-    <div className="flex-grow flex items-center justify-center p-6 md:p-12 min-h-screen bg-[#FAF7F2]">
+    <div className="flex-grow flex items-center justify-center p-6 md:p-12 min-h-screen bg-fog">
       <div className="max-w-lg w-full text-center">
         <div className="mb-12">
-          <div className="w-16 h-16 rounded-full bg-[#FBF3DB] flex items-center justify-center mx-auto mb-8">
+          <div className="w-16 h-16 rounded-full bg-accent flex items-center justify-center mx-auto mb-8">
             {onboardingSlides[step].icon}
           </div>
-          <h1 className="font-serif-display text-3xl md:text-4xl mb-6 text-[#1E1A14]">
+          <h1 className="font-serif-display text-3xl md:text-4xl mb-6 text-earth">
             {onboardingSlides[step].title}
           </h1>
-          <p className="text-sm text-[#787774] leading-relaxed max-w-md mx-auto">
+          <p className="text-sm text-muted-foreground leading-relaxed max-w-md mx-auto">
             {onboardingSlides[step].desc}
           </p>
         </div>
@@ -46,7 +46,7 @@ export default function OnboardingPage() {
             <div
               key={i}
               className={`w-2 h-2 rounded-full transition-colors ${
-                i === step ? "bg-[#1E1A14]" : "bg-[#D4C4A0]"
+                i === step ? "bg-earth" : "bg-sand"
               }`}
             />
           ))}

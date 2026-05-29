@@ -6,24 +6,9 @@ import { useFeormMarket } from "@/context/feorm-context";
 import ListingCard from "@/components/feorm/listing-card";
 import { useListings } from "@/hooks/use-listings";
 import { ChevronDown, X, SlidersHorizontal } from "lucide-react";
+import { NAMIBIAN_REGIONS } from "@/lib/regions";
 
-const NAMIBIAN_REGIONS = [
-  "All Regions",
-  "Zambezi",
-  "Kavango East",
-  "Kavango West",
-  "Ohangwena",
-  "Oshana",
-  "Omusati",
-  "Oshikoto",
-  "Kunene",
-  "Erongo",
-  "Otjozondjupa",
-  "Khomas",
-  "Hardap",
-  "Karas",
-  "Omaheke",
-];
+const REGION_OPTIONS = ["All Regions", ...NAMIBIAN_REGIONS] as const;
 
 function transformItem(item: any) {
   return {
@@ -189,7 +174,7 @@ function MarketplaceContent() {
                 role="listbox"
                 aria-label="Select region"
               >
-                {NAMIBIAN_REGIONS.map((region) => (
+                {REGION_OPTIONS.map((region) => (
                   <button
                     key={region}
                     onClick={() => handleRegionSelect(region)}

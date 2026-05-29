@@ -5,6 +5,7 @@ import { useFeormMarket } from "@/context/feorm-context";
 import { CheckCircle, MessageCircle } from "lucide-react";
 import { useBookingByReference } from "@/hooks/use-bookings";
 import { Suspense } from "react";
+import { formatPrice } from "@/lib/format";
 
 function SuccessContent() {
   const { selectedListing } = useFeormMarket();
@@ -25,29 +26,29 @@ function SuccessContent() {
   };
 
   return (
-    <div className="flex-grow flex items-center justify-center p-6 md:p-12 min-h-[60vh] bg-[#FAF7F2]">
+    <div className="flex-grow flex items-center justify-center p-6 md:p-12 min-h-[60vh] bg-fog">
       <div className="max-w-md w-full text-center">
         <div className="w-16 h-16 rounded-full bg-[#EDF3EC] flex items-center justify-center mx-auto mb-8">
           <CheckCircle size={32} className="text-[#346538]" />
         </div>
 
-        <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-[#1E1A14]">
+        <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-earth">
           Booking Confirmed
         </h1>
-        <p className="text-sm text-[#787774] mb-8">
+        <p className="text-sm text-muted-foreground mb-8">
           Your booking is confirmed. Contact the host on WhatsApp to arrange the details.
         </p>
 
         {ref && (
-          <div className="border border-[#3C2F1A]/10 bg-[#FEFDFB] rounded-[8px] p-6 mb-8">
-            <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-2">
+          <div className="border border-soil/10 bg-white-feorm rounded-[8px] p-6 mb-8">
+            <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
               Booking Reference
             </p>
-            <p className="font-mono-feorm text-2xl font-medium text-[#1E1A14]">
+            <p className="font-mono-feorm text-2xl font-medium text-earth">
               {ref}
             </p>
             {booking && (
-              <p className="font-mono-feorm text-[10px] text-[#787774] mt-2 uppercase">
+              <p className="font-mono-feorm text-[10px] text-muted-foreground mt-2 uppercase">
                 Status: {booking.status} — {formatPrice(booking.totalPrice)}
               </p>
             )}
@@ -73,16 +74,12 @@ function SuccessContent() {
   );
 }
 
-function formatPrice(cents: number): string {
-  return `N$ ${(cents / 100).toLocaleString()}`;
-}
-
 export default function BookingSuccessPage() {
   return (
     <Suspense
       fallback={
         <div className="flex-grow flex items-center justify-center min-h-[60vh]">
-          <p className="text-sm text-[#787774] font-mono-feorm">Loading...</p>
+          <p className="text-sm text-muted-foreground font-mono-feorm">Loading...</p>
         </div>
       }
     >

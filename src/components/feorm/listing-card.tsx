@@ -5,10 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import type { Listing } from "@/context/feorm-context";
-
-function formatPrice(cents: number): string {
-  return `N$ ${(cents / 100).toLocaleString()}`;
-}
+import { formatPrice } from "@/lib/format";
 
 function ListingCard({ item }: { item: Listing }) {
   return (
@@ -67,5 +64,3 @@ function ListingCard({ item }: { item: Listing }) {
 }
 
 export default React.memo(ListingCard);
-
-export { formatPrice };

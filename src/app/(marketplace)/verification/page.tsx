@@ -89,13 +89,13 @@ export default function VerificationPage() {
     <div className="flex-grow w-full max-w-2xl mx-auto px-6 py-12 md:py-24">
       {/* Header */}
       <div className="mb-12">
-        <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-2">
+        <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
           Trust Layer
         </p>
-        <h1 className="font-serif-display text-4xl md:text-5xl text-[#1E1A14] mb-3 tracking-tight">
+        <h1 className="font-serif-display text-4xl md:text-5xl text-earth mb-3 tracking-tight">
           Verification Center
         </h1>
-        <p className="text-sm text-[#787774]">
+        <p className="text-sm text-muted-foreground">
           Build trust, unlock benefits, and stand out on the Feorm marketplace.
         </p>
       </div>
@@ -104,7 +104,7 @@ export default function VerificationPage() {
       <section className="mb-10" aria-labelledby="status-heading">
         <h2
           id="status-heading"
-          className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-4"
+          className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-4"
         >
           Verification Status
         </h2>
@@ -120,27 +120,27 @@ export default function VerificationPage() {
                   Unverified
                 </span>
               )}
-              <span className="font-mono-feorm text-xs text-[#787774]">
+              <span className="font-mono-feorm text-xs text-muted-foreground">
                 {isVerified ? "Identity confirmed" : "Pending verification"}
               </span>
             </div>
             <ShieldCheck
               size={20}
-              className={isVerified ? "text-[#346538]" : "text-[#956400]"}
+              className={isVerified ? "text-[#346538]" : "text-accent-foreground"}
             />
           </div>
 
-          <div className="flex items-center gap-4 p-4 rounded-[8px] bg-[#F2EDE2]/50">
+          <div className="flex items-center gap-4 p-4 rounded-[8px] bg-cream/50">
             <div className="flex items-center gap-2">
-              <Star size={14} className="text-[#E8C96A]" />
-              <span className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#787774]">
+              <Star size={14} className="text-harvest" />
+              <span className="font-mono-feorm text-[9px] uppercase tracking-widest text-muted-foreground">
                 Trust Score
               </span>
             </div>
-            <span className="font-mono-feorm text-2xl text-[#1E1A14]">
+            <span className="font-mono-feorm text-2xl text-earth">
               {trustScore}
             </span>
-            <span className="text-xs text-[#787774]">/ 5.0</span>
+            <span className="text-xs text-muted-foreground">/ 5.0</span>
           </div>
         </div>
       </section>
@@ -149,7 +149,7 @@ export default function VerificationPage() {
       <section className="mb-10" aria-labelledby="upload-heading">
         <h2
           id="upload-heading"
-          className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-4"
+          className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-4"
         >
           Identity Document
         </h2>
@@ -157,18 +157,18 @@ export default function VerificationPage() {
           {!idUploaded ? (
             <button
               onClick={handleIdUpload}
-              className="w-full border-2 border-dashed border-[#3C2F1A]/20 rounded-[8px] p-8 flex flex-col items-center gap-4 hover:border-[#E8C96A] hover:bg-[#FBF3DB]/20 transition-all cursor-pointer min-h-[44px]"
+              className="w-full border-2 border-dashed border-soil/20 rounded-[8px] p-8 flex flex-col items-center gap-4 hover:border-harvest hover:bg-accent/20 transition-all cursor-pointer min-h-[44px]"
               type="button"
               aria-label="Upload National ID or Passport"
             >
-              <div className="w-12 h-12 rounded-full bg-[#F2EDE2] flex items-center justify-center">
-                <Upload size={20} className="text-[#5C4A2A]" />
+              <div className="w-12 h-12 rounded-full bg-cream flex items-center justify-center">
+                <Upload size={20} className="text-bark" />
               </div>
               <div className="text-center">
-                <p className="text-sm font-medium text-[#1E1A14] mb-1">
+                <p className="text-sm font-medium text-earth mb-1">
                   Upload National ID / Passport
                 </p>
-                <p className="text-xs text-[#787774]">
+                <p className="text-xs text-muted-foreground">
                   Click to upload your identification document
                 </p>
               </div>
@@ -178,7 +178,7 @@ export default function VerificationPage() {
             <div className="space-y-0">
               <div className="flex items-center gap-3 mb-6">
                 <CheckCircle2 size={16} className="text-[#346538]" />
-                <span className="text-sm font-medium text-[#1E1A14]">
+                <span className="text-sm font-medium text-earth">
                   Document uploaded successfully
                 </span>
               </div>
@@ -196,8 +196,8 @@ export default function VerificationPage() {
                             step.status === "completed"
                               ? "bg-[#EDF3EC] text-[#346538]"
                               : step.status === "in_progress"
-                              ? "bg-[#FBF3DB] text-[#956400] animate-pulse"
-                              : "bg-[#F2EDE2] text-[#787774]"
+                              ? "bg-accent text-accent-foreground animate-pulse"
+                              : "bg-cream text-muted-foreground"
                           }`}
                         >
                           <Icon size={14} />
@@ -207,7 +207,7 @@ export default function VerificationPage() {
                             className={`w-px h-8 ${
                               step.status === "completed"
                                 ? "bg-[#346538]/30"
-                                : "bg-[#3C2F1A]/10"
+                                : "bg-soil/10"
                             }`}
                           />
                         )}
@@ -220,13 +220,13 @@ export default function VerificationPage() {
                             step.status === "completed"
                               ? "text-[#346538]"
                               : step.status === "in_progress"
-                              ? "text-[#956400]"
-                              : "text-[#787774]"
+                              ? "text-accent-foreground"
+                              : "text-muted-foreground"
                           }`}
                         >
                           Step {step.step}: {step.label}
                         </p>
-                        <p className="text-xs text-[#787774] mt-0.5">
+                        <p className="text-xs text-muted-foreground mt-0.5">
                           {step.status === "completed"
                             ? "Complete"
                             : step.status === "in_progress"
@@ -247,7 +247,7 @@ export default function VerificationPage() {
       <section className="mb-10" aria-labelledby="benefits-heading">
         <h2
           id="benefits-heading"
-          className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-4"
+          className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-4"
         >
           Verification Benefits
         </h2>
@@ -257,52 +257,52 @@ export default function VerificationPage() {
               <Award size={14} className="text-[#346538]" />
             </div>
             <div>
-              <p className="text-sm font-medium text-[#1E1A14] mb-1">
+              <p className="text-sm font-medium text-earth mb-1">
                 Verified Voyager Badge
               </p>
-              <p className="text-xs text-[#787774] leading-relaxed">
+              <p className="text-xs text-muted-foreground leading-relaxed">
                 Green trust badge displayed on your profile and listings
               </p>
             </div>
           </div>
 
           <div className="bento-card p-6 flex items-start gap-3">
-            <div className="w-9 h-9 rounded-full bg-[#FBF3DB] flex items-center justify-center shrink-0">
-              <Zap size={14} className="text-[#956400]" />
+            <div className="w-9 h-9 rounded-full bg-accent flex items-center justify-center shrink-0">
+              <Zap size={14} className="text-accent-foreground" />
             </div>
             <div>
-              <p className="text-sm font-medium text-[#1E1A14] mb-1">
+              <p className="text-sm font-medium text-earth mb-1">
                 Priority Booking Access
               </p>
-              <p className="text-xs text-[#787774] leading-relaxed">
+              <p className="text-xs text-muted-foreground leading-relaxed">
                 Get early access to new listings and high-demand equipment
               </p>
             </div>
           </div>
 
           <div className="bento-card p-6 flex items-start gap-3">
-            <div className="w-9 h-9 rounded-full bg-[#F2EDE2] flex items-center justify-center shrink-0">
-              <Lock size={14} className="text-[#5C4A2A]" />
+            <div className="w-9 h-9 rounded-full bg-cream flex items-center justify-center shrink-0">
+              <Lock size={14} className="text-bark" />
             </div>
             <div>
-              <p className="text-sm font-medium text-[#1E1A14] mb-1">
+              <p className="text-sm font-medium text-earth mb-1">
                 Higher Escrow Limits
               </p>
-              <p className="text-xs text-[#787774] leading-relaxed">
+              <p className="text-xs text-muted-foreground leading-relaxed">
                 Unlock increased transaction limits for larger bookings
               </p>
             </div>
           </div>
 
           <div className="bento-card p-6 flex items-start gap-3">
-            <div className="w-9 h-9 rounded-full bg-[#F2EDE2] flex items-center justify-center shrink-0">
-              <Eye size={14} className="text-[#5C4A2A]" />
+            <div className="w-9 h-9 rounded-full bg-cream flex items-center justify-center shrink-0">
+              <Eye size={14} className="text-bark" />
             </div>
             <div>
-              <p className="text-sm font-medium text-[#1E1A14] mb-1">
+              <p className="text-sm font-medium text-earth mb-1">
                 Featured in Discovery Feed
               </p>
-              <p className="text-xs text-[#787774] leading-relaxed">
+              <p className="text-xs text-muted-foreground leading-relaxed">
                 Your listings appear prominently in search and recommendations
               </p>
             </div>
@@ -314,20 +314,20 @@ export default function VerificationPage() {
       <section aria-labelledby="ai-verify-heading">
         <h2
           id="ai-verify-heading"
-          className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-4"
+          className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-4"
         >
           Smart Verification
         </h2>
         <div className="bento-card p-6">
           <div className="flex items-center gap-3 mb-5">
-            <div className="w-9 h-9 rounded-full bg-[#FBF3DB] flex items-center justify-center">
-              <Sparkles size={16} className="text-[#956400]" />
+            <div className="w-9 h-9 rounded-full bg-accent flex items-center justify-center">
+              <Sparkles size={16} className="text-accent-foreground" />
             </div>
             <div>
-              <p className="text-sm font-medium text-[#1E1A14]">
+              <p className="text-sm font-medium text-earth">
                 Speed Up Your Verification
               </p>
-              <p className="text-xs text-[#787774]">
+              <p className="text-xs text-muted-foreground">
                 Get personalized tips to verify faster
               </p>
             </div>
@@ -364,7 +364,7 @@ export default function VerificationPage() {
                 {aiTips.map((tip, i) => (
                   <div
                     key={i}
-                    className="flex items-start gap-3 p-3 rounded-[6px] bg-[#FEFDFB]"
+                    className="flex items-start gap-3 p-3 rounded-[6px] bg-white-feorm"
                   >
                     <ChevronRight
                       size={14}
@@ -372,14 +372,14 @@ export default function VerificationPage() {
                     />
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <p className="text-sm font-medium text-[#1E1A14] leading-relaxed">
+                        <p className="text-sm font-medium text-earth leading-relaxed">
                           {tip.title}
                         </p>
-                        <span className="text-[9px] uppercase tracking-widest text-[#787774] font-mono-feorm border border-[#3C2F1A]/10 rounded-full px-2 py-0.5 shrink-0">
+                        <span className="text-[9px] uppercase tracking-widest text-muted-foreground font-mono-feorm border border-soil/10 rounded-full px-2 py-0.5 shrink-0">
                           {tip.category}
                         </span>
                       </div>
-                      <p className="text-xs text-[#787774] leading-relaxed">
+                      <p className="text-xs text-muted-foreground leading-relaxed">
                         {tip.description}
                       </p>
                     </div>

@@ -143,13 +143,13 @@ export default function SettingsPage() {
     <div className="flex-grow w-full max-w-2xl mx-auto px-6 py-12 md:py-24">
       {/* Header */}
       <div className="mb-12">
-        <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-2">
+        <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
           Account
         </p>
-        <h1 className="font-serif-display text-4xl md:text-5xl text-[#1E1A14] mb-3 tracking-tight">
+        <h1 className="font-serif-display text-4xl md:text-5xl text-earth mb-3 tracking-tight">
           Settings
         </h1>
-        <p className="text-sm text-[#787774]">
+        <p className="text-sm text-muted-foreground">
           Manage your session, exports, and system preferences.
         </p>
       </div>
@@ -158,14 +158,14 @@ export default function SettingsPage() {
       <section className="mb-10" aria-labelledby="session-heading">
         <h2
           id="session-heading"
-          className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-4"
+          className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-4"
         >
           Session Management
         </h2>
         <div className="bento-card p-6">
           <div className="flex items-center gap-3 mb-5">
             <div className="w-2.5 h-2.5 rounded-full bg-[#346538] animate-pulse" />
-            <span className="text-sm font-medium text-[#1E1A14]">
+            <span className="text-sm font-medium text-earth">
               Session Active
             </span>
           </div>
@@ -174,13 +174,13 @@ export default function SettingsPage() {
             <div>
               <label
                 htmlFor="session-phone"
-                className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#787774] block mb-1"
+                className="font-mono-feorm text-[9px] uppercase tracking-widest text-muted-foreground block mb-1"
               >
                 Phone
               </label>
               <p
                 id="session-phone"
-                className="text-sm text-[#1E1A14] font-medium"
+                className="text-sm text-earth font-medium"
               >
                 {phone || "Not set"}
               </p>
@@ -188,13 +188,13 @@ export default function SettingsPage() {
             <div>
               <label
                 htmlFor="session-name"
-                className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#787774] block mb-1"
+                className="font-mono-feorm text-[9px] uppercase tracking-widest text-muted-foreground block mb-1"
               >
                 Name
               </label>
               <p
                 id="session-name"
-                className="text-sm text-[#1E1A14] font-medium"
+                className="text-sm text-earth font-medium"
               >
                 {user?.name || "Not set"} {user?.surname || ""}
               </p>
@@ -202,24 +202,24 @@ export default function SettingsPage() {
             <div>
               <label
                 htmlFor="session-role"
-                className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#787774] block mb-1"
+                className="font-mono-feorm text-[9px] uppercase tracking-widest text-muted-foreground block mb-1"
               >
                 Role
               </label>
-              <p id="session-role" className="text-sm text-[#1E1A14] font-medium capitalize">
+              <p id="session-role" className="text-sm text-earth font-medium capitalize">
                 {selectedRole || user?.role || "Not set"}
               </p>
             </div>
             <div>
               <label
                 htmlFor="session-region"
-                className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#787774] block mb-1"
+                className="font-mono-feorm text-[9px] uppercase tracking-widest text-muted-foreground block mb-1"
               >
                 Region
               </label>
               <p
                 id="session-region"
-                className="text-sm text-[#1E1A14] font-medium"
+                className="text-sm text-earth font-medium"
               >
                 {user?.region || "Not set"}
               </p>
@@ -241,7 +241,7 @@ export default function SettingsPage() {
       <section className="mb-10" aria-labelledby="download-heading">
         <h2
           id="download-heading"
-          className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-4"
+          className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-4"
         >
           Downloads
         </h2>
@@ -272,14 +272,14 @@ export default function SettingsPage() {
       <section className="mb-10" aria-labelledby="reset-heading">
         <h2
           id="reset-heading"
-          className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-4"
+          className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-4"
         >
           System Reset
         </h2>
-        <div className="bento-card p-6 border-[#9F2F2D]/20">
+        <div className="bento-card p-6 border-destructive/20">
           <div className="flex items-start gap-3 mb-5 p-4 rounded-[8px] bg-[#FDEBEC]/50">
-            <AlertTriangle size={16} className="text-[#9F2F2D] shrink-0 mt-0.5" />
-            <p className="text-xs text-[#9F2F2D] leading-relaxed">
+            <AlertTriangle size={16} className="text-destructive shrink-0 mt-0.5" />
+            <p className="text-xs text-destructive leading-relaxed">
               These actions are irreversible. Resetting will clear your
               preferences and may require you to complete onboarding again.
             </p>
@@ -288,7 +288,7 @@ export default function SettingsPage() {
           <div className="flex flex-col sm:flex-row gap-3">
             <button
               onClick={handleResetOnboarding}
-              className="flex items-center gap-2 px-5 py-3 text-xs uppercase tracking-widest min-h-[44px] rounded-full border border-[#9F2F2D]/30 text-[#9F2F2D] hover:bg-[#FDEBEC] transition-colors active:scale-[0.98]"
+              className="flex items-center gap-2 px-5 py-3 text-xs uppercase tracking-widest min-h-[44px] rounded-full border border-destructive/30 text-destructive hover:bg-[#FDEBEC] transition-colors active:scale-[0.98]"
               type="button"
             >
               <RotateCcw size={14} />
@@ -296,7 +296,7 @@ export default function SettingsPage() {
             </button>
             <button
               onClick={handleFullReset}
-              className="flex items-center gap-2 px-5 py-3 text-xs uppercase tracking-widest min-h-[44px] rounded-full bg-[#9F2F2D] text-white hover:bg-[#8a2826] transition-colors active:scale-[0.98]"
+              className="flex items-center gap-2 px-5 py-3 text-xs uppercase tracking-widest min-h-[44px] rounded-full bg-destructive text-white hover:bg-[#8a2826] transition-colors active:scale-[0.98]"
               type="button"
             >
               <AlertTriangle size={14} />
@@ -310,20 +310,20 @@ export default function SettingsPage() {
       <section className="mb-10" aria-labelledby="ai-heading">
         <h2
           id="ai-heading"
-          className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-4"
+          className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-4"
         >
           Smart Tools
         </h2>
         <div className="bento-card p-6">
           <div className="flex items-center gap-3 mb-5">
-            <div className="w-9 h-9 rounded-full bg-[#FBF3DB] flex items-center justify-center">
-              <Sparkles size={16} className="text-[#956400]" />
+            <div className="w-9 h-9 rounded-full bg-accent flex items-center justify-center">
+              <Sparkles size={16} className="text-accent-foreground" />
             </div>
             <div>
-              <p className="text-sm font-medium text-[#1E1A14]">
+              <p className="text-sm font-medium text-earth">
                 Profile Tips
               </p>
-              <p className="text-xs text-[#787774]">
+              <p className="text-xs text-muted-foreground">
                 Get suggestions to improve your profile and attract more bookings
               </p>
             </div>
@@ -352,30 +352,30 @@ export default function SettingsPage() {
           )}
 
           {aiSuggestions && !aiLoading && (
-            <div className="mt-5 bento-card p-6 bg-[#FBF3DB]/30">
-              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#956400] mb-4">
+            <div className="mt-5 bento-card p-6 bg-accent/30">
+              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-accent-foreground mb-4">
                 Suggestions
               </p>
               <div className="space-y-3">
                 {aiSuggestions.map((suggestion, i) => (
                   <div
                     key={i}
-                    className="flex items-start gap-3 p-3 rounded-[6px] bg-[#FEFDFB]"
+                    className="flex items-start gap-3 p-3 rounded-[6px] bg-white-feorm"
                   >
                     <ChevronRight
                       size={14}
-                      className="text-[#E8C96A] shrink-0 mt-0.5"
+                      className="text-harvest shrink-0 mt-0.5"
                     />
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <p className="text-sm font-medium text-[#1E1A14] leading-relaxed">
+                        <p className="text-sm font-medium text-earth leading-relaxed">
                           {suggestion.title}
                         </p>
-                        <span className="text-[9px] uppercase tracking-widest text-[#787774] font-mono-feorm border border-[#3C2F1A]/10 rounded-full px-2 py-0.5 shrink-0">
+                        <span className="text-[9px] uppercase tracking-widest text-muted-foreground font-mono-feorm border border-soil/10 rounded-full px-2 py-0.5 shrink-0">
                           {suggestion.category}
                         </span>
                       </div>
-                      <p className="text-xs text-[#787774] leading-relaxed">
+                      <p className="text-xs text-muted-foreground leading-relaxed">
                         {suggestion.description}
                       </p>
                     </div>
@@ -391,7 +391,7 @@ export default function SettingsPage() {
       <section aria-labelledby="appinfo-heading">
         <h2
           id="appinfo-heading"
-          className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-4"
+          className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-4"
         >
           Application Info
         </h2>
@@ -399,30 +399,30 @@ export default function SettingsPage() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Shield size={14} className="text-[#5C4A2A]" />
-                <span className="text-sm text-[#1E1A14]">Project</span>
+                <Shield size={14} className="text-bark" />
+                <span className="text-sm text-earth">Project</span>
               </div>
-              <span className="font-mono-feorm text-xs text-[#787774]">
+              <span className="font-mono-feorm text-xs text-muted-foreground">
                 FE-N-0.1
               </span>
             </div>
-            <div className="border-b border-[#3C2F1A]/5" />
+            <div className="border-b border-soil/5" />
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Shield size={14} className="text-[#5C4A2A]" />
-                <span className="text-sm text-[#1E1A14]">Protocol</span>
+                <Shield size={14} className="text-bark" />
+                <span className="text-sm text-earth">Protocol</span>
               </div>
-              <span className="font-mono-feorm text-xs text-[#787774]">
+              <span className="font-mono-feorm text-xs text-muted-foreground">
                 Escrow + Verification
               </span>
             </div>
-            <div className="border-b border-[#3C2F1A]/5" />
+            <div className="border-b border-soil/5" />
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Info size={14} className="text-[#5C4A2A]" />
-                <span className="text-sm text-[#1E1A14]">Region</span>
+                <Info size={14} className="text-bark" />
+                <span className="text-sm text-earth">Region</span>
               </div>
-              <span className="font-mono-feorm text-xs text-[#787774]">
+              <span className="font-mono-feorm text-xs text-muted-foreground">
                 Sub-Saharan Africa
               </span>
             </div>

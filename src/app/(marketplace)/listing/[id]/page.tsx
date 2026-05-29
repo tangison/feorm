@@ -3,7 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useListing } from "@/hooks/use-listings";
-import { formatPrice } from "@/components/feorm/listing-card";
+import { formatPrice } from "@/lib/format";
 import Image from "next/image";
 import { ChevronLeft, MessageCircle, ArrowRight, Sparkles } from "lucide-react";
 
@@ -80,8 +80,8 @@ export default function ListingDetailPage() {
     return (
       <div className="flex-grow flex items-center justify-center min-h-[60vh]">
         <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-[#E8C96A] animate-pulse" />
-          <p className="text-sm text-[#787774] font-mono-feorm">
+          <div className="w-2 h-2 rounded-full bg-harvest animate-pulse" />
+          <p className="text-sm text-muted-foreground font-mono-feorm">
             Loading listing...
           </p>
         </div>
@@ -93,7 +93,7 @@ export default function ListingDetailPage() {
     return (
       <div className="flex-grow flex items-center justify-center min-h-[60vh]">
         <div className="text-center">
-          <p className="text-sm text-[#787774] mb-4">Listing not found.</p>
+          <p className="text-sm text-muted-foreground mb-4">Listing not found.</p>
           <button
             onClick={() => router.push("/marketplace")}
             className="btn-primary-feorm px-6 py-3 text-xs uppercase tracking-widest"
@@ -109,10 +109,10 @@ export default function ListingDetailPage() {
 
   return (
     <div className="flex-grow w-full max-w-6xl mx-auto px-6 py-6 md:py-12">
-      <div className="bg-[#FEFDFB] border border-[#3C2F1A]/10 rounded-[8px] overflow-hidden md:min-h-[600px]">
+      <div className="bg-white-feorm border border-soil/10 rounded-[8px] overflow-hidden md:min-h-[600px]">
         <div className="flex flex-col md:flex-row h-full">
           {/* Left: Image */}
-          <div className="w-full md:w-1/2 bg-[#FAF7F2] relative h-[35vh] md:h-auto border-b md:border-b-0 md:border-r border-[#3C2F1A]/10">
+          <div className="w-full md:w-1/2 bg-fog relative h-[35vh] md:h-auto border-b md:border-b-0 md:border-r border-soil/10">
             <Image
               src={listing.image}
               alt={listing.title}
@@ -124,7 +124,7 @@ export default function ListingDetailPage() {
             />
             <button
               onClick={() => router.push("/marketplace")}
-              className="absolute top-4 left-4 md:top-8 md:left-8 bg-[#FEFDFB]/90 backdrop-blur-sm border border-[#3C2F1A]/10 p-2 rounded-full text-[#1E1A14] hover:bg-[#FEFDFB] transition-colors shadow-sm"
+              className="absolute top-4 left-4 md:top-8 md:left-8 bg-white-feorm/90 backdrop-blur-sm border border-soil/10 p-2 rounded-full text-earth hover:bg-white-feorm transition-colors shadow-sm"
               aria-label="Back to marketplace"
             >
               <ChevronLeft size={16} />
@@ -132,7 +132,7 @@ export default function ListingDetailPage() {
           </div>
 
           {/* Right: Details */}
-          <div className="w-full md:w-1/2 bg-[#FEFDFB] p-6 md:p-12 flex flex-col overflow-y-auto">
+          <div className="w-full md:w-1/2 bg-white-feorm p-6 md:p-12 flex flex-col overflow-y-auto">
             <div className="flex-grow max-w-md">
               <div className="flex items-center gap-3 mb-5">
                 <span
@@ -142,47 +142,47 @@ export default function ListingDetailPage() {
                 >
                   {listing.category}
                 </span>
-                <span className="font-mono-feorm text-[10px] text-[#787774] uppercase tracking-widest">
+                <span className="font-mono-feorm text-[10px] text-muted-foreground uppercase tracking-widest">
                   {listing.region}
                 </span>
               </div>
 
-              <h1 className="font-serif-display text-3xl md:text-4xl mb-5 text-[#1E1A14] leading-[1.1] tracking-tight">
+              <h1 className="font-serif-display text-3xl md:text-4xl mb-5 text-earth leading-[1.1] tracking-tight">
                 {listing.title}
               </h1>
 
-              <div className="text-[#1E1A14] mb-8 pb-8 border-b border-[#3C2F1A]/10">
+              <div className="text-earth mb-8 pb-8 border-b border-soil/10">
                 <span className="text-2xl font-medium font-mono-feorm">
                   {formatPrice(listing.price)}
                 </span>
-                <span className="text-sm text-[#787774] ml-1 uppercase tracking-wide">
+                <span className="text-sm text-muted-foreground ml-1 uppercase tracking-wide">
                   / day
                 </span>
               </div>
 
               {/* Description with AI Enhance */}
-              <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-3">
+              <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-3">
                 Description
               </h4>
               {rewrittenDesc !== null ? (
                 <div className="mb-8">
-                  <p className="text-[#3C2F1A] text-sm leading-relaxed">
+                  <p className="text-soil text-sm leading-relaxed">
                     {typeof rewrittenDesc === "string"
                       ? rewrittenDesc
                       : rewrittenDesc.description || listing.description}
                   </p>
                   {typeof rewrittenDesc === "object" && rewrittenDesc.title && (
-                    <p className="text-[#5C4A2A] text-sm font-medium mt-2">
+                    <p className="text-bark text-sm font-medium mt-2">
                       {rewrittenDesc.title}
                     </p>
                   )}
                   <div className="flex items-center gap-3 mt-2">
-                    <span className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#787774]">
+                    <span className="font-mono-feorm text-[9px] uppercase tracking-widest text-muted-foreground">
                       Enhanced
                     </span>
                     <button
                       onClick={() => setRewrittenDesc(null)}
-                      className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#E8C96A] hover:text-[#1E1A14] transition-colors underline underline-offset-2 px-2 py-1 rounded-full min-h-[36px]"
+                      className="font-mono-feorm text-[9px] uppercase tracking-widest text-harvest hover:text-earth transition-colors underline underline-offset-2 px-2 py-1 rounded-full min-h-[36px]"
                     >
                       Show Original
                     </button>
@@ -190,18 +190,18 @@ export default function ListingDetailPage() {
                 </div>
               ) : (
                 <div className="mb-8">
-                  <p className="text-[#3C2F1A] text-sm leading-relaxed">
+                  <p className="text-soil text-sm leading-relaxed">
                     {listing.description}
                   </p>
                   <button
                     onClick={handleRewriteDescription}
                     disabled={rewriting}
-                    className="text-[10px] uppercase tracking-widest text-[#787774] hover:text-[#1E1A14] font-mono-feorm flex items-center gap-1 mt-2 transition-colors disabled:opacity-50 rounded-full px-3 py-1.5 border border-[#3C2F1A]/10 bg-[#FAF7F2] hover:border-[#3C2F1A]/30 min-h-[36px]"
+                    className="text-[10px] uppercase tracking-widest text-muted-foreground hover:text-earth font-mono-feorm flex items-center gap-1 mt-2 transition-colors disabled:opacity-50 rounded-full px-3 py-1.5 border border-soil/10 bg-fog hover:border-soil/30 min-h-[36px]"
                     aria-label="AI Enhance description"
                   >
                     {rewriting ? (
                       <>
-                        <span className="inline-block w-3 h-3 border border-[#787774]/40 border-t-[#787774] rounded-full animate-spin" />
+                        <span className="inline-block w-3 h-3 border border-muted-foreground/40 border-t-muted-foreground rounded-full animate-spin" />
                         Enhancing...
                       </>
                     ) : (
@@ -214,14 +214,14 @@ export default function ListingDetailPage() {
                 </div>
               )}
 
-              <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-3">
+              <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-3">
                 Specifications
               </h4>
               <div className="flex flex-wrap gap-2 mb-8">
                 {features.map((f: string) => (
                   <span
                     key={f}
-                    className="border border-[#3C2F1A]/10 rounded-full bg-[#FAF7F2] px-3 py-1 text-xs text-[#787774]"
+                    className="border border-soil/10 rounded-full bg-fog px-3 py-1 text-xs text-muted-foreground"
                   >
                     {f.trim()}
                   </span>
@@ -229,21 +229,21 @@ export default function ListingDetailPage() {
               </div>
 
               {/* Host Bio */}
-              <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-3">
+              <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-3">
                 Host
               </h4>
               <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-[#1E1A14] text-[#FEFDFB] flex items-center justify-center text-xs font-medium font-serif-display">
+                <div className="w-10 h-10 rounded-full bg-earth text-white-feorm flex items-center justify-center text-xs font-medium font-serif-display">
                   {listing.hostName
                     .split(" ")
                     .map((n: string) => n[0])
                     .join("")}
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-[#1E1A14]">
+                  <p className="text-sm font-medium text-earth">
                     {listing.hostName}
                   </p>
-                  <p className="text-xs text-[#787774] font-mono-feorm">
+                  <p className="text-xs text-muted-foreground font-mono-feorm">
                     {listing.hostPhone}
                   </p>
                 </div>
@@ -253,14 +253,14 @@ export default function ListingDetailPage() {
               </div>
 
               {/* AI Recommendations */}
-              <div className="mt-8 pt-8 border-t border-[#3C2F1A]/10">
-                <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-3">
+              <div className="mt-8 pt-8 border-t border-soil/10">
+                <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-3">
                   Smart Suggestions
                 </h4>
                 {suggestions === null && !loadingSuggestions && (
                   <button
                     onClick={handleGetSuggestions}
-                    className="text-[10px] uppercase tracking-widest text-[#787774] hover:text-[#1E1A14] font-mono-feorm flex items-center gap-1 transition-colors border border-[#3C2F1A]/10 rounded-full px-3 py-1.5 hover:border-[#3C2F1A]/30"
+                    className="text-[10px] uppercase tracking-widest text-muted-foreground hover:text-earth font-mono-feorm flex items-center gap-1 transition-colors border border-soil/10 rounded-full px-3 py-1.5 hover:border-soil/30"
                     aria-label="Get smart suggestions"
                   >
                     <Sparkles size={12} />
@@ -282,17 +282,17 @@ export default function ListingDetailPage() {
                     {suggestions.slice(0, 3).map((s, i) => (
                       <div
                         key={i}
-                        className="border border-[#3C2F1A]/10 rounded-[8px] p-3 bg-[#FAF7F2]"
+                        className="border border-soil/10 rounded-[8px] p-3 bg-fog"
                       >
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="text-sm font-medium text-[#1E1A14]">
+                          <span className="text-sm font-medium text-earth">
                             {s.title}
                           </span>
-                          <span className="text-[9px] uppercase tracking-widest text-[#787774] font-mono-feorm border border-[#3C2F1A]/10 rounded-full px-2 py-0.5">
+                          <span className="text-[9px] uppercase tracking-widest text-muted-foreground font-mono-feorm border border-soil/10 rounded-full px-2 py-0.5">
                             {s.category}
                           </span>
                         </div>
-                        <p className="text-xs text-[#787774] leading-relaxed">
+                        <p className="text-xs text-muted-foreground leading-relaxed">
                           {s.description}
                         </p>
                       </div>
@@ -302,10 +302,10 @@ export default function ListingDetailPage() {
               </div>
             </div>
 
-            <div className="mt-auto pt-6 bg-[#FEFDFB]">
+            <div className="mt-auto pt-6 bg-white-feorm">
               <div className="flex justify-between text-sm mb-4">
-                <span className="text-[#787774]">Security Escrow</span>
-                <span className="font-medium font-mono-feorm text-[#1E1A14]">
+                <span className="text-muted-foreground">Security Escrow</span>
+                <span className="font-medium font-mono-feorm text-earth">
                   N$ 1,500
                 </span>
               </div>

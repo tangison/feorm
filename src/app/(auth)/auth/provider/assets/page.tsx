@@ -22,23 +22,23 @@ export default function ProviderAssetsPage() {
   };
 
   return (
-    <div className="flex-grow flex items-center justify-center p-6 md:p-12 min-h-screen bg-[#FAF7F2]">
+    <div className="flex-grow flex items-center justify-center p-6 md:p-12 min-h-screen bg-fog">
       <div className="max-w-md w-full">
         <button
           onClick={() => router.push("/auth/role")}
-          className="mb-8 flex items-center gap-2 text-sm text-[#787774] hover:text-[#1E1A14] transition-colors min-h-[44px]"
+          className="mb-8 flex items-center gap-2 text-sm text-muted-foreground hover:text-earth transition-colors min-h-[44px]"
         >
           <ArrowLeft size={16} /> Back
         </button>
 
         <div className="mb-10">
-          <kbd className="font-mono-feorm text-[10px] border border-[#3C2F1A]/20 bg-[#FEFDFB] px-2 py-1 rounded text-[#787774] mb-6 inline-block">
+          <kbd className="font-mono-feorm text-[10px] border border-soil/20 bg-white-feorm px-2 py-1 rounded text-muted-foreground mb-6 inline-block">
             PROVIDER SETUP
           </kbd>
-          <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-[#1E1A14] tracking-tight">
+          <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-earth tracking-tight">
             Asset Inventory
           </h1>
-          <p className="text-sm text-[#787774] leading-relaxed">
+          <p className="text-sm text-muted-foreground leading-relaxed">
             What will you be providing to the Feorm network? Select all that apply.
           </p>
         </div>
@@ -49,38 +49,38 @@ export default function ProviderAssetsPage() {
             onClick={() => toggleAsset("stay")}
             className={`w-full p-6 text-left border-2 rounded-[8px] transition-all duration-300 active:scale-[0.98] ${
               assets.includes("stay")
-                ? "border-[#E8C96A] bg-[#FBF3DB]/30"
-                : "border-[#3C2F1A]/10 bg-[#FEFDFB] hover:border-[#3C2F1A]/20"
+                ? "border-harvest bg-accent/30"
+                : "border-soil/10 bg-white-feorm hover:border-soil/20"
             }`}
           >
             <div className="flex items-center gap-4">
               <div
                 className={`w-12 h-12 rounded-[10px] flex items-center justify-center transition-colors ${
                   assets.includes("stay")
-                    ? "bg-[#E8C96A]"
-                    : "bg-[#FAF7F2]"
+                    ? "bg-harvest"
+                    : "bg-fog"
                 }`}
               >
                 <Tent
                   size={22}
                   className={
                     assets.includes("stay")
-                      ? "text-[#1E1A14]"
-                      : "text-[#787774]"
+                      ? "text-earth"
+                      : "text-muted-foreground"
                   }
                 />
               </div>
               <div>
-                <h3 className="font-serif-display text-lg text-[#1E1A14]">
+                <h3 className="font-serif-display text-lg text-earth">
                   Farm Stays
                 </h3>
-                <p className="text-xs text-[#787774] mt-1">
+                <p className="text-xs text-muted-foreground mt-1">
                   Accommodation, guest houses, tent camps, eco lodges
                 </p>
               </div>
               {assets.includes("stay") && (
-                <div className="ml-auto w-6 h-6 rounded-full bg-[#E8C96A] flex items-center justify-center">
-                  <div className="w-2 h-2 rounded-full bg-[#1E1A14]" />
+                <div className="ml-auto w-6 h-6 rounded-full bg-harvest flex items-center justify-center">
+                  <div className="w-2 h-2 rounded-full bg-earth" />
                 </div>
               )}
             </div>
@@ -92,7 +92,7 @@ export default function ProviderAssetsPage() {
             className={`w-full p-6 text-left border-2 rounded-[8px] transition-all duration-300 active:scale-[0.98] ${
               assets.includes("equipment")
                 ? "border-[#1F6C9F] bg-[#E1F3FE]/30"
-                : "border-[#3C2F1A]/10 bg-[#FEFDFB] hover:border-[#3C2F1A]/20"
+                : "border-soil/10 bg-white-feorm hover:border-soil/20"
             }`}
           >
             <div className="flex items-center gap-4">
@@ -100,7 +100,7 @@ export default function ProviderAssetsPage() {
                 className={`w-12 h-12 rounded-[10px] flex items-center justify-center transition-colors ${
                   assets.includes("equipment")
                     ? "bg-[#E1F3FE]"
-                    : "bg-[#FAF7F2]"
+                    : "bg-fog"
                 }`}
               >
                 <Wrench
@@ -108,15 +108,15 @@ export default function ProviderAssetsPage() {
                   className={
                     assets.includes("equipment")
                       ? "text-[#1F6C9F]"
-                      : "text-[#787774]"
+                      : "text-muted-foreground"
                   }
                 />
               </div>
               <div>
-                <h3 className="font-serif-display text-lg text-[#1E1A14]">
+                <h3 className="font-serif-display text-lg text-earth">
                   Equipment
                 </h3>
-                <p className="text-xs text-[#787774] mt-1">
+                <p className="text-xs text-muted-foreground mt-1">
                   Machinery, irrigation, attachments, energy systems
                 </p>
               </div>

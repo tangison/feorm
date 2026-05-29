@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useBookings } from "@/hooks/use-bookings";
 import { Clock, ArrowRight, MapPin } from "lucide-react";
 import Link from "next/link";
-import { formatPrice } from "@/components/feorm/listing-card";
+import { formatPrice } from "@/lib/format";
 
 export default function JourneysPage() {
   const { user, phone } = useFeormAuth();
@@ -18,13 +18,13 @@ export default function JourneysPage() {
   return (
     <div className="flex-grow w-full max-w-4xl mx-auto px-6 py-12 md:py-24">
       <div className="mb-12">
-        <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-2">
+        <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
           My Journeys
         </p>
-        <h1 className="font-serif-display text-4xl md:text-5xl text-[#1E1A14] mb-3 tracking-tight">
+        <h1 className="font-serif-display text-4xl md:text-5xl text-earth mb-3 tracking-tight">
           Your Bookings
         </h1>
-        <p className="text-sm text-[#787774]">
+        <p className="text-sm text-muted-foreground">
           Active, upcoming, and past bookings.{" "}
           <span className="inline-flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-[#346538] animate-pulse" />
@@ -49,9 +49,9 @@ export default function JourneysPage() {
       )}
 
       {!bookingsLoading && bookings?.length === 0 && (
-        <div className="border border-dashed border-[#D4C4A0]/50 bg-[#FEFDFB] rounded-[8px] p-12 text-center">
-          <Clock size={32} className="text-[#D4C4A0] mx-auto mb-4" />
-          <p className="text-sm text-[#787774] mb-6">
+        <div className="border border-dashed border-sand/50 bg-white-feorm rounded-[8px] p-12 text-center">
+          <Clock size={32} className="text-sand mx-auto mb-4" />
+          <p className="text-sm text-muted-foreground mb-6">
             No bookings yet. Browse the marketplace to make your first one.
           </p>
           <Link
@@ -69,7 +69,7 @@ export default function JourneysPage() {
             <Link
               key={b._id}
               href={`/listing/${b.listingId}`}
-              className="bento-card bento-card-lift p-6 flex flex-col md:flex-row md:items-center gap-4 cursor-pointer hover:border-[#3C2F1A]/20 transition-colors"
+              className="bento-card bento-card-lift p-6 flex flex-col md:flex-row md:items-center gap-4 cursor-pointer hover:border-soil/20 transition-colors"
               aria-label={`View ${b.listing?.title || "listing"}`}
             >
               <div className="flex-grow">
@@ -85,17 +85,17 @@ export default function JourneysPage() {
                   >
                     {b.status}
                   </span>
-                  <span className="font-mono-feorm text-[9px] text-[#787774] uppercase tracking-widest">
+                  <span className="font-mono-feorm text-[9px] text-muted-foreground uppercase tracking-widest">
                     {b.reference}
                   </span>
                   {b.status === "confirmed" && (
                     <span className="w-1.5 h-1.5 rounded-full bg-[#346538] animate-pulse" />
                   )}
                 </div>
-                <h3 className="font-serif-display text-lg text-[#1E1A14]">
+                <h3 className="font-serif-display text-lg text-earth">
                   {b.listing?.title || "Listing"}
                 </h3>
-                <p className="text-xs text-[#787774] mt-1 font-mono-feorm flex items-center gap-1">
+                <p className="text-xs text-muted-foreground mt-1 font-mono-feorm flex items-center gap-1">
                   <MapPin size={10} aria-hidden="true" />
                   {b.listing?.region || "Namibia"} — {b.startDate} to {b.endDate}
                   {b.withOperator && (
@@ -104,10 +104,10 @@ export default function JourneysPage() {
                 </p>
               </div>
               <div className="text-right shrink-0">
-                <p className="font-mono-feorm text-lg font-medium text-[#1E1A14]">
+                <p className="font-mono-feorm text-lg font-medium text-earth">
                   {formatPrice(b.totalPrice)}
                 </p>
-                <p className="text-[9px] text-[#787774] font-mono-feorm uppercase tracking-wider">
+                <p className="text-[9px] text-muted-foreground font-mono-feorm uppercase tracking-wider">
                   incl. N$ {(b.escrowAmount / 100).toLocaleString()} escrow
                 </p>
               </div>

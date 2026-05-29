@@ -7,23 +7,17 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <div
-      className="min-h-screen flex items-center justify-center px-6"
-      style={{ backgroundColor: "#FAF7F2" }}
-    >
+    <div className="min-h-screen flex items-center justify-center bg-fog px-6">
       <div className="max-w-md w-full text-center space-y-8">
         {/* MapPin Icon — inline SVG (server component, no Lucide import) */}
         <div className="flex justify-center">
-          <div
-            className="w-20 h-20 rounded-full flex items-center justify-center"
-            style={{ backgroundColor: "rgba(30, 26, 20, 0.06)" }}
-          >
+          <div className="w-20 h-20 rounded-full flex items-center justify-center bg-earth/6">
             <svg
               width="40"
               height="40"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="#1E1A14"
+              stroke="var(--color-earth)"
               strokeWidth="1.5"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -36,18 +30,12 @@ export default function NotFound() {
         </div>
 
         {/* Title */}
-        <h1
-          className="font-serif-display text-4xl tracking-tight"
-          style={{ color: "#1E1A14" }}
-        >
+        <h1 className="font-serif-display text-4xl tracking-tight text-earth">
           Asset Not Found
         </h1>
 
         {/* Body Copy */}
-        <p
-          className="text-base leading-relaxed"
-          style={{ color: "#787774" }}
-        >
+        <p className="text-base leading-relaxed text-muted-foreground">
           The requested coordinate in the Feorm network is currently unavailable.
         </p>
 
@@ -55,13 +43,7 @@ export default function NotFound() {
         <div className="pt-4">
           <Link
             href="/marketplace"
-            className="inline-block text-xs uppercase tracking-widest font-medium transition-all duration-200 no-underline"
-            style={{
-              backgroundColor: "#1E1A14",
-              color: "#FEFDFB",
-              borderRadius: "9999px",
-              padding: "12px 24px",
-            }}
+            className="btn-primary-feorm inline-block px-6 py-3 text-xs uppercase tracking-widest font-medium no-underline"
           >
             Return to Marketplace
           </Link>

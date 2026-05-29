@@ -110,13 +110,13 @@ export default function ProfilePage() {
   return (
     <div className="flex-grow w-full max-w-2xl mx-auto px-6 py-12 md:py-24">
       <div className="mb-12">
-        <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-2">
+        <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
           Account
         </p>
-        <h1 className="font-serif-display text-4xl md:text-5xl text-[#1E1A14] mb-3 tracking-tight">
+        <h1 className="font-serif-display text-4xl md:text-5xl text-earth mb-3 tracking-tight">
           Profile
         </h1>
-        <p className="text-sm text-[#787774]">
+        <p className="text-sm text-muted-foreground">
           Manage your identity, verification, and account settings.
         </p>
       </div>
@@ -126,7 +126,7 @@ export default function ProfilePage() {
         <div className="bento-card p-6">
           <div className="flex items-center gap-5 mb-5">
             {/* Avatar */}
-            <div className="w-20 h-20 rounded-full bg-[#1E1A14] text-[#FEFDFB] flex items-center justify-center text-xl font-medium font-serif-display shrink-0 overflow-hidden">
+            <div className="w-20 h-20 rounded-full bg-earth text-white-feorm flex items-center justify-center text-xl font-medium font-serif-display shrink-0 overflow-hidden">
               {avatarPreview ? (
                 avatarPreview.type === "preset" ? (
                   <div
@@ -148,12 +148,12 @@ export default function ProfilePage() {
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="font-serif-display text-xl text-[#1E1A14]">
+              <h3 className="font-serif-display text-xl text-earth">
                 {user?.name && user?.surname
                   ? `${user.name} ${user.surname}`
                   : "Complete Your Profile"}
               </h3>
-              <p className="text-sm text-[#787774] font-mono-feorm flex items-center gap-1">
+              <p className="text-sm text-muted-foreground font-mono-feorm flex items-center gap-1">
                 <MapPin size={10} aria-hidden="true" />
                 +264{phone || "810000000"}
               </p>
@@ -170,7 +170,7 @@ export default function ProfilePage() {
           {/* Change Avatar Button */}
           <button
             onClick={() => setAvatarPickerOpen(!avatarPickerOpen)}
-            className="w-full flex items-center justify-center gap-2 px-5 py-2.5 text-[10px] uppercase tracking-widest font-mono-feorm text-[#787774] hover:text-[#1E1A14] border border-[#3C2F1A]/10 rounded-full hover:bg-[#FAF7F2] transition-all min-h-[44px]"
+            className="w-full flex items-center justify-center gap-2 px-5 py-2.5 text-[10px] uppercase tracking-widest font-mono-feorm text-muted-foreground hover:text-earth border border-soil/10 rounded-full hover:bg-fog transition-all min-h-[44px]"
             type="button"
             aria-expanded={avatarPickerOpen}
           >
@@ -186,10 +186,10 @@ export default function ProfilePage() {
 
           {/* Collapsible Avatar Picker */}
           {avatarPickerOpen && (
-            <div className="mt-5 pt-5 border-t border-[#3C2F1A]/10 space-y-5">
+            <div className="mt-5 pt-5 border-t border-soil/10 space-y-5">
               {/* Preset Avatars */}
               <div>
-                <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#D4C4A0] mb-3 text-center">
+                <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-sand mb-3 text-center">
                   Choose a Preset
                 </p>
                 <div className="grid grid-cols-4 gap-3 justify-items-center">
@@ -199,8 +199,8 @@ export default function ProfilePage() {
                       onClick={() => handleSelectPreset(preset.id)}
                       className={`w-12 h-12 rounded-full transition-all duration-200 hover:scale-110 active:scale-[0.95] ${
                         avatarUrl === preset.id
-                          ? "ring-2 ring-[#E8C96A] ring-offset-2 ring-offset-[#FEFDFB]"
-                          : "ring-1 ring-[#3C2F1A]/10"
+                          ? "ring-2 ring-harvest ring-offset-2 ring-offset-white-feorm"
+                          : "ring-1 ring-soil/10"
                       }`}
                       style={{ background: preset.gradient }}
                       aria-label={`Select ${preset.label} avatar`}
@@ -213,7 +213,7 @@ export default function ProfilePage() {
 
               {/* Upload */}
               <div>
-                <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#D4C4A0] mb-3 text-center">
+                <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-sand mb-3 text-center">
                   Or Upload Your Own
                 </p>
                 <input
@@ -232,7 +232,7 @@ export default function ProfilePage() {
                 >
                   {uploadingAvatar ? (
                     <>
-                      <div className="w-3 h-3 rounded-full bg-[#1E1A14] animate-pulse" />
+                      <div className="w-3 h-3 rounded-full bg-earth animate-pulse" />
                       Processing...
                     </>
                   ) : (
@@ -245,7 +245,7 @@ export default function ProfilePage() {
 
               {/* AI Generate */}
               <div>
-                <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#D4C4A0] mb-3 text-center">
+                <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-sand mb-3 text-center">
                   Or Generate with AI
                 </p>
                 <button
@@ -256,7 +256,7 @@ export default function ProfilePage() {
                 >
                   {generatingAvatar ? (
                     <>
-                      <div className="w-3 h-3 rounded-full bg-[#1E1A14] animate-pulse" />
+                      <div className="w-3 h-3 rounded-full bg-earth animate-pulse" />
                       Generating...
                     </>
                   ) : (
@@ -274,30 +274,30 @@ export default function ProfilePage() {
         <div className="bento-card p-6">
           <div className="grid grid-cols-2 gap-5">
             <div>
-              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#787774] mb-1">
+              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-muted-foreground mb-1">
                 Role
               </p>
-              <p className="text-sm text-[#1E1A14] capitalize">{user?.role || "Explorer"}</p>
+              <p className="text-sm text-earth capitalize">{user?.role || "Explorer"}</p>
             </div>
             <div>
-              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#787774] mb-1">
+              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-muted-foreground mb-1">
                 Region
               </p>
-              <p className="text-sm text-[#1E1A14]">{user?.region || "Khomas"}</p>
+              <p className="text-sm text-earth">{user?.region || "Khomas"}</p>
             </div>
             <div>
-              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#787774] mb-1">
+              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-muted-foreground mb-1">
                 Trust Score
               </p>
-              <p className="text-sm text-[#1E1A14] flex items-center gap-1.5 font-mono-feorm">
-                <Star size={14} className="text-[#E8C96A]" /> 4.8
+              <p className="text-sm text-earth flex items-center gap-1.5 font-mono-feorm">
+                <Star size={14} className="text-harvest" /> 4.8
               </p>
             </div>
             <div>
-              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#787774] mb-1">
+              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-muted-foreground mb-1">
                 Member Since
               </p>
-              <p className="text-sm text-[#1E1A14]">2026</p>
+              <p className="text-sm text-earth">2026</p>
             </div>
           </div>
         </div>
@@ -306,28 +306,28 @@ export default function ProfilePage() {
         {!user?.verified && (
           <Link
             href="/verification"
-            className="bento-card bento-card-lift p-6 flex items-center justify-between hover:border-[#1E1A14]/30 transition-colors group"
+            className="bento-card bento-card-lift p-6 flex items-center justify-between hover:border-earth/30 transition-colors group"
           >
             <div className="flex items-center gap-3">
-              <Shield size={18} className="text-[#956400]" />
+              <Shield size={18} className="text-accent-foreground" />
               <div>
-                <p className="text-sm font-medium text-[#1E1A14]">Complete Verification</p>
-                <p className="text-xs text-[#787774]">Upload ID to unlock full marketplace access</p>
+                <p className="text-sm font-medium text-earth">Complete Verification</p>
+                <p className="text-xs text-muted-foreground">Upload ID to unlock full marketplace access</p>
               </div>
             </div>
-            <ChevronRight size={16} className="text-[#787774] group-hover:translate-x-0.5 transition-transform" />
+            <ChevronRight size={16} className="text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
           </Link>
         )}
 
         <Link
           href="/support"
-          className="bento-card bento-card-lift p-6 flex items-center justify-between hover:border-[#1E1A14]/30 transition-colors group"
+          className="bento-card bento-card-lift p-6 flex items-center justify-between hover:border-earth/30 transition-colors group"
         >
           <div className="flex items-center gap-3">
-            <Settings size={18} className="text-[#787774]" />
-            <p className="text-sm font-medium text-[#1E1A14]">Support Center</p>
+            <Settings size={18} className="text-muted-foreground" />
+            <p className="text-sm font-medium text-earth">Support Center</p>
           </div>
-          <ChevronRight size={16} className="text-[#787774] group-hover:translate-x-0.5 transition-transform" />
+          <ChevronRight size={16} className="text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
         </Link>
 
         <button
@@ -335,14 +335,14 @@ export default function ProfilePage() {
             localStorage.removeItem("feorm-session");
             router.push("/");
           }}
-          className="w-full bento-card p-6 flex items-center justify-between hover:border-[#9F2F2D]/30 transition-colors text-left group"
+          className="w-full bento-card p-6 flex items-center justify-between hover:border-destructive/30 transition-colors text-left group"
           type="button"
         >
           <div className="flex items-center gap-3">
-            <LogOut size={18} className="text-[#9F2F2D]" />
-            <p className="text-sm font-medium text-[#9F2F2D]">Sign Out</p>
+            <LogOut size={18} className="text-destructive" />
+            <p className="text-sm font-medium text-destructive">Sign Out</p>
           </div>
-          <ChevronRight size={16} className="text-[#9F2F2D] group-hover:translate-x-0.5 transition-transform" />
+          <ChevronRight size={16} className="text-destructive group-hover:translate-x-0.5 transition-transform" />
         </button>
       </div>
     </div>

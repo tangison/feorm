@@ -49,30 +49,30 @@ export default function VerifyPage() {
   };
 
   return (
-    <div className="flex-grow flex items-center justify-center p-6 md:p-12 min-h-screen bg-[#FAF7F2]">
+    <div className="flex-grow flex items-center justify-center p-6 md:p-12 min-h-screen bg-fog">
       <div className="max-w-md w-full">
         <button
           onClick={() => router.push("/")}
-          className="mb-8 flex items-center gap-2 px-3 py-2 text-sm text-[#787774] hover:text-[#1E1A14] transition-colors min-h-[44px] rounded-full hover:bg-[#1E1A14]/5"
+          className="mb-8 flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-earth transition-colors min-h-[44px] rounded-full hover:bg-earth/5"
         >
           <ArrowLeft size={16} /> Back
         </button>
 
         <div className="mb-10">
-          <kbd className="font-mono-feorm text-[10px] border border-[#3C2F1A]/20 bg-[#FEFDFB] px-2 py-1 rounded text-[#787774] mb-6 inline-block">
+          <kbd className="font-mono-feorm text-[10px] border border-soil/20 bg-white-feorm px-2 py-1 rounded text-muted-foreground mb-6 inline-block">
             STEP 2 OF 2
           </kbd>
-          <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-[#1E1A14]">
+          <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-earth">
             Verify Your Number
           </h1>
-          <p className="text-sm text-[#787774] leading-relaxed">
+          <p className="text-sm text-muted-foreground leading-relaxed">
             Enter the 6-digit code we sent to +264{phone}
           </p>
         </div>
 
         <div className="space-y-6">
-          <div className="border border-[#3C2F1A]/20 bg-[#FEFDFB] p-4 rounded-[4px] focus-within:border-[#1E1A14] transition-colors">
-            <label htmlFor="otp-input" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-[#787774]">
+          <div className="border border-soil/20 bg-white-feorm p-4 rounded-[4px] focus-within:border-earth transition-colors">
+            <label htmlFor="otp-input" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-muted-foreground">
               Verification Code
             </label>
             <input
@@ -87,12 +87,12 @@ export default function VerifyPage() {
               maxLength={6}
               aria-invalid={otpError ? "true" : undefined}
               aria-describedby={otpError ? "otp-error" : undefined}
-              className="w-full bg-transparent outline-none text-2xl text-[#1E1A14] placeholder-[#D4C4A0] font-mono-feorm tracking-[0.3em] min-h-[44px]"
+              className="w-full bg-transparent outline-none text-2xl text-earth placeholder-sand font-mono-feorm tracking-[0.3em] min-h-[44px]"
             />
           </div>
 
           {otpError && (
-            <p id="otp-error" role="alert" className="text-xs text-[#9F2F2D] font-mono-feorm">{otpError}</p>
+            <p id="otp-error" role="alert" className="text-xs text-destructive font-mono-feorm">{otpError}</p>
           )}
 
           <button
@@ -105,8 +105,8 @@ export default function VerifyPage() {
           </button>
         </div>
 
-        <div className="mt-6 p-4 bg-[#FBF3DB]/30 border border-[#E8C96A]/20 rounded-[4px]" role="note">
-          <p className="text-[10px] text-[#956400] font-mono-feorm uppercase tracking-wide">
+        <div className="mt-6 p-4 bg-accent/30 border border-harvest/20 rounded-[4px]" role="note">
+          <p className="text-[10px] text-accent-foreground font-mono-feorm uppercase tracking-wide">
             Demo Mode: Use OTP <strong>123456</strong>
           </p>
         </div>

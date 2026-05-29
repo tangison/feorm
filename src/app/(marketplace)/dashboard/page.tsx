@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { useFeormAuth, useFeormOnboarding } from "@/context/feorm-context";
-import { formatPrice } from "@/components/feorm/listing-card";
+import { formatPrice } from "@/lib/format";
 import {
   Sparkles,
   RefreshCw,
@@ -177,33 +177,33 @@ export default function DashboardPage() {
     <div className="flex-grow w-full max-w-4xl mx-auto px-6 py-12 md:py-24">
       {/* Header */}
       <div className="mb-12">
-        <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-2">
+        <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
           Host Dashboard
         </p>
-        <h1 className="font-serif-display text-4xl md:text-5xl text-[#1E1A14] mb-3 tracking-tight">
+        <h1 className="font-serif-display text-4xl md:text-5xl text-earth mb-3 tracking-tight">
           Welcome back, {user?.name || "Host"}
         </h1>
-        <p className="text-sm text-[#787774]">
+        <p className="text-sm text-muted-foreground">
           Manage your listings, earnings, and pending requests.
         </p>
       </div>
 
       {/* ─── AI Insights Card ───────────────────────────────── */}
       <section className="mb-10" aria-labelledby="ai-insights-heading">
-        <div className="bento-card p-6 border-l-4 border-l-[#E8C96A]">
+        <div className="bento-card p-6 border-l-4 border-l-harvest">
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-[#FBF3DB] flex items-center justify-center">
-                <Sparkles size={16} className="text-[#956400]" />
+              <div className="w-9 h-9 rounded-full bg-accent flex items-center justify-center">
+                <Sparkles size={16} className="text-accent-foreground" />
               </div>
               <div>
                 <h3
                   id="ai-insights-heading"
-                  className="font-serif-display text-lg text-[#1E1A14]"
+                  className="font-serif-display text-lg text-earth"
                 >
                   Listing Tips
                 </h3>
-                <p className="text-xs text-[#787774]">
+                <p className="text-xs text-muted-foreground">
                   Suggestions to help you get more bookings
                 </p>
               </div>
@@ -233,22 +233,22 @@ export default function DashboardPage() {
               {aiInsights.map((insight, i) => (
                 <div
                   key={i}
-                  className="flex items-start gap-3 p-4 rounded-[8px] bg-[#FBF3DB]/30"
+                  className="flex items-start gap-3 p-4 rounded-[8px] bg-accent/30"
                 >
                   <ChevronRight
                     size={14}
-                    className="text-[#E8C96A] shrink-0 mt-0.5"
+                    className="text-harvest shrink-0 mt-0.5"
                   />
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <p className="text-sm font-medium text-[#1E1A14] leading-relaxed">
+                      <p className="text-sm font-medium text-earth leading-relaxed">
                         {insight.title}
                       </p>
-                      <span className="text-[9px] uppercase tracking-widest text-[#787774] font-mono-feorm border border-[#3C2F1A]/10 rounded-full px-2 py-0.5 shrink-0">
+                      <span className="text-[9px] uppercase tracking-widest text-muted-foreground font-mono-feorm border border-soil/10 rounded-full px-2 py-0.5 shrink-0">
                         {insight.category}
                       </span>
                     </div>
-                    <p className="text-xs text-[#787774] leading-relaxed">
+                    <p className="text-xs text-muted-foreground leading-relaxed">
                       {insight.description}
                     </p>
                   </div>
@@ -263,12 +263,12 @@ export default function DashboardPage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
         {stats.map((s) => (
           <div key={s.label} className="bento-card p-6">
-            <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#787774] mb-2">
+            <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-muted-foreground mb-2">
               {s.label}
             </p>
             <p
               className={`font-mono-feorm text-2xl md:text-3xl ${
-                s.accent ? "text-[#346538]" : "text-[#1E1A14]"
+                s.accent ? "text-[#346538]" : "text-earth"
               }`}
             >
               {s.value}
@@ -281,14 +281,14 @@ export default function DashboardPage() {
       <section className="mb-10" aria-labelledby="revenue-heading">
         <h3
           id="revenue-heading"
-          className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-4"
+          className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-4"
         >
           Revenue — Last 6 Months
         </h3>
         <div className="bento-card p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <p className="font-mono-feorm text-2xl text-[#1E1A14]">
+              <p className="font-mono-feorm text-2xl text-earth">
                 N$ 35,920
               </p>
               <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#346538] flex items-center gap-1 mt-1">
@@ -307,7 +307,7 @@ export default function DashboardPage() {
       <section className="mb-10" aria-labelledby="utilization-heading">
         <h3
           id="utilization-heading"
-          className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-4"
+          className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-4"
         >
           Equipment Utilization
         </h3>
@@ -316,7 +316,7 @@ export default function DashboardPage() {
             {equipmentUtilization.map((item) => (
               <div key={item.name}>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-[#1E1A14] font-medium">
+                  <span className="text-sm text-earth font-medium">
                     {item.name}
                   </span>
                   <span
@@ -324,14 +324,14 @@ export default function DashboardPage() {
                       item.utilization >= 80
                         ? "text-[#346538]"
                         : item.utilization >= 60
-                        ? "text-[#956400]"
-                        : "text-[#9F2F2D]"
+                        ? "text-accent-foreground"
+                        : "text-destructive"
                     }`}
                   >
                     {item.utilization}%
                   </span>
                 </div>
-                <div className="w-full h-2 rounded-full bg-[#F2EDE2]">
+                <div className="w-full h-2 rounded-full bg-cream">
                   <div
                     className="h-full rounded-full transition-all duration-500"
                     style={{
@@ -340,8 +340,8 @@ export default function DashboardPage() {
                         item.utilization >= 80
                           ? "#346538"
                           : item.utilization >= 60
-                          ? "#E8C96A"
-                          : "#9F2F2D",
+                          ? "var(--color-harvest)"
+                          : "var(--destructive)",
                     }}
                   />
                 </div>
@@ -355,7 +355,7 @@ export default function DashboardPage() {
       <section className="mb-10" aria-labelledby="pending-heading">
         <h3
           id="pending-heading"
-          className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-4"
+          className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-4"
         >
           Pending Requests
         </h3>
@@ -374,21 +374,21 @@ export default function DashboardPage() {
                   >
                     Pending
                   </span>
-                  <span className="font-mono-feorm text-[9px] text-[#787774] uppercase tracking-widest">
+                  <span className="font-mono-feorm text-[9px] text-muted-foreground uppercase tracking-widest">
                     {req.type === "stay" ? "Stay" : "Equipment"}
                   </span>
                 </div>
-                <h4 className="font-serif-display text-lg text-[#1E1A14]">
+                <h4 className="font-serif-display text-lg text-earth">
                   {req.title}
                 </h4>
-                <p className="text-xs text-[#787774] mt-1 font-mono-feorm">
+                <p className="text-xs text-muted-foreground mt-1 font-mono-feorm">
                   Requested by {req.requester} — {req.duration} —{" "}
                   {formatPrice(req.amount)}
                 </p>
               </div>
               <div className="flex gap-2">
                 {processedRequests.has(req.id) ? (
-                  <span className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] px-4 py-2">Processed</span>
+                  <span className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground px-4 py-2">Processed</span>
                 ) : (
                   <>
                     <button
@@ -406,7 +406,7 @@ export default function DashboardPage() {
                         setProcessedRequests((prev) => new Set(prev).add(req.id));
                         toast({ title: `Declined: ${req.title}` });
                       }}
-                      className="px-4 py-2 text-xs uppercase tracking-widest bg-[#FDEBEC] text-[#9F2F2D] rounded-full hover:bg-[#f5d5d6] transition-colors active:scale-[0.98] min-h-[44px]"
+                      className="px-4 py-2 text-xs uppercase tracking-widest bg-[#FDEBEC] text-destructive rounded-full hover:bg-[#f5d5d6] transition-colors active:scale-[0.98] min-h-[44px]"
                       type="button"
                     >
                       Decline
@@ -423,7 +423,7 @@ export default function DashboardPage() {
       <section className="mb-10" aria-labelledby="activity-heading">
         <h3
           id="activity-heading"
-          className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-4"
+          className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-4"
         >
           Recent Activity
         </h3>
@@ -433,19 +433,19 @@ export default function DashboardPage() {
               key={i}
               className={`flex items-center justify-between p-6 ${
                 i < recentActivity.length - 1
-                  ? "border-b border-[#3C2F1A]/5"
+                  ? "border-b border-soil/5"
                   : ""
               }`}
             >
               <div>
-                <p className="text-sm font-medium text-[#1E1A14]">
+                <p className="text-sm font-medium text-earth">
                   {item.action}
                 </p>
-                <p className="text-xs text-[#787774] font-mono-feorm">
+                <p className="text-xs text-muted-foreground font-mono-feorm">
                   {item.detail}
                 </p>
               </div>
-              <span className="font-mono-feorm text-[9px] text-[#787774] uppercase tracking-widest">
+              <span className="font-mono-feorm text-[9px] text-muted-foreground uppercase tracking-widest">
                 {item.time}
               </span>
             </div>
@@ -457,7 +457,7 @@ export default function DashboardPage() {
       <section aria-labelledby="actions-heading">
         <h3
           id="actions-heading"
-          className="font-mono-feorm text-[10px] uppercase tracking-widest text-[#787774] mb-4"
+          className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-4"
         >
           Quick Actions
         </h3>
@@ -504,23 +504,23 @@ export default function DashboardPage() {
 
           {rewriteResults && !rewriteLoading && (
             <div className="mt-5 space-y-3">
-              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#787774] mb-3">
+              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-muted-foreground mb-3">
                 Optimized Titles
               </p>
               {rewriteResults.map((result, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-3 p-3 rounded-[6px] bg-[#F2EDE2]/50"
+                  className="flex items-center gap-3 p-3 rounded-[6px] bg-cream/50"
                 >
                   <ChevronRight
                     size={12}
-                    className="text-[#5C4A2A] shrink-0"
+                    className="text-bark shrink-0"
                   />
                   <div className="flex-1">
-                    <p className="text-xs text-[#787774] line-through">
+                    <p className="text-xs text-muted-foreground line-through">
                       {result.original}
                     </p>
-                    <p className="text-sm text-[#1E1A14] font-medium">
+                    <p className="text-sm text-earth font-medium">
                       {result.rewritten}
                     </p>
                   </div>
