@@ -1,64 +1,97 @@
-export interface PresetAvatar {
+/**
+ * Feorm Emoji Avatar System
+ *
+ * 5 brand-aligned emojis representing Namibian agrotourism identity.
+ * Users pick one during onboarding — no letter initials, just visual identity.
+ *
+ * Each emoji has a themed background gradient that matches Feorm's earth palette.
+ */
+
+export interface EmojiAvatar {
   id: string;
+  emoji: string;
   label: string;
-  gradient: string;
+  bg: string;       // Tailwind background class
+  ring: string;     // Tailwind ring class when selected
 }
 
-export const PRESET_AVATARS: PresetAvatar[] = [
+export const EMOJI_AVATARS: EmojiAvatar[] = [
   {
-    id: "preset://amber-dunes",
-    label: "Amber Dunes",
-    gradient: "linear-gradient(135deg, #E8C96A 0%, #D4A853 50%, #B8862D 100%)",
+    id: "emoji://acacia",
+    emoji: "🌳",
+    label: "Acacia",
+    bg: "bg-gradient-to-br from-harvest/30 to-cream",
+    ring: "ring-harvest",
   },
   {
-    id: "preset://red-kalahari",
-    label: "Red Kalahari",
-    gradient: "linear-gradient(135deg, #9F2F2D 0%, #C44536 50%, #772E2E 100%)",
+    id: "emoji://desert-fox",
+    emoji: "🦊",
+    label: "Desert Fox",
+    bg: "bg-gradient-to-br from-earth/15 to-sand/30",
+    ring: "ring-earth",
   },
   {
-    id: "preset://desert-sage",
-    label: "Desert Sage",
-    gradient: "linear-gradient(135deg, #346538 0%, #4A7A4E 50%, #2D5A30 100%)",
+    id: "emoji://sunrise",
+    emoji: "🌅",
+    label: "Sunrise",
+    bg: "bg-gradient-to-br from-harvest/20 to-accent/40",
+    ring: "ring-harvest",
   },
   {
-    id: "preset://erongo-stone",
-    label: "Erongo Stone",
-    gradient: "linear-gradient(135deg, #787774 0%, #5C5A57 50%, #3C3A38 100%)",
+    id: "emoji://ox",
+    emoji: "🐂",
+    label: "Ox",
+    bg: "bg-gradient-to-br from-cream to-sand/20",
+    ring: "ring-bark",
   },
   {
-    id: "preset://golden-hour",
-    label: "Golden Hour",
-    gradient: "linear-gradient(135deg, #FBF3DB 0%, #E8C96A 50%, #D4A853 100%)",
-  },
-  {
-    id: "preset://deep-earth",
-    label: "Deep Earth",
-    gradient: "linear-gradient(135deg, #3C2F1A 0%, #5C4A2A 50%, #1E1A14 100%)",
-  },
-  {
-    id: "preset://savanna-dawn",
-    label: "Savanna Dawn",
-    gradient: "linear-gradient(135deg, #D4C4A0 0%, #B8A080 50%, #8C7A5A 100%)",
-  },
-  {
-    id: "preset://river-delta",
-    label: "River Delta",
-    gradient: "linear-gradient(135deg, #1F6C9F 0%, #2D8BC4 50%, #1A5A88 100%)",
+    id: "emoji://wheat",
+    emoji: "🌾",
+    label: "Wheat",
+    bg: "bg-gradient-to-br from-accent/40 to-cream",
+    ring: "ring-harvest",
   },
 ];
 
-const PRESET_MAP: Record<string, string> = Object.fromEntries(
-  PRESET_AVATARS.map((p) => [p.id, p.gradient])
+const EMOJI_MAP: Record<string, EmojiAvatar> = Object.fromEntries(
+  EMOJI_AVATARS.map((a) => [a.id, a])
 );
 
+/** Check if a URL is an emoji avatar reference */
+export function isEmojiAvatar(url: string): boolean {
+  return url.startsWith("emoji://");
+}
+
+/** Get the EmojiAvatar object for a given URL */
+export function getEmojiAvatar(url: string): EmojiAvatar | null {
+  return EMOJI_MAP[url] || null;
+}
+
+/** Legacy: Check if a URL is a preset gradient avatar */
 export function isPresetAvatar(url: string): boolean {
   return url.startsWith("preset://");
 }
 
+/** Legacy: Get gradient for preset avatar (still supported for existing users) */
+const LEGACY_PRESETS: Record<string, string> = {
+  "preset://amber-dunes": "linear-gradient(135deg, #E8C96A 0%, #D4A853 50%, #B8862D 100%)",
+  "preset://red-kalahari": "linear-gradient(135deg, #9F2F2D 0%, #C44536 50%, #772E2E 100%)",
+  "preset://desert-sage": "linear-gradient(135deg, #346538 0%, #4A7A4E 50%, #2D5A30 100%)",
+  "preset://erongo-stone": "linear-gradient(135deg, #787774 0%, #5C5A57 50%, #3C3A38 100%)",
+  "preset://golden-hour": "linear-gradient(135deg, #FBF3DB 0%, #E8C96A 50%, #D4A853 100%)",
+  "preset://deep-earth": "linear-gradient(135deg, #3C2F1A 0%, #5C4A2A 50%, #1E1A14 100%)",
+  "preset://savanna-dawn": "linear-gradient(135deg, #D4C4A0 0%, #B8A080 50%, #8C7A5A 100%)",
+  "preset://river-delta": "linear-gradient(135deg, #1F6C9F 0%, #2D8BC4 50%, #1A5A88 100%)",
+};
+
 export function getPresetGradient(url: string): string | null {
-  return PRESET_MAP[url] || null;
+  return LEGACY_PRESETS[url] || null;
 }
 
+/**
+ * Compress an uploaded image to a data URL.
+ * Used when users upload their own photo instead of picking an emoji.
+ */
 export function compressImage(
   file: File,
   maxSize: number = 512,

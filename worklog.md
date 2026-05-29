@@ -422,3 +422,33 @@ Stage Summary:
 - 3 import sites updated for NAMIBIAN_REGIONS consolidation
 - /auth route now properly serves the auth landing page (was 404 before)
 - All routes 200, lint clean, zero runtime errors
+
+---
+Task ID: 13
+Agent: Main Agent (Mobile Bottom Nav + Emoji Avatars)
+Task: Add mobile bottom navigation and replace letter-initial avatars with 5 brand-aligned emoji avatars
+
+Work Log:
+- Created EMOJI_AVATARS system in lib/avatar.tsx with 5 brand-aligned emojis:
+  🌳 Acacia (harvest gradient bg)
+  🦊 Desert Fox (earth gradient bg)
+  🌅 Sunrise (harvest/accent gradient bg)
+  🐂 Ox (cream/sand gradient bg)
+  🌾 Wheat (accent/cream gradient bg)
+- Each emoji avatar has a themed background gradient, ring color, label, and unique ID (emoji://acacia etc.)
+- Rewrote nav.tsx: mobile now uses slim top header (48px brand + avatar) + bottom tab bar (56px + safe area)
+- Bottom nav has 5 thumb-zone tabs for both Provider and Voyager roles
+- Removed userInitials display entirely — avatars now show emoji or uploaded image, never letters
+- Updated layout.tsx: pt-12 pb-16 for mobile (header + bottom bar), lg:pt-0 lg:pb-0 lg:ml-[240px] for desktop
+- Updated identity page: replaced PRESET_AVATARS grid with EMOJI_AVATARS flex row, shows selected emoji label
+- Updated profile page: same emoji picker, emoji avatar display in profile card
+- Updated chat FAB: bottom-6 → bottom-20 on mobile (clears 56px bottom nav bar + safe area)
+- All routes 200, lint clean
+
+Stage Summary:
+- Mobile navigation redesigned: top header (brand + avatar) + bottom tab bar (5 icons)
+- Letter-initial avatars eliminated: now shows emoji with themed gradient backgrounds
+- 5 brand-aligned emoji avatars: 🌳 Acacia, 🦊 Desert Fox, 🌅 Sunrise, 🐂 Ox, 🌾 Wheat
+- Chat FAB repositioned to clear bottom nav bar
+- All avatar display points updated (nav, profile, identity)
+- Legacy preset:// gradient avatars still supported for backward compatibility

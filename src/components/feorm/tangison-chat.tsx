@@ -105,7 +105,7 @@ export default function TangisonChat() {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 lg:bottom-8 lg:right-8 z-50 w-14 h-14 rounded-full bg-earth text-white-feorm shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group hover:scale-105 active:scale-[0.98]"
+        className="fixed bottom-20 right-5 lg:bottom-8 lg:right-8 z-50 w-14 h-14 rounded-full bg-earth text-white-feorm shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group hover:scale-105 active:scale-[0.98]"
         aria-label="Open Tangison AI assistant"
       >
         <Sparkles size={20} className="text-harvest group-hover:rotate-12 transition-transform" />
@@ -114,7 +114,7 @@ export default function TangisonChat() {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 lg:bottom-8 lg:right-8 z-50 w-[360px] max-w-[calc(100vw-48px)] flex flex-col rounded-[12px] overflow-hidden shadow-2xl border border-earth/8 bg-white-feorm">
+    <div className="fixed bottom-20 right-5 lg:bottom-8 lg:right-8 z-50 w-[360px] max-w-[calc(100vw-48px)] flex flex-col rounded-[12px] overflow-hidden shadow-2xl border border-earth/8 bg-white-feorm">
       {/* Header */}
       <div className="bg-earth text-white-feorm px-5 py-4 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">

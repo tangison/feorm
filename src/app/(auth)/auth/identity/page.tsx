@@ -7,7 +7,9 @@ import { useAuthMutations } from "@/hooks/use-auth";
 import { ArrowLeft, ArrowRight, Sparkles, Camera, Upload } from "lucide-react";
 import Image from "next/image";
 import {
-  PRESET_AVATARS,
+  EMOJI_AVATARS,
+  isEmojiAvatar,
+  getEmojiAvatar,
   isPresetAvatar,
   getPresetGradient,
   compressImage,
@@ -27,9 +29,13 @@ export default function IdentityPage() {
 
   const { setupIdentity } = useAuthMutations();
 
-  // Derived: preview style for current avatar
+  // Derived: preview for current avatar
   const avatarPreview = useMemo(() => {
     if (!avatarUrl) return null;
+    if (isEmojiAvatar(avatarUrl)) {
+      const ea = getEmojiAvatar(avatarUrl);
+      return ea ? { type: "emoji" as const, emoji: ea.emoji, bg: ea.bg } : null;
+    }
     if (isPresetAvatar(avatarUrl)) {
       const gradient = getPresetGradient(avatarUrl);
       return { type: "preset" as const, gradient };
@@ -37,10 +43,10 @@ export default function IdentityPage() {
     return { type: "image" as const, url: avatarUrl };
   }, [avatarUrl]);
 
-  // ── Preset Avatar Selection ──
-  const handleSelectPreset = useCallback(
-    (presetId: string) => {
-      setAvatarUrl(presetId);
+  // ── Emoji Avatar Selection ──
+  const handleSelectEmoji = useCallback(
+    (emojiId: string) => {
+      setAvatarUrl(emojiId);
     },
     [setAvatarUrl]
   );
@@ -50,11 +56,7 @@ export default function IdentityPage() {
     async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (!file) return;
-
-      // Validate file type
       if (!file.type.startsWith("image/")) return;
-
-      // Validate size (max 5MB)
       if (file.size > 5 * 1024 * 1024) return;
 
       setUploadingAvatar(true);
@@ -62,7 +64,6 @@ export default function IdentityPage() {
         const dataUrl = await compressImage(file, 512, 0.8);
         setAvatarUrl(dataUrl);
       } catch {
-        // Fallback: use raw data URL
         const reader = new FileReader();
         reader.onload = () => {
           if (typeof reader.result === "string") {
@@ -72,7 +73,6 @@ export default function IdentityPage() {
         reader.readAsDataURL(file);
       }
       setUploadingAvatar(false);
-      // Reset file input
       if (fileInputRef.current) fileInputRef.current.value = "";
     },
     [setAvatarUrl]
@@ -152,22 +152,26 @@ export default function IdentityPage() {
             Tell Us About Yourself
           </h1>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Hosts want to know who they are welcoming. Add your name and region to build trust.
+            Pick an avatar and add your name. Hosts want to know who they are welcoming.
           </p>
         </div>
 
         <div className="space-y-5">
-          {/* ── Avatar Creation ── */}
+          {/* ── Avatar Section ── */}
           <div className="border border-soil/10 bg-white-feorm rounded-[8px] p-6">
             <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-5">
-              Avatar Creation
+              Choose Your Avatar
             </p>
 
             {/* Preview Circle */}
             <div className="flex justify-center mb-6">
-              <div className="w-24 h-24 rounded-full border-2 border-dashed border-sand flex items-center justify-center overflow-hidden shrink-0 relative">
+              <div className="w-24 h-24 rounded-full border-2 border-dashed border-sand flex items-center justify-center overflow-hidden shrink-0">
                 {avatarPreview ? (
-                  avatarPreview.type === "preset" ? (
+                  avatarPreview.type === "emoji" ? (
+                    <div className={`w-full h-full flex items-center justify-center ${avatarPreview.bg}`}>
+                      <span className="text-4xl leading-none select-none">{avatarPreview.emoji}</span>
+                    </div>
+                  ) : avatarPreview.type === "preset" ? (
                     <div
                       className="w-full h-full"
                       style={{ background: avatarPreview.gradient ?? undefined }}
@@ -188,32 +192,41 @@ export default function IdentityPage() {
               </div>
             </div>
 
-            {/* Option 1: Choose a Preset */}
+            {/* Emoji Avatar Grid — 5 brand-aligned options */}
             <div className="mb-6">
               <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-sand mb-3 text-center">
-                Choose a Preset
+                Pick Your Identity
               </p>
-              <div className="grid grid-cols-4 gap-3 justify-items-center">
-                {PRESET_AVATARS.map((preset) => (
+              <div className="flex items-center justify-center gap-3">
+                {EMOJI_AVATARS.map((ea) => (
                   <button
-                    key={preset.id}
-                    onClick={() => handleSelectPreset(preset.id)}
-                    className={`w-12 h-12 rounded-full transition-all duration-200 hover:scale-110 active:scale-[0.95] ${
-                      avatarUrl === preset.id
-                        ? "ring-2 ring-harvest ring-offset-2 ring-offset-white-feorm"
+                    key={ea.id}
+                    onClick={() => handleSelectEmoji(ea.id)}
+                    className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-[0.95] ${
+                      ea.bg
+                    } ${
+                      avatarUrl === ea.id
+                        ? `ring-2 ${ea.ring} ring-offset-2 ring-offset-white-feorm`
                         : "ring-1 ring-soil/10"
                     }`}
-                    style={{ background: preset.gradient }}
-                    aria-label={`Select ${preset.label} avatar`}
-                    title={preset.label}
+                    aria-label={`Select ${ea.label} avatar`}
+                    title={ea.label}
                     type="button"
-                  />
+                  >
+                    <span className="text-2xl leading-none select-none">{ea.emoji}</span>
+                  </button>
                 ))}
               </div>
+              {/* Show selected label */}
+              {avatarUrl && isEmojiAvatar(avatarUrl) && (
+                <p className="text-center mt-2 font-mono-feorm text-[9px] uppercase tracking-widest text-accent-foreground">
+                  {getEmojiAvatar(avatarUrl)?.label}
+                </p>
+              )}
             </div>
 
-            {/* Option 2: Upload Your Own */}
-            <div className="mb-5">
+            {/* Upload Option */}
+            <div className="mb-4">
               <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-sand mb-3 text-center">
                 Or Upload Your Own
               </p>
@@ -244,7 +257,7 @@ export default function IdentityPage() {
               </button>
             </div>
 
-            {/* Option 3: Generate AI Identity */}
+            {/* AI Generate */}
             <div>
               <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-sand mb-3 text-center">
                 Or Generate with AI
@@ -266,9 +279,6 @@ export default function IdentityPage() {
                   </>
                 )}
               </button>
-              <p className="text-[9px] text-muted-foreground font-mono-feorm text-center uppercase tracking-wider mt-2">
-                Editorial-style portrait for your profile
-              </p>
             </div>
           </div>
 

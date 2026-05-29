@@ -8,15 +8,15 @@ import {
   MapPin,
   Clock,
   LayoutDashboard,
-  User,
   Tent,
   Wrench,
   Settings,
   Shield,
   LifeBuoy,
   LogOut,
+  User,
 } from "lucide-react";
-import { isPresetAvatar, getPresetGradient } from "@/lib/avatar";
+import { isEmojiAvatar, getEmojiAvatar, isPresetAvatar, getPresetGradient } from "@/lib/avatar";
 
 export default function FeormNav() {
   const { user, avatarUrl } = useFeormAuth();
@@ -27,13 +27,20 @@ export default function FeormNav() {
 
   const isProvider = selectedRole === "provider";
 
-  const userInitials =
-    user?.name && user?.surname
-      ? `${user.name[0]}${user.surname[0]}`
-      : "JD";
-
-  const isPreset = avatarUrl && isPresetAvatar(avatarUrl);
-  const presetGradient = isPreset ? getPresetGradient(avatarUrl) : null;
+  // ── Resolve avatar display ──
+  const avatarDisplay = (() => {
+    if (!avatarUrl) return { type: "emoji" as const, emoji: "🌳", bg: "bg-gradient-to-br from-harvest/30 to-cream" };
+    if (isEmojiAvatar(avatarUrl)) {
+      const ea = getEmojiAvatar(avatarUrl);
+      if (ea) return { type: "emoji" as const, emoji: ea.emoji, bg: ea.bg };
+      return { type: "emoji" as const, emoji: "🌳", bg: "bg-gradient-to-br from-harvest/30 to-cream" };
+    }
+    if (isPresetAvatar(avatarUrl)) {
+      const gradient = getPresetGradient(avatarUrl);
+      return { type: "preset" as const, gradient };
+    }
+    return { type: "image" as const, url: avatarUrl };
+  })();
 
   // ── Desktop sidebar nav items ──
   const providerNavItems = [
@@ -55,36 +62,70 @@ export default function FeormNav() {
     { label: "Support", href: "/support", icon: LifeBuoy, active: pathname === "/support" },
   ];
 
-  // ── Mobile two-line nav items (compact set) ──
-  const mobileProviderNav = [
+  // ── Mobile bottom nav items (5 max for thumb zone) ──
+  const mobileBottomProvider = [
     { label: "Stays", href: "/marketplace?view=stays", icon: Tent, active: pathname === "/marketplace", onClick: () => setMarketView("stays") },
     { label: "Gear", href: "/marketplace?view=equipment", icon: Wrench, active: pathname === "/marketplace", onClick: () => setMarketView("equipment") },
-    { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, active: pathname === "/dashboard" },
+    { label: "Board", href: "/dashboard", icon: LayoutDashboard, active: pathname === "/dashboard" },
     { label: "Profile", href: "/profile", icon: User, active: pathname === "/profile" },
+    { label: "More", href: "/settings", icon: Settings, active: pathname === "/settings" || pathname === "/verification" || pathname === "/support" },
   ];
 
-  const mobileVoyagerNav = [
+  const mobileBottomVoyager = [
     { label: "Explore", href: "/marketplace", icon: MapPin, active: pathname === "/marketplace" || pathname.startsWith("/listing") },
-    { label: "Journeys", href: "/journeys", icon: Clock, active: pathname === "/journeys" },
+    { label: "Trips", href: "/journeys", icon: Clock, active: pathname === "/journeys" },
+    { label: "Verify", href: "/verification", icon: Shield, active: pathname === "/verification" },
     { label: "Profile", href: "/profile", icon: User, active: pathname === "/profile" },
-    { label: "Settings", href: "/settings", icon: Settings, active: pathname === "/settings" },
+    { label: "More", href: "/settings", icon: Settings, active: pathname === "/settings" || pathname === "/support" },
   ];
 
   const desktopNavItems = isProvider ? providerNavItems : voyagerNavItems;
-  const mobileNavItems = isProvider ? mobileProviderNav : mobileVoyagerNav;
+  const mobileBottomItems = isProvider ? mobileBottomProvider : mobileBottomVoyager;
 
-  const hasActiveNav = mobileNavItems.some((i) => i.active);
+  // ── Shared avatar rendering ──
+  const renderAvatar = (size: number = 32) => {
+    const cls = `w-[${size}px] h-[${size}px] rounded-full flex items-center justify-center overflow-hidden shrink-0`;
+
+    if (avatarDisplay.type === "emoji") {
+      return (
+        <div className={`${avatarDisplay.bg} ${cls}`} style={{ width: size, height: size }}>
+          <span style={{ fontSize: Math.round(size * 0.5) }} className="leading-none select-none">
+            {avatarDisplay.emoji}
+          </span>
+        </div>
+      );
+    }
+    if (avatarDisplay.type === "preset") {
+      return (
+        <div
+          className={cls}
+          style={{ width: size, height: size, background: avatarDisplay.gradient ?? undefined }}
+        />
+      );
+    }
+    return (
+      <div className={cls} style={{ width: size, height: size }}>
+        <Image
+          src={avatarDisplay.url}
+          alt="Avatar"
+          width={size}
+          height={size}
+          sizes={`${size}px`}
+          className="w-full h-full object-cover"
+        />
+      </div>
+    );
+  };
 
   return (
     <>
       {/* ═══════════════════════════════════════════════════════
-          MOBILE: Premium Two-Line Navigation
-          Line 1: Brand + Avatar (48px)
-          Line 2: Nav tabs with active indicator (48px)
+          MOBILE: Slim Top Header + Bottom Tab Bar
       ═══════════════════════════════════════════════════════ */}
+
+      {/* Top Header — Brand + Avatar only (48px) */}
       <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white-feorm/90 backdrop-blur-xl border-b border-earth/5">
-        {/* Line 1 — Brand Row */}
-        <div className="flex items-center justify-between h-12 px-5">
+        <div className="flex items-center justify-between h-12 px-4">
           <Link
             href="/marketplace"
             className="flex items-center gap-2"
@@ -103,50 +144,29 @@ export default function FeormNav() {
             </span>
           </Link>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
             <span
-              className={`text-[8px] uppercase font-semibold px-2 py-0.5 rounded-full tracking-wider ${
+              className={`text-[7px] uppercase font-bold px-1.5 py-0.5 rounded-full tracking-wider ${
                 isProvider ? "tag-verified" : "tag-pastel"
               }`}
             >
               {isProvider ? "Provider" : "Voyager"}
             </span>
-            <Link
-              href="/profile"
-              className="w-8 h-8 rounded-full bg-earth text-white-feorm flex items-center justify-center text-[10px] font-medium overflow-hidden"
-              style={presetGradient ? { background: presetGradient } : undefined}
-              aria-label="Profile"
-            >
-              {avatarUrl && !isPreset ? (
-                <Image
-                  src={avatarUrl}
-                  alt="Avatar"
-                  width={32}
-                  height={32}
-                  sizes="32px"
-                  className="w-full h-full object-cover"
-                />
-              ) : !avatarUrl ? (
-                userInitials
-              ) : null}
+            <Link href="/profile" aria-label="Profile">
+              {renderAvatar(30)}
             </Link>
-            <button
-              onClick={() => {
-                localStorage.removeItem("feorm-session");
-                setHasCompletedOnboarding(false);
-                router.push("/");
-              }}
-              className="w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:bg-fog hover:text-destructive transition-colors active:scale-[0.95]"
-              aria-label="Sign out"
-            >
-              <LogOut size={14} />
-            </button>
           </div>
         </div>
+      </header>
 
-        {/* Line 2 — Nav Tabs */}
-        <nav className="flex items-center h-12 px-2 gap-1" role="navigation" aria-label="Main navigation">
-          {mobileNavItems.map((item) => {
+      {/* Bottom Tab Bar — 5 icons in thumb zone (56px + safe area) */}
+      <nav
+        className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white-feorm/95 backdrop-blur-xl border-t border-earth/8 safe-area-bottom"
+        role="navigation"
+        aria-label="Main navigation"
+      >
+        <div className="flex items-center justify-around h-14">
+          {mobileBottomItems.map((item) => {
             const Icon = item.icon;
             const isActive = item.active;
             return (
@@ -154,20 +174,22 @@ export default function FeormNav() {
                 key={item.label}
                 href={item.href}
                 onClick={(item as { onClick?: () => void }).onClick}
-                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-full transition-all duration-200 min-h-[44px] text-[11px] uppercase tracking-[0.04em] font-medium ${
+                className={`flex flex-col items-center justify-center gap-0.5 min-w-0 flex-1 min-h-[44px] transition-colors duration-150 ${
                   isActive
-                    ? "bg-earth text-white-feorm"
-                    : "text-muted-foreground active:scale-[0.96]"
+                    ? "text-earth"
+                    : "text-muted-foreground active:text-earth"
                 }`}
                 aria-current={isActive ? "page" : undefined}
               >
-                <Icon size={14} aria-hidden="true" />
-                <span>{item.label}</span>
+                <Icon size={18} aria-hidden="true" strokeWidth={isActive ? 2.2 : 1.5} />
+                <span className="text-[9px] font-medium uppercase tracking-[0.04em] leading-none">
+                  {item.label}
+                </span>
               </Link>
             );
           })}
-        </nav>
-      </header>
+        </div>
+      </nav>
 
       {/* ═══════════════════════════════════════════════════════
           DESKTOP: Premium Minimal Sidebar
@@ -244,23 +266,7 @@ export default function FeormNav() {
             href="/profile"
             className="flex items-center gap-2.5 px-1 mb-3 group"
           >
-            <div
-              className="w-8 h-8 rounded-full bg-earth text-white-feorm flex items-center justify-center text-[10px] font-medium overflow-hidden"
-              style={presetGradient ? { background: presetGradient } : undefined}
-            >
-              {avatarUrl && !isPreset ? (
-                <Image
-                  src={avatarUrl}
-                  alt="Avatar"
-                  width={32}
-                  height={32}
-                  sizes="32px"
-                  className="w-full h-full object-cover"
-                />
-              ) : !avatarUrl ? (
-                userInitials
-              ) : null}
-            </div>
+            {renderAvatar(32)}
             <div className="flex-1 min-w-0">
               <p className="text-xs font-medium text-earth truncate">
                 {user?.name || "Demo"} {user?.surname || "User"}

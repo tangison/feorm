@@ -18,7 +18,9 @@ import {
   Upload,
 } from "lucide-react";
 import {
-  PRESET_AVATARS,
+  EMOJI_AVATARS,
+  isEmojiAvatar,
+  getEmojiAvatar,
   isPresetAvatar,
   getPresetGradient,
   compressImage,
@@ -32,14 +34,13 @@ export default function ProfilePage() {
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const userInitials =
-    user?.name && user?.surname
-      ? `${user.name[0]}${user.surname[0]}`
-      : "JD";
-
   // Avatar preview
   const avatarPreview = useMemo(() => {
     if (!avatarUrl) return null;
+    if (isEmojiAvatar(avatarUrl)) {
+      const ea = getEmojiAvatar(avatarUrl);
+      return ea ? { type: "emoji" as const, emoji: ea.emoji, bg: ea.bg } : null;
+    }
     if (isPresetAvatar(avatarUrl)) {
       const gradient = getPresetGradient(avatarUrl);
       return { type: "preset" as const, gradient };
@@ -47,10 +48,10 @@ export default function ProfilePage() {
     return { type: "image" as const, url: avatarUrl };
   }, [avatarUrl]);
 
-  // ── Preset Avatar Selection ──
-  const handleSelectPreset = useCallback(
-    (presetId: string) => {
-      setAvatarUrl(presetId);
+  // ── Emoji Avatar Selection ──
+  const handleSelectEmoji = useCallback(
+    (emojiId: string) => {
+      setAvatarUrl(emojiId);
     },
     [setAvatarUrl]
   );
@@ -125,10 +126,14 @@ export default function ProfilePage() {
         {/* ── User Identity Card ── */}
         <div className="bento-card p-6">
           <div className="flex items-center gap-5 mb-5">
-            {/* Avatar */}
-            <div className="w-20 h-20 rounded-full bg-earth text-white-feorm flex items-center justify-center text-xl font-medium font-serif-display shrink-0 overflow-hidden">
+            {/* Avatar — emoji first, then image/preset fallback */}
+            <div className="w-20 h-20 rounded-full bg-earth text-white-feorm flex items-center justify-center shrink-0 overflow-hidden">
               {avatarPreview ? (
-                avatarPreview.type === "preset" ? (
+                avatarPreview.type === "emoji" ? (
+                  <div className={`w-full h-full flex items-center justify-center ${avatarPreview.bg}`}>
+                    <span className="text-4xl leading-none select-none">{avatarPreview.emoji}</span>
+                  </div>
+                ) : avatarPreview.type === "preset" ? (
                   <div
                     className="w-full h-full"
                     style={{ background: avatarPreview.gradient ?? undefined }}
@@ -144,7 +149,7 @@ export default function ProfilePage() {
                   />
                 )
               ) : (
-                userInitials
+                <span className="text-3xl">🌳</span>
               )}
             </div>
             <div className="flex-1 min-w-0">
@@ -187,28 +192,36 @@ export default function ProfilePage() {
           {/* Collapsible Avatar Picker */}
           {avatarPickerOpen && (
             <div className="mt-5 pt-5 border-t border-soil/10 space-y-5">
-              {/* Preset Avatars */}
+              {/* Emoji Avatars */}
               <div>
                 <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-sand mb-3 text-center">
-                  Choose a Preset
+                  Pick Your Identity
                 </p>
-                <div className="grid grid-cols-4 gap-3 justify-items-center">
-                  {PRESET_AVATARS.map((preset) => (
+                <div className="flex items-center justify-center gap-3">
+                  {EMOJI_AVATARS.map((ea) => (
                     <button
-                      key={preset.id}
-                      onClick={() => handleSelectPreset(preset.id)}
-                      className={`w-12 h-12 rounded-full transition-all duration-200 hover:scale-110 active:scale-[0.95] ${
-                        avatarUrl === preset.id
-                          ? "ring-2 ring-harvest ring-offset-2 ring-offset-white-feorm"
+                      key={ea.id}
+                      onClick={() => handleSelectEmoji(ea.id)}
+                      className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-[0.95] ${
+                        ea.bg
+                      } ${
+                        avatarUrl === ea.id
+                          ? `ring-2 ${ea.ring} ring-offset-2 ring-offset-white-feorm`
                           : "ring-1 ring-soil/10"
                       }`}
-                      style={{ background: preset.gradient }}
-                      aria-label={`Select ${preset.label} avatar`}
-                      title={preset.label}
+                      aria-label={`Select ${ea.label} avatar`}
+                      title={ea.label}
                       type="button"
-                    />
+                    >
+                      <span className="text-2xl leading-none select-none">{ea.emoji}</span>
+                    </button>
                   ))}
                 </div>
+                {avatarUrl && isEmojiAvatar(avatarUrl) && (
+                  <p className="text-center mt-2 font-mono-feorm text-[9px] uppercase tracking-widest text-accent-foreground">
+                    {getEmojiAvatar(avatarUrl)?.label}
+                  </p>
+                )}
               </div>
 
               {/* Upload */}

@@ -11,12 +11,12 @@ export default function MarketplaceLayout({
     <div className="flex-grow flex flex-col min-h-screen">
       <FeormNav />
       {/* 
-        Mobile: top nav = 96px (2 × 48px), so pt-[96px]
-        Desktop: left sidebar = 240px, so lg:ml-[240px] lg:pt-0
+        Mobile: top header = 48px, bottom tab bar = 56px + safe area
+        Desktop: left sidebar = 240px
       */}
       <main
         id="main-content"
-        className="flex-grow flex flex-col page-enter pt-[96px] lg:pt-0 lg:ml-[240px]"
+        className="flex-grow flex flex-col page-enter pt-12 pb-16 lg:pt-0 lg:pb-0 lg:ml-[240px]"
       >
         {children}
       </main>
