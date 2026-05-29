@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import ZAI from "z-ai-web-dev-sdk";
+import { chatCompletion, type ChatMessage } from "@/lib/ai-providers";
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,60 +13,61 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const prompt = `You are an AI copywriter for Feorm, a premium Namibian agrotourism marketplace. Rewrite the following listing to be more compelling and search-optimized. Keep the tone: Premium Utilitarian Minimalism. Use earthy, dignified language. No emojis.
+    const messages: ChatMessage[] = [
+      {
+        role: "system",
+        content:
+          "You are a copywriter for Feorm, a premium Namibian agrotourism marketplace. Rewrite listings to be compelling and search-optimized. Tone: Premium Utilitarian Minimalism. Earthy, dignified language. No emojis. Always respond with valid JSON only — no markdown, no code blocks, just the raw JSON object: { \"title\": \"rewritten title\", \"description\": \"rewritten description\" }",
+      },
+      {
+        role: "user",
+        content: `Type: ${type || "listing"}\nRegion: ${region || "Namibia"}\nTitle: ${title || "Untitled"}\nDescription: ${description || "No description"}\n\nRewrite this listing.`,
+      },
+    ];
 
-Type: ${type || "listing"}
-Region: ${region || "Namibia"}
-Title: ${title || "Untitled"}
-Description: ${description || "No description"}
-
-Respond in JSON format: { "title": "rewritten title", "description": "rewritten description" }`;
-
-    const zai = await ZAI.create();
-
-    const response = await zai.chat.completions.create({
-      model: "glm-4-flash",
-      messages: [
-        {
-          role: "system",
-          content: "You are a copywriter for the Feorm agrotourism platform. Always respond with valid JSON. No markdown, no code blocks, just the raw JSON object.",
-        },
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
-    });
-
-    const content = response.choices[0]?.message?.content || "{}";
-
-    let rewritten;
     try {
-      rewritten = JSON.parse(content);
-    } catch {
-      const cleaned = content
-        .replace(/```json\n?/g, "")
-        .replace(/```\n?/g, "")
-        .trim();
+      const result = await chatCompletion(messages);
+
+      let rewritten;
       try {
-        rewritten = JSON.parse(cleaned);
+        rewritten = JSON.parse(result.content);
       } catch {
-        // Fallback with simple enhancement
-        rewritten = {
+        const cleaned = result.content
+          .replace(/```json\n?/g, "")
+          .replace(/```\n?/g, "")
+          .trim();
+        try {
+          rewritten = JSON.parse(cleaned);
+        } catch {
+          rewritten = {
+            title: title ? `${title} — Premium Experience` : "Premium Listing",
+            description: description
+              ? `${description} Experience authentic Namibian hospitality with modern comforts.`
+              : "An exceptional offering in the heart of Namibia.",
+          };
+        }
+      }
+
+      return NextResponse.json({
+        original: { title, description },
+        rewritten,
+        provider: result.provider,
+      });
+    } catch (aiError) {
+      console.error("AI rewrite error:", aiError);
+      return NextResponse.json({
+        original: { title, description },
+        rewritten: {
           title: title ? `${title} — Premium Experience` : "Premium Listing",
           description: description
             ? `${description} Experience authentic Namibian hospitality with modern comforts.`
             : "An exceptional offering in the heart of Namibia.",
-        };
-      }
+        },
+        provider: "fallback",
+      });
     }
-
-    return NextResponse.json({
-      original: { title, description },
-      rewritten,
-    });
   } catch (error) {
-    console.error("AI rewrite error:", error);
+    console.error("Rewrite route error:", error);
     return NextResponse.json(
       { error: "Failed to rewrite listing" },
       { status: 500 }

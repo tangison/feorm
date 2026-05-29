@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import ZAI from "z-ai-web-dev-sdk";
+import { chatCompletion, type ChatMessage } from "@/lib/ai-providers";
 
-const SUGGEST_SYSTEM_PROMPT = `You are a Namibian agrotourism advisor for Feorm. Generate 3 personalized recommendations. Format each as JSON: {title, description, category}. Categories: 'experience', 'equipment', 'optimization'. Keep descriptions under 40 words. Be specific to Namibian regions and agricultural context.`;
+const SUGGEST_SYSTEM_PROMPT = `You are a Namibian agrotourism advisor for Feorm. Generate 3 personalized recommendations. Format each as JSON: {title, description, category}. Categories: 'experience', 'equipment', 'optimization'. Keep descriptions under 40 words. Be specific to Namibian regions and agricultural context. Respond with ONLY a valid JSON array, no markdown or code blocks.`;
 
 interface SuggestBody {
-  role: string; // "voyager" | "provider"
+  role: string;
   interests: string[];
   region: string;
 }
@@ -17,7 +17,6 @@ interface Suggestion {
 
 function getFallbackVoyagerSuggestions(region: string, interests: string[]): Suggestion[] {
   const regionName = region || "Namibia";
-  const interestStr = interests.length > 0 ? interests.join(", ") : "agriculture, nature";
 
   return [
     {
@@ -62,7 +61,6 @@ function getFallbackProviderSuggestions(region: string, interests: string[]): Su
 
 function parseSuggestions(raw: string): Suggestion[] {
   try {
-    // Try to extract JSON array from the response
     const jsonMatch = raw.match(/\[[\s\S]*\]/);
     if (jsonMatch) {
       const parsed = JSON.parse(jsonMatch[0]);
@@ -97,7 +95,6 @@ export async function POST(request: NextRequest) {
     let suggestions: Suggestion[];
 
     try {
-      const zai = await ZAI.create();
       const isVoyager = role === "voyager";
       const roleContext = isVoyager
         ? `The user is a voyager (traveller/explorer) interested in: ${interests.join(", ") || "agriculture, nature, culture"}.`
@@ -105,29 +102,24 @@ export async function POST(request: NextRequest) {
 
       const userMessage = `${roleContext} Region: ${region || "Namibia"}. Generate 3 ${isVoyager ? "curated experience recommendations" : "asset optimization tips"} specific to this context.`;
 
-      const response = await zai.chat.completions.create({
-        model: "glm-4-flash",
-        messages: [
-          { role: "system", content: SUGGEST_SYSTEM_PROMPT },
-          { role: "user", content: userMessage },
-        ],
-      });
+      const messages: ChatMessage[] = [
+        { role: "system", content: SUGGEST_SYSTEM_PROMPT },
+        { role: "user", content: userMessage },
+      ];
 
-      const raw = response.choices[0].message.content.trim();
-      const parsed = parseSuggestions(raw);
+      const result = await chatCompletion(messages);
+      const parsed = parseSuggestions(result.content);
 
       if (parsed.length === 3) {
         suggestions = parsed;
       } else {
-        // Partial parse — fill remaining with fallback
         const fallback = isVoyager
           ? getFallbackVoyagerSuggestions(region, interests)
           : getFallbackProviderSuggestions(region, interests);
-
         suggestions = [...parsed, ...fallback.slice(parsed.length)].slice(0, 3);
       }
-    } catch (sdkError) {
-      console.error("AI suggest SDK error, falling back to static:", sdkError);
+    } catch (aiError) {
+      console.error("AI suggest error, falling back to static:", aiError);
       suggestions =
         role === "voyager"
           ? getFallbackVoyagerSuggestions(region, interests)

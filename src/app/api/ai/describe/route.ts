@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import ZAI from "z-ai-web-dev-sdk";
+import { chatCompletion, type ChatMessage } from "@/lib/ai-providers";
 
-const DESCRIBE_SYSTEM_PROMPT = `You are a listing enhancer for Feorm, a Namibian agrotourism and equipment rental marketplace. Given a listing title and type, generate: 1) An editorial description (authoritative, minimal, earth-toned, max 100 words, no exclamation marks). 2) 4-6 feature/spec tags as short phrases. 3) A suggested price range in Namibian dollars (N$). Format your response as JSON: {"description": "...", "features": ["...", "..."], "suggestedPrice": {"min": <cents>, "max": <cents>}}. Prices are in N$ cents (e.g. 50000 = N$500). Be specific to Namibian agriculture and landscape.`;
+const DESCRIBE_SYSTEM_PROMPT = `You are a listing enhancer for Feorm, a Namibian agrotourism and equipment rental marketplace. Given a listing title and type, generate: 1) An editorial description (authoritative, minimal, earth-toned, max 100 words, no exclamation marks). 2) 4-6 feature/spec tags as short phrases. 3) A suggested price range in Namibian dollars (N$). Format your response as JSON: {"description": "...", "features": ["...", "..."], "suggestedPrice": {"min": <cents>, "max": <cents>}}. Prices are in N$ cents (e.g. 50000 = N$500). Be specific to Namibian agriculture and landscape. Respond with ONLY valid JSON, no markdown or code blocks.`;
 
 interface DescribeBody {
   title: string;
@@ -36,7 +36,6 @@ function getFallbackResult(title: string, type: string): DescribeResult {
   const isEquipment = type === "equipment";
   const lowerTitle = title.toLowerCase();
 
-  // Pick features based on title keywords
   let featureSet: string[];
   if (isEquipment) {
     if (lowerTitle.includes("tractor")) featureSet = EQUIPMENT_FEATURES.tractor;
@@ -51,7 +50,6 @@ function getFallbackResult(title: string, type: string): DescribeResult {
     else featureSet = STAY_FEATURES.default;
   }
 
-  // Generate price range based on type
   let priceMin: number;
   let priceMax: number;
   if (isEquipment) {
@@ -66,7 +64,6 @@ function getFallbackResult(title: string, type: string): DescribeResult {
     else { priceMin = 12000; priceMax = 35000; }
   }
 
-  // Template description
   const descriptions = isEquipment
     ? `${title} — communal machinery within the Feorm trust network. Shared access reduces capital burden while maintaining uptime across seasons. Maintained to working standard. Available for scheduled booking through the platform. The land requires the right tools; this is one of them.`
     : `${title} — a working farm stay rooted in the Namibian landscape. Guests participate in the daily rhythm of agriculture: sunrise routines, communal meals, and the quiet authority of land that sustains. No resort pretence. Only what the soil and community provide.`;
@@ -104,7 +101,6 @@ function parseDescribeResult(raw: string, title: string, type: string): Describe
         : fallback.suggestedPrice.max,
     };
 
-    // Ensure max >= min
     if (suggestedPrice.max < suggestedPrice.min) {
       suggestedPrice.max = suggestedPrice.min * 2;
     }
@@ -131,21 +127,21 @@ export async function POST(request: NextRequest) {
     let result: DescribeResult;
 
     try {
-      const zai = await ZAI.create();
-      const userMessage = `Generate enhanced listing details for:\n\nTitle: ${title}\nType: ${listingType}`;
+      const messages: ChatMessage[] = [
+        {
+          role: "system",
+          content: DESCRIBE_SYSTEM_PROMPT,
+        },
+        {
+          role: "user",
+          content: `Generate enhanced listing details for:\n\nTitle: ${title}\nType: ${listingType}`,
+        },
+      ];
 
-      const response = await zai.chat.completions.create({
-        model: "glm-4-flash",
-        messages: [
-          { role: "system", content: DESCRIBE_SYSTEM_PROMPT },
-          { role: "user", content: userMessage },
-        ],
-      });
-
-      const raw = response.choices[0].message.content.trim();
-      result = parseDescribeResult(raw, title, listingType);
+      const aiResult = await chatCompletion(messages);
+      result = parseDescribeResult(aiResult.content, title, listingType);
     } catch (sdkError) {
-      console.error("AI describe SDK error, falling back to template:", sdkError);
+      console.error("AI describe error, falling back to template:", sdkError);
       result = getFallbackResult(title, listingType);
     }
 
