@@ -231,3 +231,30 @@ Verification:
 - `next build` succeeds: 32 routes, all pages generated, TypeScript passed
 - `bun run lint` clean
 - Dev server: all routes 200
+
+---
+Task ID: 10
+Agent: Main Agent (Premium Mobile Architecture)
+Task: Revamp mobile UI to premium minimalistic with two-line navigation, perfect dimensions, and mobile-first architecture
+
+Work Log:
+- Analyzed existing project structure: dual navigation (desktop sidebar 260px + mobile bottom nav 72px), 46 shadcn/ui components, Feorm earth-tone design system
+- Designed premium two-line mobile navigation: Line 1 (48px) brand + role badge + avatar, Line 2 (48px) horizontal nav pills with active indicator
+- Replaced mobile bottom nav bar with premium top navigation (frosted glass bg-white-feorm/90 backdrop-blur-xl)
+- Refined desktop sidebar: 260px → 240px, tighter spacing, rounded-lg instead of rounded-full, hover:bg-fog instead of hover:bg-[#FAF7F2]
+- Updated marketplace layout: pt-[96px] for mobile top nav clearance (2 × 48px), lg:ml-[240px] for desktop
+- Revamped marketplace page: tighter spacing, smaller font sizes, compact filters, premium skeleton loading
+- Revamped listing card: reduced image height (h-44 mobile, h-56 desktop), tighter padding, smaller arrow button, refined hover states
+- Revamped footer: smaller type sizes (text-[11px] instead of text-sm), reduced padding, thinner color strip
+- Updated globals.css: reduced border-radius (--radius 0.625rem → 0.5rem), thinner borders (0.06 opacity instead of 0.1), smaller scrollbar (4px), tighter animations, reduced motion distances, overscroll-behavior: none, -webkit-tap-highlight-color: transparent
+- All pages verified: marketplace, dashboard, profile, journeys all 200 OK
+- Lint clean
+
+Stage Summary:
+- Mobile navigation transformed from bottom tab bar to premium two-line top navigation (96px total)
+- Frosted glass header with backdrop-blur for premium feel
+- Desktop sidebar refined to 240px with tighter, more minimal spacing
+- All component dimensions reduced for mobile density (cards, fonts, padding, borders)
+- Touch targets maintained at 44px minimum
+- CSS design tokens refined: thinner borders, smaller radius, tighter animations
+- Consistent premium minimalistic aesthetic across all breakpoints

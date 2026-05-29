@@ -55,7 +55,7 @@
 }
 
 :root {
-  --radius: 0.625rem;
+  --radius: 0.5rem;
   --background: #FAF7F2;
   --foreground: #1E1A14;
   --card: #FEFDFB;
@@ -71,8 +71,8 @@
   --accent: #FBF3DB;
   --accent-foreground: #956400;
   --destructive: #9F2F2D;
-  --border: rgba(60, 47, 26, 0.1);
-  --input: rgba(60, 47, 26, 0.2);
+  --border: rgba(60, 47, 26, 0.08);
+  --input: rgba(60, 47, 26, 0.15);
   --ring: #E8C96A;
   --chart-1: #1E1A14;
   --chart-2: #3C2F1A;
@@ -85,7 +85,7 @@
   --sidebar-primary-foreground: #FEFDFB;
   --sidebar-accent: #F2EDE2;
   --sidebar-accent-foreground: #1E1A14;
-  --sidebar-border: rgba(60, 47, 26, 0.1);
+  --sidebar-border: rgba(60, 47, 26, 0.08);
   --sidebar-ring: #5C4A2A;
 }
 
@@ -97,17 +97,23 @@
     @apply bg-background text-foreground;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Prevent iOS bounce overscroll */
+    overscroll-behavior: none;
+  }
+  /* Premium mobile tap highlight */
+  html {
+    -webkit-tap-highlight-color: transparent;
   }
 }
 
-/* Focus Visible — Global keyboard focus indicator (P0 Accessibility Fix) */
+/* Focus Visible */
 :focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
-/* Skip to Content link (WCAG 2.4.1 Bypass Blocks) */
+/* Skip to Content */
 .skip-link {
   position: absolute;
   top: -100%;
@@ -127,37 +133,40 @@
   top: 0;
 }
 
-/* Feorm Design System Utilities */
+/* ═══════════════════════════════════════════════════════
+   Feorm Design System — Premium Mobile Architecture
+   ═══════════════════════════════════════════════════════ */
+
 @layer utilities {
   .font-serif-display {
     font-family: var(--font-dm-serif), 'DM Serif Display', serif;
     letter-spacing: -0.02em;
     line-height: 1.1;
   }
-  
+
   .font-mono-feorm {
     font-family: var(--font-jetbrains-mono), 'JetBrains Mono', monospace;
   }
 
+  /* Card System — premium minimal */
   .bento-card {
     background: #FEFDFB;
-    border: 1px solid rgba(60, 47, 26, 0.1);
+    border: 1px solid rgba(60, 47, 26, 0.06);
     border-radius: 8px;
     box-shadow: none;
     transition: box-shadow 0.2s ease, transform 0.2s ease;
-    /* CSS Containment — isolates layout recalculation per card */
     contain: layout style paint;
   }
 
   .bento-card:hover {
-    box-shadow: 0 4px 24px rgba(30, 26, 20, 0.03);
+    box-shadow: 0 2px 16px rgba(30, 26, 20, 0.04);
   }
 
-  /* Only lift on interactive cards */
   .bento-card-lift:hover {
-    transform: translateY(-2px);
+    transform: translateY(-1px);
   }
 
+  /* Buttons */
   .btn-primary-feorm {
     background-color: #1E1A14;
     color: #FEFDFB;
@@ -167,11 +176,10 @@
   }
 
   .btn-primary-feorm:active {
-    transform: scale(0.98);
+    transform: scale(0.97);
     background-color: #333333;
   }
 
-  /* Harvest CTA — Primary action buttons use Harvest gold */
   .btn-harvest {
     background-color: #E8C96A;
     color: #1E1A14;
@@ -183,13 +191,13 @@
     background-color: #d4b55a;
   }
   .btn-harvest:active {
-    transform: scale(0.98);
+    transform: scale(0.97);
     background-color: #c0a34a;
   }
 
   .btn-secondary-feorm {
     background-color: transparent;
-    border: 1px solid rgba(60, 47, 26, 0.1);
+    border: 1px solid rgba(60, 47, 26, 0.08);
     color: #1E1A14;
     border-radius: 9999px;
     font-weight: 500;
@@ -200,6 +208,7 @@
     background-color: rgba(60, 47, 26, 0.03);
   }
 
+  /* Tags */
   .tag-pastel {
     background-color: #FBF3DB;
     color: #956400;
@@ -236,27 +245,28 @@
     color: #787774;
   }
 
-  /* Scale-in page transition */
+  /* Page transition */
   .page-enter {
-    animation: feorm-scale-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: feorm-scale-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 }
 
-/* Mobile Bottom Nav — Safe Area */
+/* Mobile safe area */
 .safe-area-bottom {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #FAF7F2; }
+/* Custom Scrollbar — minimal */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #D4C4A0; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #b8a880; }
 * {
   scrollbar-width: thin;
-  scrollbar-color: #D4C4A0 #FAF7F2;
+  scrollbar-color: #D4C4A0 transparent;
 }
 
-/* Skeleton Shimmer Loader */
+/* Skeleton */
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
@@ -264,45 +274,45 @@
 .skeleton-shimmer {
   background: linear-gradient(
     90deg,
-    rgba(60, 47, 26, 0.04) 25%,
-    rgba(60, 47, 26, 0.08) 50%,
-    rgba(60, 47, 26, 0.04) 75%
+    rgba(60, 47, 26, 0.03) 25%,
+    rgba(60, 47, 26, 0.07) 50%,
+    rgba(60, 47, 26, 0.03) 75%
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
   border-radius: 4px;
 }
 
-/* Stagger Reveal for Grid Items */
+/* Stagger Reveal */
 .stagger-reveal > * {
-  animation: feorm-reveal 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: feorm-reveal 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 .stagger-reveal > *:nth-child(1) { animation-delay: 0ms; }
-.stagger-reveal > *:nth-child(2) { animation-delay: 60ms; }
-.stagger-reveal > *:nth-child(3) { animation-delay: 120ms; }
-.stagger-reveal > *:nth-child(4) { animation-delay: 180ms; }
-.stagger-reveal > *:nth-child(5) { animation-delay: 240ms; }
-.stagger-reveal > *:nth-child(6) { animation-delay: 300ms; }
-.stagger-reveal > *:nth-child(7) { animation-delay: 360ms; }
-.stagger-reveal > *:nth-child(8) { animation-delay: 420ms; }
-.stagger-reveal > *:nth-child(9) { animation-delay: 480ms; }
-.stagger-reveal > *:nth-child(10) { animation-delay: 540ms; }
-.stagger-reveal > *:nth-child(11) { animation-delay: 600ms; }
-.stagger-reveal > *:nth-child(12) { animation-delay: 660ms; }
+.stagger-reveal > *:nth-child(2) { animation-delay: 50ms; }
+.stagger-reveal > *:nth-child(3) { animation-delay: 100ms; }
+.stagger-reveal > *:nth-child(4) { animation-delay: 150ms; }
+.stagger-reveal > *:nth-child(5) { animation-delay: 200ms; }
+.stagger-reveal > *:nth-child(6) { animation-delay: 250ms; }
+.stagger-reveal > *:nth-child(7) { animation-delay: 300ms; }
+.stagger-reveal > *:nth-child(8) { animation-delay: 350ms; }
+.stagger-reveal > *:nth-child(9) { animation-delay: 400ms; }
+.stagger-reveal > *:nth-child(10) { animation-delay: 450ms; }
+.stagger-reveal > *:nth-child(11) { animation-delay: 500ms; }
+.stagger-reveal > *:nth-child(12) { animation-delay: 550ms; }
 
-/* Reveal Animation - CSS-only, no JS class toggle needed */
+/* Reveal */
 .reveal {
-  animation: feorm-reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: feorm-reveal 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.delay-1 { animation-delay: 80ms; }
-.delay-2 { animation-delay: 160ms; }
-.delay-3 { animation-delay: 240ms; }
+.delay-1 { animation-delay: 60ms; }
+.delay-2 { animation-delay: 120ms; }
+.delay-3 { animation-delay: 180ms; }
 
 @keyframes feorm-reveal {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -310,11 +320,10 @@
   }
 }
 
-/* Scale-in keyframe for page transitions */
 @keyframes feorm-scale-in {
   from {
     opacity: 0;
-    transform: scale(0.98);
+    transform: scale(0.99);
   }
   to {
     opacity: 1;
@@ -322,7 +331,7 @@
   }
 }
 
-/* Respect reduced motion preferences */
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .reveal,
   .stagger-reveal > *,

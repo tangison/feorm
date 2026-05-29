@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useFeormMarket } from "@/context/feorm-context";
 import ListingCard from "@/components/feorm/listing-card";
 import { useListings } from "@/hooks/use-listings";
-import { ChevronDown, X } from "lucide-react";
+import { ChevronDown, X, SlidersHorizontal } from "lucide-react";
 
 const NAMIBIAN_REGIONS = [
   "All Regions",
@@ -25,7 +25,6 @@ const NAMIBIAN_REGIONS = [
   "Omaheke",
 ];
 
-// Pure transform — used inside useMemo to preserve referential stability
 function transformItem(item: any) {
   return {
     id: item._id,
@@ -54,7 +53,6 @@ function MarketplaceContent() {
   const [regionDropdownOpen, setRegionDropdownOpen] = useState(false);
   const [showAvailableOnly, setShowAvailableOnly] = useState(false);
 
-  // Close dropdown on Escape key
   useEffect(() => {
     if (!regionDropdownOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -71,7 +69,6 @@ function MarketplaceContent() {
     }
   }, [searchParams, setMarketView]);
 
-  // Sync region from URL params (only when param changes)
   const currentParamRegion = searchParams.get("region") || "All Regions";
   useEffect(() => {
     setSelectedRegion(currentParamRegion);
@@ -81,8 +78,6 @@ function MarketplaceContent() {
     marketView === "stays" ? "stay" : "equipment"
   );
 
-  // Filter listings by region and availability, then transform for stable refs
-  // This is memoized so ListingCard's React.memo comparison works correctly
   const transformedListings = useMemo(() => {
     if (!listings) return [];
     let filtered = listings;
@@ -119,170 +114,163 @@ function MarketplaceContent() {
     selectedRegion !== "All Regions" || showAvailableOnly;
 
   return (
-    <div className="flex-grow w-full max-w-6xl mx-auto px-6 py-12 md:py-24">
-      {/* Header with toggle */}
-      <div className="mb-12 md:mb-16">
-        {/* Pill Toggle: Farm Stays | Equipment */}
-        <div className="flex items-center gap-2 mb-8">
-          <button
-            onClick={() => {
-              setMarketView("stays");
-              router.push("/marketplace?view=stays");
-            }}
-            className={`px-5 py-2.5 rounded-full text-xs uppercase tracking-widest font-medium transition-all duration-200 min-h-[44px] ${
-              marketView === "stays"
-                ? "bg-[#1E1A14] text-[#FEFDFB]"
-                : "bg-transparent border border-[#3C2F1A]/10 text-[#787774] hover:bg-[#FAF7F2]"
-            }`}
-          >
-            Farm Stays
-          </button>
-          <button
-            onClick={() => {
-              setMarketView("equipment");
-              router.push("/marketplace?view=equipment");
-            }}
-            className={`px-5 py-2.5 rounded-full text-xs uppercase tracking-widest font-medium transition-all duration-200 min-h-[44px] ${
-              marketView === "equipment"
-                ? "bg-[#1E1A14] text-[#FEFDFB]"
-                : "bg-transparent border border-[#3C2F1A]/10 text-[#787774] hover:bg-[#FAF7F2]"
-            }`}
-          >
-            Equipment
-          </button>
-          <span className="hidden md:inline-block mx-2 text-[#D4C4A0]">|</span>
-          <span className="hidden md:inline-block font-mono-feorm text-[10px] text-[#787774] uppercase tracking-widest">
-            {transformedListings?.length || 0} listings
-          </span>
+    <div className="flex-grow w-full max-w-6xl mx-auto px-4 md:px-6 py-6 md:py-12 lg:py-16">
+      {/* View Toggle */}
+      <div className="flex items-center gap-2 mb-5 md:mb-8">
+        <button
+          onClick={() => {
+            setMarketView("stays");
+            router.push("/marketplace?view=stays");
+          }}
+          className={`px-4 py-2 rounded-full text-[10px] uppercase tracking-[0.08em] font-medium transition-all duration-200 min-h-[40px] ${
+            marketView === "stays"
+              ? "bg-earth text-white-feorm"
+              : "bg-transparent border border-earth/8 text-muted-foreground hover:bg-fog"
+          }`}
+        >
+          Farm Stays
+        </button>
+        <button
+          onClick={() => {
+            setMarketView("equipment");
+            router.push("/marketplace?view=equipment");
+          }}
+          className={`px-4 py-2 rounded-full text-[10px] uppercase tracking-[0.08em] font-medium transition-all duration-200 min-h-[40px] ${
+            marketView === "equipment"
+              ? "bg-earth text-white-feorm"
+              : "bg-transparent border border-earth/8 text-muted-foreground hover:bg-fog"
+          }`}
+        >
+          Equipment
+        </button>
+        <span className="hidden md:inline-block font-mono-feorm text-[9px] text-muted-foreground uppercase tracking-widest ml-3">
+          {transformedListings?.length || 0} listings
+        </span>
+      </div>
+
+      {/* Title + Filters */}
+      <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4 md:gap-6 mb-6 md:mb-10">
+        <div>
+          <h1 className="font-serif-display text-3xl md:text-4xl lg:text-5xl text-earth mb-1.5 tracking-tight">
+            {marketView === "stays" ? "Farm Stays" : "Equipment Exchange"}
+          </h1>
+          <p className="text-xs md:text-sm text-muted-foreground max-w-md leading-relaxed">
+            {marketView === "stays"
+              ? "Find farm stays across Namibia."
+              : "Rent tractors, pumps, and more from local owners."}
+          </p>
         </div>
 
-        <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6">
-          <div>
-            <h1 className="font-serif-display text-4xl md:text-5xl text-[#1E1A14] mb-3 tracking-tight">
-              {marketView === "stays" ? "Farm Stays" : "Equipment Exchange"}
-            </h1>
-            <p className="text-sm text-[#787774] max-w-lg leading-relaxed">
-              {marketView === "stays"
-                ? "Find farm stays across Namibia — from bushveld camps to lodge rooms."
-                : "Rent tractors, pumps, and more from local owners. Escrow-protected."}
-            </p>
-          </div>
-          <div className="flex items-center gap-2 flex-wrap">
-            {/* Region Filter Dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => setRegionDropdownOpen(!regionDropdownOpen)}
-                className={`border px-3 py-1.5 rounded-full text-xs hover:bg-[#FAF7F2] transition-colors flex items-center gap-1.5 min-h-[36px] ${
-                  selectedRegion !== "All Regions"
-                    ? "border-[#1E1A14] bg-[#1E1A14] text-[#FEFDFB]"
-                    : "border-[#3C2F1A]/10 bg-[#FEFDFB]"
-                }`}
-                aria-expanded={regionDropdownOpen}
-                aria-haspopup="listbox"
-                aria-label="Filter by region"
-              >
-                {selectedRegion === "All Regions" ? "Region" : selectedRegion}
-                <ChevronDown
-                  size={12}
-                  className={`transition-transform duration-200 ${
-                    regionDropdownOpen ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-              {regionDropdownOpen && (
-                <div
-                  className="absolute right-0 top-full mt-1 w-48 bg-[#FEFDFB] border border-[#3C2F1A]/10 rounded-[8px] shadow-lg z-50 max-h-80 overflow-y-auto"
-                  role="listbox"
-                  aria-label="Select region"
-                >
-                  {NAMIBIAN_REGIONS.map((region) => (
-                    <button
-                      key={region}
-                      onClick={() => handleRegionSelect(region)}
-                      className={`w-full text-left px-4 py-2.5 text-xs hover:bg-[#FAF7F2] transition-colors ${
-                        selectedRegion === region
-                          ? "font-medium text-[#1E1A14] bg-[#FAF7F2]"
-                          : "text-[#787774]"
-                      } ${region === "All Regions" ? "border-b border-[#3C2F1A]/5" : ""}`}
-                      role="option"
-                      aria-selected={selectedRegion === region}
-                    >
-                      {region}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Availability Toggle */}
+        <div className="flex items-center gap-2">
+          {/* Region Filter */}
+          <div className="relative">
             <button
-              onClick={() => setShowAvailableOnly(!showAvailableOnly)}
-              className={`border px-3 py-1.5 rounded-full text-xs transition-colors min-h-[36px] ${
-                showAvailableOnly
-                  ? "border-[#1E1A14] bg-[#1E1A14] text-[#FEFDFB]"
-                  : "border-[#3C2F1A]/10 bg-[#FEFDFB] hover:bg-[#FAF7F2]"
+              onClick={() => setRegionDropdownOpen(!regionDropdownOpen)}
+              className={`border px-3 py-1.5 rounded-full text-[10px] uppercase tracking-wider transition-colors flex items-center gap-1 min-h-[36px] ${
+                selectedRegion !== "All Regions"
+                  ? "border-earth bg-earth text-white-feorm"
+                  : "border-earth/8 bg-white-feorm hover:bg-fog"
               }`}
-              aria-pressed={showAvailableOnly}
+              aria-expanded={regionDropdownOpen}
+              aria-haspopup="listbox"
+              aria-label="Filter by region"
             >
-              Available
+              {selectedRegion === "All Regions" ? "Region" : selectedRegion}
+              <ChevronDown
+                size={10}
+                className={`transition-transform duration-200 ${
+                  regionDropdownOpen ? "rotate-180" : ""
+                }`}
+              />
             </button>
-
-            {/* Clear Filters */}
-            {hasActiveFilters && (
-              <button
-                onClick={clearFilters}
-                className="border border-[#9F2F2D]/20 px-3 py-1.5 rounded-full text-xs text-[#9F2F2D] hover:bg-[#FDEBEC] transition-colors min-h-[36px] flex items-center gap-1.5"
-                aria-label="Clear all filters"
+            {regionDropdownOpen && (
+              <div
+                className="absolute right-0 top-full mt-1.5 w-44 bg-white-feorm border border-earth/8 rounded-lg shadow-lg z-50 max-h-72 overflow-y-auto"
+                role="listbox"
+                aria-label="Select region"
               >
-                <X size={10} />
-                Clear
-              </button>
+                {NAMIBIAN_REGIONS.map((region) => (
+                  <button
+                    key={region}
+                    onClick={() => handleRegionSelect(region)}
+                    className={`w-full text-left px-3.5 py-2.5 text-[11px] hover:bg-fog transition-colors ${
+                      selectedRegion === region
+                        ? "font-medium text-earth bg-fog"
+                        : "text-muted-foreground"
+                    } ${region === "All Regions" ? "border-b border-earth/5" : ""}`}
+                    role="option"
+                    aria-selected={selectedRegion === region}
+                  >
+                    {region}
+                  </button>
+                ))}
+              </div>
             )}
           </div>
+
+          {/* Available Toggle */}
+          <button
+            onClick={() => setShowAvailableOnly(!showAvailableOnly)}
+            className={`border px-3 py-1.5 rounded-full text-[10px] uppercase tracking-wider transition-colors min-h-[36px] ${
+              showAvailableOnly
+                ? "border-earth bg-earth text-white-feorm"
+                : "border-earth/8 bg-white-feorm hover:bg-fog"
+            }`}
+            aria-pressed={showAvailableOnly}
+          >
+            Available
+          </button>
+
+          {/* Clear */}
+          {hasActiveFilters && (
+            <button
+              onClick={clearFilters}
+              className="border border-destructive/15 px-2.5 py-1.5 rounded-full text-[10px] text-destructive hover:bg-red-50 transition-colors min-h-[36px] flex items-center gap-1"
+              aria-label="Clear all filters"
+            >
+              <X size={10} />
+            </button>
+          )}
         </div>
       </div>
 
-      {/* Loading skeleton — dimensions match ListingCard exactly */}
+      {/* Loading skeleton */}
       {isLoading && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="bento-card flex flex-col">
-              <div className="h-56 p-2">
-                <div className="w-full h-full skeleton-shimmer rounded-[4px]" />
+              <div className="h-48 md:h-56 p-2">
+                <div className="w-full h-full skeleton-shimmer rounded-md" />
               </div>
-              <div className="p-5 md:p-6 border-t border-[#3C2F1A]/5">
-                <div className="h-3 w-20 skeleton-shimmer mb-4" />
-                <div className="h-6 w-3/4 skeleton-shimmer mb-3" />
-                <div className="h-4 w-1/3 skeleton-shimmer mt-6" />
+              <div className="p-4 md:p-5 border-t border-earth/5">
+                <div className="h-2.5 w-16 skeleton-shimmer mb-3" />
+                <div className="h-5 w-3/4 skeleton-shimmer mb-2" />
+                <div className="h-3.5 w-1/3 skeleton-shimmer mt-5" />
               </div>
             </div>
           ))}
         </div>
       )}
 
-      {/* Bento Grid with stagger reveal */}
+      {/* Grid */}
       {!isLoading && transformedListings && transformedListings.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 stagger-reveal">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 stagger-reveal">
           {transformedListings.map((item) => (
-            <ListingCard
-              key={item.id}
-              item={item}
-            />
+            <ListingCard key={item.id} item={item} />
           ))}
         </div>
       )}
 
-      {/* Empty state */}
+      {/* Empty */}
       {transformedListings?.length === 0 && !isLoading && (
-        <div className="border border-dashed border-[#D4C4A0]/50 bg-[#FEFDFB] rounded-[8px] p-12 text-center">
-          <p className="text-sm text-[#787774] mb-4">
+        <div className="border border-dashed border-sand/40 bg-white-feorm rounded-lg p-10 text-center">
+          <p className="text-xs text-muted-foreground mb-4">
             No listings found{selectedRegion !== "All Regions" ? ` in ${selectedRegion}` : ""}.
-            Try removing a filter or check back soon.
           </p>
           {hasActiveFilters && (
             <button
               onClick={clearFilters}
-              className="btn-secondary-feorm px-5 py-2.5 text-xs uppercase tracking-widest"
+              className="btn-secondary-feorm px-4 py-2 text-[10px] uppercase tracking-widest"
             >
               Clear Filters
             </button>
@@ -299,9 +287,9 @@ export default function MarketplacePage() {
       fallback={
         <div className="flex-grow flex items-center justify-center min-h-[60vh]">
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-[#E8C96A] animate-pulse" />
-            <span className="font-mono-feorm text-[10px] text-[#787774] uppercase tracking-widest">
-              Loading...
+            <div className="w-1.5 h-1.5 rounded-full bg-harvest animate-pulse" />
+            <span className="font-mono-feorm text-[9px] text-muted-foreground uppercase tracking-widest">
+              Loading
             </span>
           </div>
         </div>

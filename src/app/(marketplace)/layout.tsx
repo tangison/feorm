@@ -10,14 +10,17 @@ export default function MarketplaceLayout({
   return (
     <div className="flex-grow flex flex-col min-h-screen">
       <FeormNav />
-      {/* Desktop: offset for 260px sidebar | Mobile: offset for 72px bottom nav */}
+      {/* 
+        Mobile: top nav = 96px (2 × 48px), so pt-[96px]
+        Desktop: left sidebar = 240px, so lg:ml-[240px] lg:pt-0
+      */}
       <main
         id="main-content"
-        className="flex-grow flex flex-col page-enter lg:ml-[260px] pb-[88px] lg:pb-0"
+        className="flex-grow flex flex-col page-enter pt-[96px] lg:pt-0 lg:ml-[240px]"
       >
         {children}
       </main>
-      <div className="lg:ml-[260px]">
+      <div className="lg:ml-[240px]">
         <FeormFooter />
       </div>
       <LazyTangisonChat />
