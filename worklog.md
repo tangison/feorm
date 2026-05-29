@@ -470,3 +470,34 @@ Stage Summary:
 - All code pushed to https://github.com/tangison/feorm.git on main branch
 - 4 commits pushed including: P1/P2 audit fixes, color token migration, unused component cleanup, utility dedup, bottom nav, emoji avatars
 - Lint clean, all routes 200, dev server stable
+
+---
+Task ID: 15
+Agent: Main Agent (Humanoid Avatars + Floating Nav + Takeaway Menu)
+Task: Replace emoji avatars with humanoid/cartoonish SVG characters, redesign bottom nav to 3 essential tabs with floating rounded corners, add takeaway menu for secondary items
+
+Work Log:
+- Audited current codebase: nav.tsx, avatar.tsx, layout.tsx, profile/identity pages, chat FAB, footer, context system
+- Identified 9 issues: dual avatar storage bug, no real "More" menu, massive avatar code duplication, 5 emoji avatars, edge-to-edge bottom nav
+- Created 5 hand-crafted SVG humanoid avatars (AI image gen API was down due to network timeout):
+  - Amara: African woman farmer with headwrap, harvest gold accents
+  - Kazo: African man explorer with sun hat, vest, earth tones
+  - Tandi: African woman with braided crown, gold rings, modern outfit
+  - Shona: African elder with grey beard, wisdom, traditional shirt
+  - Nale: Young African with locs, headband, hoodie, adventurous
+- Rewrote lib/avatar.tsx: New HumanoidAvatar interface with id/label/src/ring/accent/description, HUMANOID_AVATARS array, resolveAvatarDisplay() helper, legacy support for emoji:// and preset://
+- Rewrote nav.tsx: Floating bottom nav (fixed bottom-4 left-4 right-4, rounded-2xl, shadow, backdrop-blur), 3 essential tabs (Voyager: Explore/Journeys/Profile, Provider: Listings/Dashboard/Profile), takeaway bottom sheet for secondary items (Verification/Settings/Support/Sign Out), avatar in top header triggers more menu
+- Updated profile/page.tsx: Humanoid avatar picker with character names and descriptions, upload and AI generate options
+- Updated identity/page.tsx: Same humanoid avatar picker
+- Updated layout.tsx: pb-16 → pb-24 for floating bottom nav clearance
+- Updated tangison-chat.tsx: bottom-20 → bottom-24 for floating nav clearance, z-30 for FAB to not overlap sheet
+- Added CSS: feorm-slide-up animation for takeaway sheet
+- Fixed lint issues: setState-in-effect → closeMore callback from link handlers, ref-during-render → resolveAvatarDisplay handles legacy URLs in display layer
+- All routes verified 200, lint clean, pushed to GitHub
+
+Stage Summary:
+- Emoji avatars eliminated: replaced with 5 illustrated humanoid SVG characters
+- Bottom nav redesigned: floating pill with rounded corners, 3 essential tabs only
+- Takeaway menu: bottom sheet with backdrop blur for secondary navigation
+- Code quality: no lint errors, clean architecture, legacy backward compatibility
+- Pushed to GitHub: 2dfa05c on main
