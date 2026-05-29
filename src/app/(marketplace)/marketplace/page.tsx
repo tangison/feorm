@@ -225,7 +225,7 @@ function MarketplaceContent() {
           {hasActiveFilters && (
             <button
               onClick={clearFilters}
-              className="border border-destructive/15 px-2.5 py-1.5 rounded-full text-[10px] text-destructive hover:bg-red-50 transition-colors min-h-[36px] flex items-center gap-1"
+              className="border border-destructive/15 px-2.5 py-1.5 rounded-full text-[10px] text-destructive hover:bg-[#FDEBEC] transition-colors min-h-[36px] flex items-center gap-1"
               aria-label="Clear all filters"
             >
               <X size={10} />

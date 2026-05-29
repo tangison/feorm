@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { DM_Sans, DM_Serif_Display, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
@@ -26,6 +26,13 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#1E1A14",
+};
+
 export const metadata: Metadata = {
   title: "Feorm | Premium Utilitarian",
   description:
@@ -51,9 +58,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <meta name="theme-color" content="#1E1A14" />
-      </head>
       <body
         className={`${dmSerif.variable} ${dmSans.variable} ${jetbrainsMono.variable} antialiased`}
       >

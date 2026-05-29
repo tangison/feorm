@@ -11,7 +11,6 @@ import {
   User,
   Tent,
   Wrench,
-  Package,
   Settings,
   Shield,
   LifeBuoy,
@@ -58,10 +57,10 @@ export default function FeormNav() {
 
   // ── Mobile two-line nav items (compact set) ──
   const mobileProviderNav = [
-    { label: "Assets", href: "/marketplace", icon: Package, active: pathname === "/marketplace" },
+    { label: "Stays", href: "/marketplace?view=stays", icon: Tent, active: pathname === "/marketplace", onClick: () => setMarketView("stays") },
+    { label: "Gear", href: "/marketplace?view=equipment", icon: Wrench, active: pathname === "/marketplace", onClick: () => setMarketView("equipment") },
     { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, active: pathname === "/dashboard" },
     { label: "Profile", href: "/profile", icon: User, active: pathname === "/profile" },
-    { label: "Settings", href: "/settings", icon: Settings, active: pathname === "/settings" },
   ];
 
   const mobileVoyagerNav = [
@@ -104,7 +103,7 @@ export default function FeormNav() {
             </span>
           </Link>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5">
             <span
               className={`text-[8px] uppercase font-semibold px-2 py-0.5 rounded-full tracking-wider ${
                 isProvider ? "tag-verified" : "tag-pastel"
@@ -131,6 +130,17 @@ export default function FeormNav() {
                 userInitials
               ) : null}
             </Link>
+            <button
+              onClick={() => {
+                localStorage.removeItem("feorm-session");
+                setHasCompletedOnboarding(false);
+                router.push("/");
+              }}
+              className="w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:bg-fog hover:text-destructive transition-colors active:scale-[0.95]"
+              aria-label="Sign out"
+            >
+              <LogOut size={14} />
+            </button>
           </div>
         </div>
 
@@ -266,7 +276,7 @@ export default function FeormNav() {
               setHasCompletedOnboarding(false);
               router.push("/");
             }}
-            className="flex items-center gap-2.5 rounded-lg px-4 py-2 text-destructive/70 hover:bg-red-50 transition-all duration-150 w-full min-h-[40px]"
+            className="flex items-center gap-2.5 rounded-lg px-4 py-2 text-destructive/70 hover:bg-[#FDEBEC] transition-all duration-150 w-full min-h-[40px]"
           >
             <LogOut size={14} aria-hidden="true" />
             <span className="font-mono-feorm text-[10px] uppercase tracking-[0.06em] font-medium">

@@ -258,3 +258,38 @@ Stage Summary:
 - Touch targets maintained at 44px minimum
 - CSS design tokens refined: thinner borders, smaller radius, tighter animations
 - Consistent premium minimalistic aesthetic across all breakpoints
+
+---
+Task ID: 11
+Agent: Main Agent (Audit & Debug)
+Task: Full audit and debug of Feorm mobile UI after two-line navigation overhaul
+
+Work Log:
+- Ran full audit using explore-code methodology across 30+ source files
+- Checked dev server logs, lint, and all route compilation
+- Identified 3 P0 bugs, 8 P1 issues, 8 P2 improvements, 6 P3 nice-to-haves
+
+P0 Fixes Applied:
+1. Chat FAB position: Changed `bottom-[88px]` to `bottom-6` on mobile in tangison-chat.tsx (was floating 64px above bottom due to removed bottom nav)
+2. Mobile sign-out: Added LogOut icon button in mobile header Line 1 next to avatar, with hover:text-destructive feedback
+3. Mobile provider nav: Replaced single "Assets" link with separate "Stays" (Tent icon) and "Gear" (Wrench icon) items, both with onClick handlers that call setMarketView()
+
+P1 Fixes Applied:
+4. Chat send button: Changed hover:bg-[#333] to hover:bg-bark (design system token)
+5. hover:bg-red-50 replaced with hover:bg-[#FDEBEC] (Feorm destructive palette) in nav.tsx and marketplace/page.tsx
+6. Added Viewport export with viewport-fit=cover for notch/safe-area devices
+7. Moved theme-color to Viewport export, removed manual <meta> tag from layout
+8. Chat FAB button: Changed bg-[#1E1A14] to bg-earth and text-[#FEFDFB] to text-white-feorm (design tokens)
+9. Chat panel: Changed border-[#3C2F1A]/10 to border-earth/8, bg-[#FEFDFB] to bg-white-feorm
+
+Remaining Known Issues (not fixed this round):
+- 200+ hardcoded hex colors across 26 files (P1, requires systematic token migration)
+- Legacy page.tsx monolith at / route (P1, 1200+ lines of duplicate code)
+- 45 unused shadcn/ui components (P2)
+- Duplicate formatPrice and NAMIBIAN_REGIONS across files (P2)
+- Silent catch blocks throughout (P2)
+
+Stage Summary:
+- 3 P0 bugs fixed: chat FAB position, mobile sign-out, provider nav toggle
+- 6 P1 issues fixed: design token alignment, viewport meta, color consistency
+- All routes 200, lint clean, compilation stable
