@@ -1,78 +1,94 @@
 /**
- * Feorm Emoji Avatar System
+ * Feorm Humanoid Avatar System
  *
- * 5 brand-aligned emojis representing Namibian agrotourism identity.
- * Users pick one during onboarding — no letter initials, just visual identity.
+ * 5 brand-aligned cartoonish humanoid avatars representing Namibian identities.
+ * Users pick one during onboarding — no letter initials, no emojis — real illustrated characters.
  *
- * Each emoji has a themed background gradient that matches Feorm's earth palette.
+ * Each avatar is an SVG file stored in /public/avatars/ with Feorm's earth palette.
  */
 
-export interface EmojiAvatar {
+export interface HumanoidAvatar {
   id: string;
-  emoji: string;
   label: string;
-  bg: string;       // Tailwind background class
-  ring: string;     // Tailwind ring class when selected
+  src: string;       // Path to SVG in /public/avatars/
+  ring: string;      // Tailwind ring class when selected
+  accent: string;    // Accent color for labels/badges
+  description: string;
 }
 
-export const EMOJI_AVATARS: EmojiAvatar[] = [
+export const HUMANOID_AVATARS: HumanoidAvatar[] = [
   {
-    id: "emoji://acacia",
-    emoji: "🌳",
-    label: "Acacia",
-    bg: "bg-gradient-to-br from-harvest/30 to-cream",
+    id: "avatar://amara",
+    label: "Amara",
+    src: "/avatars/amara.svg",
     ring: "ring-harvest",
+    accent: "text-accent-foreground",
+    description: "Farmer & Host",
   },
   {
-    id: "emoji://desert-fox",
-    emoji: "🦊",
-    label: "Desert Fox",
-    bg: "bg-gradient-to-br from-earth/15 to-sand/30",
-    ring: "ring-earth",
-  },
-  {
-    id: "emoji://sunrise",
-    emoji: "🌅",
-    label: "Sunrise",
-    bg: "bg-gradient-to-br from-harvest/20 to-accent/40",
-    ring: "ring-harvest",
-  },
-  {
-    id: "emoji://ox",
-    emoji: "🐂",
-    label: "Ox",
-    bg: "bg-gradient-to-br from-cream to-sand/20",
+    id: "avatar://kazo",
+    label: "Kazo",
+    src: "/avatars/kazo.svg",
     ring: "ring-bark",
+    accent: "text-bark",
+    description: "Explorer & Guide",
   },
   {
-    id: "emoji://wheat",
-    emoji: "🌾",
-    label: "Wheat",
-    bg: "bg-gradient-to-br from-accent/40 to-cream",
+    id: "avatar://tandi",
+    label: "Tandi",
+    src: "/avatars/tandi.svg",
     ring: "ring-harvest",
+    accent: "text-accent-foreground",
+    description: "Community Leader",
+  },
+  {
+    id: "avatar://shona",
+    label: "Shona",
+    src: "/avatars/shona.svg",
+    ring: "ring-sand",
+    accent: "text-muted-foreground",
+    description: "Elder & Mentor",
+  },
+  {
+    id: "avatar://nale",
+    label: "Nale",
+    src: "/avatars/nale.svg",
+    ring: "ring-earth",
+    accent: "text-earth",
+    description: "Adventurer",
   },
 ];
 
-const EMOJI_MAP: Record<string, EmojiAvatar> = Object.fromEntries(
-  EMOJI_AVATARS.map((a) => [a.id, a])
+const AVATAR_MAP: Record<string, HumanoidAvatar> = Object.fromEntries(
+  HUMANOID_AVATARS.map((a) => [a.id, a])
 );
 
-/** Check if a URL is an emoji avatar reference */
+/** Check if a URL is a humanoid avatar reference */
+export function isHumanoidAvatar(url: string): boolean {
+  return url.startsWith("avatar://");
+}
+
+/** Get the HumanoidAvatar object for a given URL */
+export function getHumanoidAvatar(url: string): HumanoidAvatar | null {
+  return AVATAR_MAP[url] || null;
+}
+
+/** @deprecated Legacy emoji system — still supported for existing users */
 export function isEmojiAvatar(url: string): boolean {
   return url.startsWith("emoji://");
 }
 
-/** Get the EmojiAvatar object for a given URL */
-export function getEmojiAvatar(url: string): EmojiAvatar | null {
-  return EMOJI_MAP[url] || null;
+/** @deprecated Legacy — returns null (emoji avatars are replaced by humanoid ones) */
+export function getEmojiAvatar(_url: string): null {
+  return null;
 }
 
-/** Legacy: Check if a URL is a preset gradient avatar */
+/** Check if a URL is a preset gradient avatar (legacy) */
 export function isPresetAvatar(url: string): boolean {
   return url.startsWith("preset://");
 }
 
-/** Legacy: Get gradient for preset avatar (still supported for existing users) */
+/** Legacy: Get gradient for preset avatar */
 const LEGACY_PRESETS: Record<string, string> = {
   "preset://amber-dunes": "linear-gradient(135deg, #E8C96A 0%, #D4A853 50%, #B8862D 100%)",
   "preset://red-kalahari": "linear-gradient(135deg, #9F2F2D 0%, #C44536 50%, #772E2E 100%)",
@@ -89,8 +105,40 @@ export function getPresetGradient(url: string): string | null {
 }
 
 /**
+ * Resolve an avatarUrl to display info.
+ * Returns the type of avatar and rendering data.
+ */
+export function resolveAvatarDisplay(avatarUrl: string | ""): {
+  type: "humanoid" | "preset" | "image";
+  src?: string;
+  gradient?: string;
+} | null {
+  if (!avatarUrl) return null;
+
+  if (isHumanoidAvatar(avatarUrl)) {
+    const ha = getHumanoidAvatar(avatarUrl);
+    if (ha) return { type: "humanoid", src: ha.src };
+    // Fallback to first avatar
+    return { type: "humanoid", src: HUMANOID_AVATARS[0].src };
+  }
+
+  if (isEmojiAvatar(avatarUrl)) {
+    // Migrate: default to first humanoid avatar
+    return { type: "humanoid", src: HUMANOID_AVATARS[0].src };
+  }
+
+  if (isPresetAvatar(avatarUrl)) {
+    const gradient = getPresetGradient(avatarUrl);
+    if (gradient) return { type: "preset", gradient };
+  }
+
+  // It's an image URL or data URL
+  return { type: "image", src: avatarUrl };
+}
+
+/**
  * Compress an uploaded image to a data URL.
- * Used when users upload their own photo instead of picking an emoji.
+ * Used when users upload their own photo instead of picking an avatar.
  */
 export function compressImage(
   file: File,

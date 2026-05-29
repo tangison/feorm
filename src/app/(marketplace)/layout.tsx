@@ -16,7 +16,7 @@ export default function MarketplaceLayout({
       */}
       <main
         id="main-content"
-        className="flex-grow flex flex-col page-enter pt-12 pb-16 lg:pt-0 lg:pb-0 lg:ml-[240px]"
+        className="flex-grow flex flex-col page-enter pt-12 pb-24 lg:pt-0 lg:pb-0 lg:ml-[240px]"
       >
         {children}
       </main>

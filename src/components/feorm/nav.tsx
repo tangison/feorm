@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect, useCallback } from "react";
 import { useFeormAuth, useFeormMarket, useFeormOnboarding } from "@/context/feorm-context";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
@@ -9,110 +10,122 @@ import {
   Clock,
   LayoutDashboard,
   Tent,
-  Wrench,
+  User,
   Settings,
   Shield,
   LifeBuoy,
   LogOut,
-  User,
+  X,
+  Wrench,
 } from "lucide-react";
-import { isEmojiAvatar, getEmojiAvatar, isPresetAvatar, getPresetGradient } from "@/lib/avatar";
+import { resolveAvatarDisplay } from "@/lib/avatar";
 
 export default function FeormNav() {
-  const { user, avatarUrl } = useFeormAuth();
+  const { user, avatarUrl, setAvatarUrl } = useFeormAuth();
   const { setMarketView } = useFeormMarket();
   const { selectedRole, setHasCompletedOnboarding } = useFeormOnboarding();
   const pathname = usePathname();
   const router = useRouter();
 
   const isProvider = selectedRole === "provider";
+  const [moreOpen, setMoreOpen] = useState(false);
+
+  // Close more menu (called from link click handlers)
+  const closeMore = useCallback(() => setMoreOpen(false), []);
+
+  // Close more menu on Escape key
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMoreOpen(false);
+    };
+    if (moreOpen) {
+      document.addEventListener("keydown", handleKey);
+      return () => document.removeEventListener("keydown", handleKey);
+    }
+  }, [moreOpen]);
+
+  // Prevent body scroll when more menu is open
+  useEffect(() => {
+    if (moreOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [moreOpen]);
 
   // ── Resolve avatar display ──
-  const avatarDisplay = (() => {
-    if (!avatarUrl) return { type: "emoji" as const, emoji: "🌳", bg: "bg-gradient-to-br from-harvest/30 to-cream" };
-    if (isEmojiAvatar(avatarUrl)) {
-      const ea = getEmojiAvatar(avatarUrl);
-      if (ea) return { type: "emoji" as const, emoji: ea.emoji, bg: ea.bg };
-      return { type: "emoji" as const, emoji: "🌳", bg: "bg-gradient-to-br from-harvest/30 to-cream" };
-    }
-    if (isPresetAvatar(avatarUrl)) {
-      const gradient = getPresetGradient(avatarUrl);
-      return { type: "preset" as const, gradient };
-    }
-    return { type: "image" as const, url: avatarUrl };
-  })();
+  const avatarDisplay = resolveAvatarDisplay(avatarUrl);
 
-  // ── Desktop sidebar nav items ──
-  const providerNavItems = [
-    { label: "Farm Stays", href: "/marketplace?view=stays", icon: Tent, active: pathname === "/marketplace", onClick: () => setMarketView("stays") },
-    { label: "Equipment", href: "/marketplace?view=equipment", icon: Wrench, active: pathname === "/marketplace", onClick: () => setMarketView("equipment") },
-    { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, active: pathname === "/dashboard" },
-    { label: "Profile", href: "/profile", icon: User, active: pathname === "/profile" },
-    { label: "Verification", href: "/verification", icon: Shield, active: pathname === "/verification" },
-    { label: "Settings", href: "/settings", icon: Settings, active: pathname === "/settings" },
-    { label: "Support", href: "/support", icon: LifeBuoy, active: pathname === "/support" },
-  ];
+  // ── Migrate legacy emoji:// — handled by resolveAvatarDisplay ──
+  // If user has an old emoji:// URL, we just display the default humanoid avatar
+  // No state mutation needed — the display layer handles it
 
-  const voyagerNavItems = [
-    { label: "Explore", href: "/marketplace", icon: MapPin, active: pathname === "/marketplace" || pathname.startsWith("/listing") },
-    { label: "Journeys", href: "/journeys", icon: Clock, active: pathname === "/journeys" },
-    { label: "Verification", href: "/verification", icon: Shield, active: pathname === "/verification" },
-    { label: "Profile", href: "/profile", icon: User, active: pathname === "/profile" },
-    { label: "Settings", href: "/settings", icon: Settings, active: pathname === "/settings" },
-    { label: "Support", href: "/support", icon: LifeBuoy, active: pathname === "/support" },
-  ];
+  // ── Mobile bottom nav: 3 essential tabs ──
+  const mobileTabs = isProvider
+    ? [
+        { label: "Listings", href: "/marketplace", icon: Tent, active: pathname === "/marketplace" || pathname.startsWith("/listing"), onClick: () => setMarketView("stays") },
+        { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, active: pathname === "/dashboard" },
+        { label: "Profile", href: "/profile", icon: User, active: pathname === "/profile" },
+      ]
+    : [
+        { label: "Explore", href: "/marketplace", icon: MapPin, active: pathname === "/marketplace" || pathname.startsWith("/listing") },
+        { label: "Journeys", href: "/journeys", icon: Clock, active: pathname === "/journeys" },
+        { label: "Profile", href: "/profile", icon: User, active: pathname === "/profile" },
+      ];
 
-  // ── Mobile bottom nav items (5 max for thumb zone) ──
-  const mobileBottomProvider = [
-    { label: "Stays", href: "/marketplace?view=stays", icon: Tent, active: pathname === "/marketplace", onClick: () => setMarketView("stays") },
-    { label: "Gear", href: "/marketplace?view=equipment", icon: Wrench, active: pathname === "/marketplace", onClick: () => setMarketView("equipment") },
-    { label: "Board", href: "/dashboard", icon: LayoutDashboard, active: pathname === "/dashboard" },
-    { label: "Profile", href: "/profile", icon: User, active: pathname === "/profile" },
-    { label: "More", href: "/settings", icon: Settings, active: pathname === "/settings" || pathname === "/verification" || pathname === "/support" },
-  ];
+  // ── More menu items ──
+  const moreItems = isProvider
+    ? [
+        { label: "Equipment", href: "/marketplace?view=equipment", icon: Wrench, onClick: () => setMarketView("equipment") },
+        { label: "Verification", href: "/verification", icon: Shield },
+        { label: "Settings", href: "/settings", icon: Settings },
+        { label: "Support", href: "/support", icon: LifeBuoy },
+      ]
+    : [
+        { label: "Verification", href: "/verification", icon: Shield },
+        { label: "Settings", href: "/settings", icon: Settings },
+        { label: "Support", href: "/support", icon: LifeBuoy },
+      ];
 
-  const mobileBottomVoyager = [
-    { label: "Explore", href: "/marketplace", icon: MapPin, active: pathname === "/marketplace" || pathname.startsWith("/listing") },
-    { label: "Trips", href: "/journeys", icon: Clock, active: pathname === "/journeys" },
-    { label: "Verify", href: "/verification", icon: Shield, active: pathname === "/verification" },
-    { label: "Profile", href: "/profile", icon: User, active: pathname === "/profile" },
-    { label: "More", href: "/settings", icon: Settings, active: pathname === "/settings" || pathname === "/support" },
-  ];
-
-  const desktopNavItems = isProvider ? providerNavItems : voyagerNavItems;
-  const mobileBottomItems = isProvider ? mobileBottomProvider : mobileBottomVoyager;
+  const signOut = useCallback(() => {
+    localStorage.removeItem("feorm-session");
+    setHasCompletedOnboarding(false);
+    router.push("/");
+  }, [setHasCompletedOnboarding, router]);
 
   // ── Shared avatar rendering ──
   const renderAvatar = (size: number = 32) => {
-    const cls = `w-[${size}px] h-[${size}px] rounded-full flex items-center justify-center overflow-hidden shrink-0`;
-
-    if (avatarDisplay.type === "emoji") {
+    if (!avatarDisplay) {
+      // Default: show Amara avatar
       return (
-        <div className={`${avatarDisplay.bg} ${cls}`} style={{ width: size, height: size }}>
-          <span style={{ fontSize: Math.round(size * 0.5) }} className="leading-none select-none">
-            {avatarDisplay.emoji}
-          </span>
+        <div className="rounded-full overflow-hidden shrink-0 bg-fog" style={{ width: size, height: size }}>
+          <Image src="/avatars/amara.svg" alt="Avatar" width={size} height={size} sizes={`${size}px`} className="w-full h-full object-cover" />
         </div>
       );
     }
+
+    if (avatarDisplay.type === "humanoid") {
+      return (
+        <div className="rounded-full overflow-hidden shrink-0 bg-fog" style={{ width: size, height: size }}>
+          <Image src={avatarDisplay.src!} alt="Avatar" width={size} height={size} sizes={`${size}px`} className="w-full h-full object-cover" />
+        </div>
+      );
+    }
+
     if (avatarDisplay.type === "preset") {
       return (
         <div
-          className={cls}
+          className="rounded-full shrink-0"
           style={{ width: size, height: size, background: avatarDisplay.gradient ?? undefined }}
         />
       );
     }
+
+    // Image URL or data URL
     return (
-      <div className={cls} style={{ width: size, height: size }}>
-        <Image
-          src={avatarDisplay.url}
-          alt="Avatar"
-          width={size}
-          height={size}
-          sizes={`${size}px`}
-          className="w-full h-full object-cover"
-        />
+      <div className="rounded-full overflow-hidden shrink-0" style={{ width: size, height: size }}>
+        <Image src={avatarDisplay.src!} alt="Avatar" width={size} height={size} sizes={`${size}px`} className="w-full h-full object-cover" />
       </div>
     );
   };
@@ -120,10 +133,10 @@ export default function FeormNav() {
   return (
     <>
       {/* ═══════════════════════════════════════════════════════
-          MOBILE: Slim Top Header + Bottom Tab Bar
+          MOBILE: Slim Top Header + Floating Bottom Nav
       ═══════════════════════════════════════════════════════ */}
 
-      {/* Top Header — Brand + Avatar only (48px) */}
+      {/* Top Header — Brand + Avatar + More (48px) */}
       <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white-feorm/90 backdrop-blur-xl border-b border-earth/5">
         <div className="flex items-center justify-between h-12 px-4">
           <Link
@@ -152,21 +165,26 @@ export default function FeormNav() {
             >
               {isProvider ? "Provider" : "Voyager"}
             </span>
-            <Link href="/profile" aria-label="Profile">
-              {renderAvatar(30)}
-            </Link>
+            <button
+              onClick={() => setMoreOpen(!moreOpen)}
+              className="flex items-center gap-1.5 min-h-[36px] min-w-[36px] justify-center rounded-full active:bg-earth/5 transition-colors"
+              aria-label="More menu"
+              aria-expanded={moreOpen}
+            >
+              {renderAvatar(28)}
+            </button>
           </div>
         </div>
       </header>
 
-      {/* Bottom Tab Bar — 5 icons in thumb zone (56px + safe area) */}
+      {/* Floating Bottom Tab Bar — 3 essential tabs */}
       <nav
-        className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white-feorm/95 backdrop-blur-xl border-t border-earth/8 safe-area-bottom"
+        className="lg:hidden fixed bottom-4 left-4 right-4 z-40 bg-white-feorm/95 backdrop-blur-xl rounded-2xl shadow-lg shadow-earth/8 border border-earth/5 safe-area-bottom"
         role="navigation"
         aria-label="Main navigation"
       >
         <div className="flex items-center justify-around h-14">
-          {mobileBottomItems.map((item) => {
+          {mobileTabs.map((item) => {
             const Icon = item.icon;
             const isActive = item.active;
             return (
@@ -181,15 +199,92 @@ export default function FeormNav() {
                 }`}
                 aria-current={isActive ? "page" : undefined}
               >
-                <Icon size={18} aria-hidden="true" strokeWidth={isActive ? 2.2 : 1.5} />
+                <Icon size={20} aria-hidden="true" strokeWidth={isActive ? 2.2 : 1.5} />
                 <span className="text-[9px] font-medium uppercase tracking-[0.04em] leading-none">
                   {item.label}
                 </span>
+                {isActive && (
+                  <span className="w-1 h-1 rounded-full bg-harvest mt-0.5" />
+                )}
               </Link>
             );
           })}
         </div>
       </nav>
+
+      {/* ═══════════════════════════════════════════════════════
+          MORE MENU — Takeaway sheet
+      ═══════════════════════════════════════════════════════ */}
+      {moreOpen && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="lg:hidden fixed inset-0 z-40 bg-earth/20 backdrop-blur-sm"
+            onClick={() => setMoreOpen(false)}
+            aria-hidden="true"
+          />
+
+          {/* Sheet */}
+          <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white-feorm rounded-t-2xl shadow-2xl border-t border-earth/5 safe-area-bottom animate-slide-up">
+            {/* Handle */}
+            <div className="flex justify-center pt-3 pb-2">
+              <div className="w-8 h-1 rounded-full bg-sand/60" />
+            </div>
+
+            {/* User info */}
+            <div className="px-5 pb-4 flex items-center gap-3 border-b border-earth/5">
+              {renderAvatar(40)}
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-earth truncate">
+                  {user?.name || "Demo"} {user?.surname || "User"}
+                </p>
+                <p className="font-mono-feorm text-[9px] text-muted-foreground uppercase tracking-widest">
+                  {isProvider ? "Provider" : "Voyager"}
+                </p>
+              </div>
+              <button
+                onClick={() => setMoreOpen(false)}
+                className="w-8 h-8 rounded-full hover:bg-fog flex items-center justify-center"
+                aria-label="Close menu"
+              >
+                <X size={16} className="text-muted-foreground" />
+              </button>
+            </div>
+
+            {/* Menu items */}
+            <div className="py-2 px-2">
+              {moreItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    onClick={() => {
+                      closeMore();
+                      (item as { onClick?: () => void }).onClick?.();
+                    }}
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl text-earth hover:bg-fog transition-colors min-h-[44px]"
+                  >
+                    <Icon size={18} className="text-muted-foreground" aria-hidden="true" />
+                    <span className="text-sm font-medium">{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* Sign Out */}
+            <div className="px-2 pb-4 pt-1 border-t border-earth/5 mx-2">
+              <button
+                onClick={signOut}
+                className="flex items-center gap-3 px-4 py-3 rounded-xl text-destructive hover:bg-[#FDEBEC] transition-colors w-full min-h-[44px]"
+              >
+                <LogOut size={18} aria-hidden="true" />
+                <span className="text-sm font-medium">Sign Out</span>
+              </button>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* ═══════════════════════════════════════════════════════
           DESKTOP: Premium Minimal Sidebar
@@ -230,7 +325,25 @@ export default function FeormNav() {
 
         {/* Nav Items */}
         <nav className="flex-1 flex flex-col gap-0.5" role="navigation">
-          {desktopNavItems.map((item) => {
+          {(isProvider
+            ? [
+                { label: "Farm Stays", href: "/marketplace?view=stays", icon: Tent, active: pathname === "/marketplace", onClick: () => setMarketView("stays") },
+                { label: "Equipment", href: "/marketplace?view=equipment", icon: Wrench, active: pathname === "/marketplace", onClick: () => setMarketView("equipment") },
+                { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, active: pathname === "/dashboard" },
+                { label: "Profile", href: "/profile", icon: User, active: pathname === "/profile" },
+                { label: "Verification", href: "/verification", icon: Shield, active: pathname === "/verification" },
+                { label: "Settings", href: "/settings", icon: Settings, active: pathname === "/settings" },
+                { label: "Support", href: "/support", icon: LifeBuoy, active: pathname === "/support" },
+              ]
+            : [
+                { label: "Explore", href: "/marketplace", icon: MapPin, active: pathname === "/marketplace" || pathname.startsWith("/listing") },
+                { label: "Journeys", href: "/journeys", icon: Clock, active: pathname === "/journeys" },
+                { label: "Verification", href: "/verification", icon: Shield, active: pathname === "/verification" },
+                { label: "Profile", href: "/profile", icon: User, active: pathname === "/profile" },
+                { label: "Settings", href: "/settings", icon: Settings, active: pathname === "/settings" },
+                { label: "Support", href: "/support", icon: LifeBuoy, active: pathname === "/support" },
+              ]
+          ).map((item) => {
             const Icon = item.icon;
             const isActive = item.active;
             return (
@@ -277,11 +390,7 @@ export default function FeormNav() {
             </div>
           </Link>
           <button
-            onClick={() => {
-              localStorage.removeItem("feorm-session");
-              setHasCompletedOnboarding(false);
-              router.push("/");
-            }}
+            onClick={signOut}
             className="flex items-center gap-2.5 rounded-lg px-4 py-2 text-destructive/70 hover:bg-[#FDEBEC] transition-all duration-150 w-full min-h-[40px]"
           >
             <LogOut size={14} aria-hidden="true" />

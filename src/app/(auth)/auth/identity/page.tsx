@@ -7,12 +7,13 @@ import { useAuthMutations } from "@/hooks/use-auth";
 import { ArrowLeft, ArrowRight, Sparkles, Camera, Upload } from "lucide-react";
 import Image from "next/image";
 import {
-  EMOJI_AVATARS,
-  isEmojiAvatar,
-  getEmojiAvatar,
+  HUMANOID_AVATARS,
+  isHumanoidAvatar,
+  getHumanoidAvatar,
   isPresetAvatar,
   getPresetGradient,
   compressImage,
+  resolveAvatarDisplay,
 } from "@/lib/avatar";
 import { NAMIBIAN_REGIONS } from "@/lib/regions";
 
@@ -30,23 +31,12 @@ export default function IdentityPage() {
   const { setupIdentity } = useAuthMutations();
 
   // Derived: preview for current avatar
-  const avatarPreview = useMemo(() => {
-    if (!avatarUrl) return null;
-    if (isEmojiAvatar(avatarUrl)) {
-      const ea = getEmojiAvatar(avatarUrl);
-      return ea ? { type: "emoji" as const, emoji: ea.emoji, bg: ea.bg } : null;
-    }
-    if (isPresetAvatar(avatarUrl)) {
-      const gradient = getPresetGradient(avatarUrl);
-      return { type: "preset" as const, gradient };
-    }
-    return { type: "image" as const, url: avatarUrl };
-  }, [avatarUrl]);
+  const avatarPreview = useMemo(() => resolveAvatarDisplay(avatarUrl), [avatarUrl]);
 
-  // ── Emoji Avatar Selection ──
-  const handleSelectEmoji = useCallback(
-    (emojiId: string) => {
-      setAvatarUrl(emojiId);
+  // ── Avatar Selection ──
+  const handleSelectAvatar = useCallback(
+    (avatarId: string) => {
+      setAvatarUrl(avatarId);
     },
     [setAvatarUrl]
   );
@@ -134,6 +124,14 @@ export default function IdentityPage() {
     setLoading(false);
   }, [name, surname, region, phone, avatarUrl, setupIdentity, setUser, router]);
 
+  // Resolve selected avatar info
+  const selectedInfo = useMemo(() => {
+    if (isHumanoidAvatar(avatarUrl)) {
+      return getHumanoidAvatar(avatarUrl);
+    }
+    return null;
+  }, [avatarUrl]);
+
   return (
     <div className="flex-grow flex items-center justify-center p-6 md:p-12 min-h-screen bg-fog">
       <div className="max-w-md w-full">
@@ -167,10 +165,15 @@ export default function IdentityPage() {
             <div className="flex justify-center mb-6">
               <div className="w-24 h-24 rounded-full border-2 border-dashed border-sand flex items-center justify-center overflow-hidden shrink-0">
                 {avatarPreview ? (
-                  avatarPreview.type === "emoji" ? (
-                    <div className={`w-full h-full flex items-center justify-center ${avatarPreview.bg}`}>
-                      <span className="text-4xl leading-none select-none">{avatarPreview.emoji}</span>
-                    </div>
+                  avatarPreview.type === "humanoid" ? (
+                    <Image
+                      src={avatarPreview.src!}
+                      alt="Your avatar"
+                      width={96}
+                      height={96}
+                      sizes="96px"
+                      className="w-full h-full object-cover"
+                    />
                   ) : avatarPreview.type === "preset" ? (
                     <div
                       className="w-full h-full"
@@ -178,7 +181,7 @@ export default function IdentityPage() {
                     />
                   ) : (
                     <Image
-                      src={avatarPreview.url}
+                      src={avatarPreview.src!}
                       alt="Your avatar"
                       width={96}
                       height={96}
@@ -192,36 +195,42 @@ export default function IdentityPage() {
               </div>
             </div>
 
-            {/* Emoji Avatar Grid — 5 brand-aligned options */}
+            {/* Humanoid Avatar Selection — 5 brand-aligned illustrated characters */}
             <div className="mb-6">
-              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-sand mb-3 text-center">
-                Pick Your Identity
+              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-sand mb-4 text-center">
+                Choose Your Character
               </p>
-              <div className="flex items-center justify-center gap-3">
-                {EMOJI_AVATARS.map((ea) => (
+              <div className="flex items-center justify-center gap-2.5">
+                {HUMANOID_AVATARS.map((ha) => (
                   <button
-                    key={ea.id}
-                    onClick={() => handleSelectEmoji(ea.id)}
-                    className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-[0.95] ${
-                      ea.bg
-                    } ${
-                      avatarUrl === ea.id
-                        ? `ring-2 ${ea.ring} ring-offset-2 ring-offset-white-feorm`
+                    key={ha.id}
+                    onClick={() => handleSelectAvatar(ha.id)}
+                    className={`relative w-14 h-14 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-[0.95] overflow-hidden ${
+                      avatarUrl === ha.id
+                        ? `ring-2 ${ha.ring} ring-offset-2 ring-offset-white-feorm`
                         : "ring-1 ring-soil/10"
                     }`}
-                    aria-label={`Select ${ea.label} avatar`}
-                    title={ea.label}
+                    aria-label={`Select ${ha.label} avatar — ${ha.description}`}
+                    title={`${ha.label} — ${ha.description}`}
                     type="button"
                   >
-                    <span className="text-2xl leading-none select-none">{ea.emoji}</span>
+                    <Image
+                      src={ha.src}
+                      alt={ha.label}
+                      width={56}
+                      height={56}
+                      sizes="56px"
+                      className="w-full h-full object-cover"
+                    />
                   </button>
                 ))}
               </div>
-              {/* Show selected label */}
-              {avatarUrl && isEmojiAvatar(avatarUrl) && (
-                <p className="text-center mt-2 font-mono-feorm text-[9px] uppercase tracking-widest text-accent-foreground">
-                  {getEmojiAvatar(avatarUrl)?.label}
-                </p>
+              {/* Show selected character info */}
+              {selectedInfo && (
+                <div className="text-center mt-3">
+                  <p className="font-serif-display text-sm text-earth">{selectedInfo.label}</p>
+                  <p className="font-mono-feorm text-[8px] uppercase tracking-widest text-muted-foreground">{selectedInfo.description}</p>
+                </div>
               )}
             </div>
 

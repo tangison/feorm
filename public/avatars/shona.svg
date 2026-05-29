@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="100" fill="#D4C4A0" opacity="0.3"/>
+  <circle cx="100" cy="100" r="100" fill="#FAF7F2"/>
+  <!-- Head -->
+  <ellipse cx="100" cy="94" rx="40" ry="44" fill="#6B3A1A"/>
+  <!-- Hair - silver/grey short -->
+  <path d="M60 82 Q60 50 100 44 Q140 50 140 82" fill="#8C8C8C"/>
+  <path d="M64 82 Q64 54 100 48 Q136 54 136 82" fill="#A0A0A0"/>
+  <!-- Side hair -->
+  <path d="M60 82 Q58 90 62 94" fill="#8C8C8C"/>
+  <path d="M140 82 Q142 90 138 94" fill="#8C8C8C"/>
+  <!-- Eyes - wise and kind -->
+  <ellipse cx="84" cy="92" rx="4.5" ry="5" fill="#1E1A14"/>
+  <ellipse cx="116" cy="92" rx="4.5" ry="5" fill="#1E1A14"/>
+  <ellipse cx="86" cy="90" rx="1.8" ry="2" fill="#FEFDFB"/>
+  <ellipse cx="118" cy="90" rx="1.8" ry="2" fill="#FEFDFB"/>
+  <!-- Crow's feet -->
+  <path d="M72 88 Q74 90 72 93" stroke="#5C3A1A" stroke-width="0.8" fill="none" opacity="0.5"/>
+  <path d="M128 88 Q126 90 128 93" stroke="#5C3A1A" stroke-width="0.8" fill="none" opacity="0.5"/>
+  <!-- Eyebrows - thick, distinguished -->
+  <path d="M74 83 Q84 78 94 83" stroke="#8C8C8C" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  <path d="M106 83 Q116 78 126 83" stroke="#8C8C8C" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  <!-- Nose - broad, distinguished -->
+  <path d="M96 98 Q100 104 104 98" stroke="#4A2810" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- Beard - grey -->
+  <path d="M72 106 Q72 134 100 140 Q128 134 128 106" fill="#A0A0A0"/>
+  <path d="M76 108 Q76 132 100 137 Q124 132 124 108" fill="#B0B0B0"/>
+  <!-- Mustache -->
+  <path d="M84 104 Q92 110 100 106 Q108 110 116 104" fill="#A0A0A0"/>
+  <!-- Gentle smile through beard -->
+  <path d="M88 112 Q100 120 112 112" stroke="#4A2810" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <!-- Cheeks -->
+  <ellipse cx="74" cy="104" rx="6" ry="3" fill="#C4785A" opacity="0.25"/>
+  <ellipse cx="126" cy="104" rx="6" ry="3" fill="#C4785A" opacity="0.25"/>
+  <!-- Neck -->
+  <rect x="90" y="132" width="20" height="14" rx="4" fill="#6B3A1A"/>
+  <!-- Shoulders/Body - traditional shirt -->
+  <path d="M55 200 Q55 150 100 144 Q145 150 145 200Z" fill="#5C4A2A"/>
+  <!-- Shirt detail - button line -->
+  <circle cx="100" cy="158" r="2" fill="#D4C4A0"/>
+  <circle cx="100" cy="170" r="2" fill="#D4C4A0"/>
+  <circle cx="100" cy="182" r="2" fill="#D4C4A0"/>
+  <!-- Collar -->
+  <path d="M82 144 L92 156 L100 148 L108 156 L118 144" stroke="#D4C4A0" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <!-- Wisdom lines on forehead -->
+  <path d="M78 78 Q100 75 122 78" stroke="#5C3A1A" stroke-width="0.7" fill="none" opacity="0.3"/>
+  <path d="M80 74 Q100 71 120 74" stroke="#5C3A1A" stroke-width="0.7" fill="none" opacity="0.3"/>
+</svg>

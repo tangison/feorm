@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="100" fill="#FBF3DB"/>
+  <!-- Head -->
+  <ellipse cx="100" cy="92" rx="38" ry="42" fill="#C68642"/>
+  <!-- Hair - locs/dreadlocks -->
+  <path d="M62 80 Q62 48 100 42 Q138 48 138 80" fill="#1E1A14"/>
+  <!-- Loc strands falling -->
+  <path d="M62 78 Q58 95 56 115" stroke="#1E1A14" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <path d="M68 72 Q64 90 62 112" stroke="#1E1A14" stroke-width="6" stroke-linecap="round" fill="none"/>
+  <path d="M74 66 Q72 85 70 108" stroke="#1E1A14" stroke-width="6" stroke-linecap="round" fill="none"/>
+  <path d="M132 78 Q136 95 138 115" stroke="#1E1A14" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <path d="M126 72 Q130 90 132 112" stroke="#1E1A14" stroke-width="6" stroke-linecap="round" fill="none"/>
+  <path d="M120 66 Q122 85 124 108" stroke="#1E1A14" stroke-width="6" stroke-linecap="round" fill="none"/>
+  <!-- Loc highlights -->
+  <path d="M62 78 Q58 95 56 115" stroke="#3C2F1A" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.4"/>
+  <path d="M132 78 Q136 95 138 115" stroke="#3C2F1A" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.4"/>
+  <!-- Headband -->
+  <rect x="62" y="68" width="76" height="6" rx="3" fill="#E8C96A"/>
+  <rect x="62" y="70" width="76" height="2" rx="1" fill="#D4A853"/>
+  <!-- Eyes - bright and youthful -->
+  <ellipse cx="84" cy="90" rx="5" ry="5.5" fill="#1E1A14"/>
+  <ellipse cx="116" cy="90" rx="5" ry="5.5" fill="#1E1A14"/>
+  <ellipse cx="86" cy="88" rx="2" ry="2.2" fill="#FEFDFB"/>
+  <ellipse cx="118" cy="88" rx="2" ry="2.2" fill="#FEFDFB"/>
+  <!-- Eyebrows - slightly raised, curious -->
+  <path d="M76 82 Q84 77 92 81" stroke="#1E1A14" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M108 81 Q116 77 124 82" stroke="#1E1A14" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <!-- Nose -->
+  <ellipse cx="100" cy="98" rx="3.5" ry="3" fill="#B07040"/>
+  <!-- Confident grin -->
+  <path d="M86 107 Q100 120 114 107" stroke="#1E1A14" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  <!-- Teeth -->
+  <path d="M90 109 Q100 117 110 109" fill="#FEFDFB"/>
+  <!-- Cheeks - youthful glow -->
+  <ellipse cx="74" cy="102" rx="6" ry="3.5" fill="#E8A08A" opacity="0.35"/>
+  <ellipse cx="126" cy="102" rx="6" ry="3.5" fill="#E8A08A" opacity="0.35"/>
+  <!-- Neck -->
+  <rect x="90" y="129" width="20" height="14" rx="4" fill="#C68642"/>
+  <!-- Shoulders/Body - modern hoodie feel -->
+  <path d="M55 200 Q55 150 100 144 Q145 150 145 200Z" fill="#3C2F1A"/>
+  <!-- Hood neckline -->
+  <path d="M78 148 Q100 140 122 148" stroke="#5C4A2A" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- Drawstring -->
+  <path d="M94 148 L96 165" stroke="#D4C4A0" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M106 148 L104 165" stroke="#D4C4A0" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Drawstring tips -->
+  <circle cx="96" cy="166" r="2" fill="#D4C4A0"/>
+  <circle cx="104" cy="166" r="2" fill="#D4C4A0"/>
+</svg>

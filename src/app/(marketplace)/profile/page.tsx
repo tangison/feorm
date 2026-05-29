@@ -18,12 +18,13 @@ import {
   Upload,
 } from "lucide-react";
 import {
-  EMOJI_AVATARS,
-  isEmojiAvatar,
-  getEmojiAvatar,
+  HUMANOID_AVATARS,
+  isHumanoidAvatar,
+  getHumanoidAvatar,
   isPresetAvatar,
   getPresetGradient,
   compressImage,
+  resolveAvatarDisplay,
 } from "@/lib/avatar";
 
 export default function ProfilePage() {
@@ -35,23 +36,12 @@ export default function ProfilePage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Avatar preview
-  const avatarPreview = useMemo(() => {
-    if (!avatarUrl) return null;
-    if (isEmojiAvatar(avatarUrl)) {
-      const ea = getEmojiAvatar(avatarUrl);
-      return ea ? { type: "emoji" as const, emoji: ea.emoji, bg: ea.bg } : null;
-    }
-    if (isPresetAvatar(avatarUrl)) {
-      const gradient = getPresetGradient(avatarUrl);
-      return { type: "preset" as const, gradient };
-    }
-    return { type: "image" as const, url: avatarUrl };
-  }, [avatarUrl]);
+  const avatarPreview = useMemo(() => resolveAvatarDisplay(avatarUrl), [avatarUrl]);
 
-  // ── Emoji Avatar Selection ──
-  const handleSelectEmoji = useCallback(
-    (emojiId: string) => {
-      setAvatarUrl(emojiId);
+  // ── Avatar Selection ──
+  const handleSelectAvatar = useCallback(
+    (avatarId: string) => {
+      setAvatarUrl(avatarId);
     },
     [setAvatarUrl]
   );
@@ -108,6 +98,14 @@ export default function ProfilePage() {
     setGeneratingAvatar(false);
   }, [user, setAvatarUrl]);
 
+  // Resolve selected avatar label
+  const selectedLabel = useMemo(() => {
+    if (isHumanoidAvatar(avatarUrl)) {
+      return getHumanoidAvatar(avatarUrl)?.label || null;
+    }
+    return null;
+  }, [avatarUrl]);
+
   return (
     <div className="flex-grow w-full max-w-2xl mx-auto px-6 py-12 md:py-24">
       <div className="mb-12">
@@ -126,13 +124,18 @@ export default function ProfilePage() {
         {/* ── User Identity Card ── */}
         <div className="bento-card p-6">
           <div className="flex items-center gap-5 mb-5">
-            {/* Avatar — emoji first, then image/preset fallback */}
-            <div className="w-20 h-20 rounded-full bg-earth text-white-feorm flex items-center justify-center shrink-0 overflow-hidden">
+            {/* Avatar display */}
+            <div className="w-20 h-20 rounded-full bg-fog flex items-center justify-center shrink-0 overflow-hidden">
               {avatarPreview ? (
-                avatarPreview.type === "emoji" ? (
-                  <div className={`w-full h-full flex items-center justify-center ${avatarPreview.bg}`}>
-                    <span className="text-4xl leading-none select-none">{avatarPreview.emoji}</span>
-                  </div>
+                avatarPreview.type === "humanoid" ? (
+                  <Image
+                    src={avatarPreview.src!}
+                    alt="Your avatar"
+                    width={80}
+                    height={80}
+                    sizes="80px"
+                    className="w-full h-full object-cover"
+                  />
                 ) : avatarPreview.type === "preset" ? (
                   <div
                     className="w-full h-full"
@@ -140,7 +143,7 @@ export default function ProfilePage() {
                   />
                 ) : (
                   <Image
-                    src={avatarPreview.url}
+                    src={avatarPreview.src!}
                     alt="Your avatar"
                     width={80}
                     height={80}
@@ -149,7 +152,14 @@ export default function ProfilePage() {
                   />
                 )
               ) : (
-                <span className="text-3xl">🌳</span>
+                <Image
+                  src="/avatars/amara.svg"
+                  alt="Default avatar"
+                  width={80}
+                  height={80}
+                  sizes="80px"
+                  className="w-full h-full object-cover"
+                />
               )}
             </div>
             <div className="flex-1 min-w-0">
@@ -162,6 +172,11 @@ export default function ProfilePage() {
                 <MapPin size={10} aria-hidden="true" />
                 +264{phone || "810000000"}
               </p>
+              {selectedLabel && (
+                <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-accent-foreground mt-0.5">
+                  {selectedLabel}
+                </p>
+              )}
             </div>
             <span
               className={`text-[9px] uppercase font-semibold px-2.5 py-1 rounded-full tracking-wider shrink-0 ${
@@ -192,36 +207,46 @@ export default function ProfilePage() {
           {/* Collapsible Avatar Picker */}
           {avatarPickerOpen && (
             <div className="mt-5 pt-5 border-t border-soil/10 space-y-5">
-              {/* Emoji Avatars */}
+              {/* Humanoid Avatars */}
               <div>
-                <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-sand mb-3 text-center">
-                  Pick Your Identity
+                <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-sand mb-4 text-center">
+                  Choose Your Character
                 </p>
-                <div className="flex items-center justify-center gap-3">
-                  {EMOJI_AVATARS.map((ea) => (
+                <div className="flex items-center justify-center gap-2.5">
+                  {HUMANOID_AVATARS.map((ha) => (
                     <button
-                      key={ea.id}
-                      onClick={() => handleSelectEmoji(ea.id)}
-                      className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-[0.95] ${
-                        ea.bg
-                      } ${
-                        avatarUrl === ea.id
-                          ? `ring-2 ${ea.ring} ring-offset-2 ring-offset-white-feorm`
+                      key={ha.id}
+                      onClick={() => handleSelectAvatar(ha.id)}
+                      className={`relative w-14 h-14 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-[0.95] overflow-hidden ${
+                        avatarUrl === ha.id
+                          ? `ring-2 ${ha.ring} ring-offset-2 ring-offset-white-feorm`
                           : "ring-1 ring-soil/10"
                       }`}
-                      aria-label={`Select ${ea.label} avatar`}
-                      title={ea.label}
+                      aria-label={`Select ${ha.label} avatar — ${ha.description}`}
+                      title={`${ha.label} — ${ha.description}`}
                       type="button"
                     >
-                      <span className="text-2xl leading-none select-none">{ea.emoji}</span>
+                      <Image
+                        src={ha.src}
+                        alt={ha.label}
+                        width={56}
+                        height={56}
+                        sizes="56px"
+                        className="w-full h-full object-cover"
+                      />
                     </button>
                   ))}
                 </div>
-                {avatarUrl && isEmojiAvatar(avatarUrl) && (
-                  <p className="text-center mt-2 font-mono-feorm text-[9px] uppercase tracking-widest text-accent-foreground">
-                    {getEmojiAvatar(avatarUrl)?.label}
-                  </p>
-                )}
+                {/* Show selected character info */}
+                {avatarUrl && isHumanoidAvatar(avatarUrl) && (() => {
+                  const ha = getHumanoidAvatar(avatarUrl);
+                  return ha ? (
+                    <div className="text-center mt-3">
+                      <p className="font-serif-display text-sm text-earth">{ha.label}</p>
+                      <p className="font-mono-feorm text-[8px] uppercase tracking-widest text-muted-foreground">{ha.description}</p>
+                    </div>
+                  ) : null;
+                })()}
               </div>
 
               {/* Upload */}
