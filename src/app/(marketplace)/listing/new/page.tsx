@@ -48,12 +48,12 @@ export default function NewListingPage() {
         }),
       });
 
-      if (!res.ok) throw new Error("Failed to create listing");
+      if (!res.ok) throw new Error("Could not create listing");
 
       toast({ title: "Listing created successfully" });
       router.push("/marketplace");
     } catch {
-      toast({ title: "Failed to create listing", description: "Please try again" });
+      toast({ title: "Could not create listing", description: "Something went wrong. Please try again." });
     }
     setLoading(false);
   };
@@ -73,7 +73,7 @@ export default function NewListingPage() {
             NEW LISTING
           </kbd>
           <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-earth tracking-tight">
-            Add a Listing
+            Add a listing
           </h1>
           <p className="text-sm text-muted-foreground leading-relaxed">
             Create a new farm stay or equipment listing on Feorm.

@@ -62,7 +62,7 @@ export default function ProviderStayVerifyPage() {
         </div>
 
         <h1 className="font-serif-display text-3xl md:text-4xl mb-3 text-white tracking-tight">
-          Verification Notice
+          Verification notice
         </h1>
         <p className="text-sm text-white/60 leading-relaxed mb-8">
           Your listing will be reviewed before going live. This usually takes 24–48 hours. You will receive an email once approved.

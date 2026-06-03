@@ -93,7 +93,7 @@ export default function ProviderStayProfilePage() {
         </div>
 
         <h1 className="font-serif-display text-3xl md:text-4xl mb-3 text-white tracking-tight">
-          About You
+          About you
         </h1>
         <p className="text-sm text-white/60 leading-relaxed mb-8">
           Tell us about yourself and your farm. Voyagers want to know who is hosting them.

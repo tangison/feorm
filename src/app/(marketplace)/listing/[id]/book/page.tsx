@@ -74,7 +74,7 @@ export default function BookPage() {
       // Navigate to success page with reference
       router.push(`/booking/success?ref=${result.reference}`);
     } catch (err: any) {
-      alert(err.message || "Booking failed. Please try again.");
+      alert(err.message || "Could not complete your booking. Please try again or contact support.");
     }
     setLoading(false);
   };

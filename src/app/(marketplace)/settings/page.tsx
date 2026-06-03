@@ -68,7 +68,7 @@ export default function SettingsPage() {
 
       toast({ title: "Brand identity downloaded" });
     } catch {
-      toast({ title: "Download failed", description: "Please try again" });
+      toast({ title: "Could not download brand identity", description: "Something went wrong. Please try again." });
     } finally {
       setBrandLoading(false);
     }

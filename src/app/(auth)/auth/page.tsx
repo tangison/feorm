@@ -48,7 +48,7 @@ function AuthContent() {
 
       setSent(true);
     } catch {
-      setError("Failed to send magic link. Please try again.");
+      setError("Could not send the login link. Check your email address and try again.");
     }
     setLoading(false);
   };
@@ -116,7 +116,7 @@ function AuthContent() {
                   </div>
                 )}
                 <h1 className="font-serif-display text-3xl mb-3 text-earth tracking-tight">
-                  Enter Your Email
+                  Enter your email
                 </h1>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   We will send you a magic link to sign in. No password needed.
@@ -175,7 +175,7 @@ function AuthContent() {
                   CHECK YOUR EMAIL
                 </kbd>
                 <h1 className="font-serif-display text-3xl mb-3 text-earth tracking-tight">
-                  Magic Link Sent
+                  Login link sent
                 </h1>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   We sent a login link to <span className="font-medium text-earth">{email}</span>.

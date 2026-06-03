@@ -5,7 +5,15 @@ import { createClient } from "@/utils/supabase/server";
  * Seed development data into Supabase.
  *
  * Tables seeded: profiles, listings
- * Call POST /api/seed to populate the database with sample data.
+ * Call POST /api/seed with header x-seed-secret to populate the database.
+ *
+ * Column mapping (seed data → DB schema):
+ *   profiles.role          → check ('guest','voyager','provider_stay','provider_equipment','admin')
+ *   listings.price_cents   → integer (prices in N$ cents)
+ *   listings.category      → check ('stay','equipment')
+ *   listings.images        → text[] default '{}'
+ *   listings.amenities     → text[] default '{}'
+ *   listings.active        → boolean default true
  */
 export async function POST(request: NextRequest) {
   try {
@@ -23,31 +31,31 @@ export async function POST(request: NextRequest) {
     // ─── Seed Profiles ──────────────────────────────────────────
     const profiles = [
       {
-        id: "seed-host-1",
-        phone: "+264812345001",
+        id: "a0000000-0000-0000-0000-000000000001",
+        phone: "+264 81 234 5678",
         name: "Aisha",
         surname: "Mwangi",
         region: "Oshikoto",
-        role: "provider",
+        role: "provider_stay",
         verified: true,
       },
       {
-        id: "seed-host-2",
-        phone: "+264812345002",
+        id: "a0000000-0000-0000-0000-000000000002",
+        phone: "+264 81 345 6789",
         name: "Johan",
         surname: "Pretorius",
         region: "Khomas",
-        role: "provider",
+        role: "provider_stay",
         verified: true,
       },
       {
-        id: "seed-host-3",
-        phone: "+264812345003",
+        id: "a0000000-0000-0000-0000-000000000003",
+        phone: "+264 81 901 2345",
         name: "Tangeni",
         surname: "Nambinga",
         region: "Oshana",
-        role: "provider",
-        verified: false,
+        role: "provider_equipment",
+        verified: true,
       },
     ];
 
@@ -64,54 +72,50 @@ export async function POST(request: NextRequest) {
     }
 
     // ─── Seed Listings ──────────────────────────────────────────
+    // Column names match schema.sql exactly:
+    //   price_cents, category, images, amenities, host_id, host_phone, active
     const listings = [
       {
-        id: "seed-listing-1",
+        id: "b0000000-0000-0000-0000-000000000001",
         title: "Oshikoto Heritage Farm Stay",
         region: "Oshikoto",
-        price: 22000, // N$220 per night in cents
-        type: "stay",
-        category: "lodge",
+        price_cents: 22000, // N$220 per night in cents
+        category: "stay",
         description:
           "A working cattle farm rooted in Ovambo tradition. Guests participate in milking routines, mahangu planting, and communal fireside storytelling under the Milky Way. No resort pretence — only what the land and community provide.",
-        image_url: "/images/listing-stay-hero.png",
-        features: "Farm-to-table meals,Guided bush walk,Stargazing deck,Communal fire pit,Off-grid solar power",
-        host_id: "seed-host-1",
-        host_name: "Aisha Mwangi",
-        host_phone: "+264812345001",
-        available: true,
+        images: "{}",
+        amenities: ["Farm-to-table meals", "Guided bush walk", "Stargazing deck", "Communal fire pit", "Off-grid solar power"],
+        host_id: "a0000000-0000-0000-0000-000000000001",
+        host_phone: "+264 81 234 5678",
+        active: true,
       },
       {
-        id: "seed-listing-2",
+        id: "b0000000-0000-0000-0000-000000000002",
         title: "Khomas Highland Tractor",
         region: "Khomas",
-        price: 250000, // N$2,500 per day in cents
-        type: "equipment",
-        category: "tractor",
+        price_cents: 250000, // N$2,500 per day in cents
+        category: "equipment",
         description:
           "85HP Massey Ferguson shared through the Feorm trust network. Low hours, PTO attachment, front loader ready. Seasonal availability. The land requires the right tools; this is one of them.",
-        image_url: "/images/listing-equip-hero.png",
-        features: "85HP engine,PTO attachment,Front loader ready,Low hours,Community-verified",
-        host_id: "seed-host-2",
-        host_name: "Johan Pretorius",
-        host_phone: "+264812345002",
-        available: true,
+        images: "{}",
+        amenities: ["85HP engine", "PTO attachment", "Front loader ready", "Low hours", "Community-verified"],
+        host_id: "a0000000-0000-0000-0000-000000000002",
+        host_phone: "+264 81 345 6789",
+        active: true,
       },
       {
-        id: "seed-listing-3",
+        id: "b0000000-0000-0000-0000-000000000003",
         title: "Oshana Solar Pump Kit",
         region: "Oshana",
-        price: 120000, // N$1,200 per day in cents
-        type: "equipment",
-        category: "pump",
+        price_cents: 120000, // N$1,200 per day in cents
+        category: "equipment",
         description:
           "High-flow borehole pump with 5kW solar array. Remote monitoring capable. Weather-sealed and low maintenance. Shared access through the platform reduces capital burden while maintaining uptime.",
-        image_url: "/images/listing-equip-hero.png",
-        features: "High-flow capacity,Solar-compatible,Borehole rated,Remote monitoring,Low maintenance",
-        host_id: "seed-host-3",
-        host_name: "Tangeni Nambinga",
-        host_phone: "+264812345003",
-        available: true,
+        images: "{}",
+        amenities: ["High-flow capacity", "Solar-compatible", "Borehole rated", "Remote monitoring", "Low maintenance"],
+        host_id: "a0000000-0000-0000-0000-000000000003",
+        host_phone: "+264 81 901 2345",
+        active: true,
       },
     ];
 

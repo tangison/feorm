@@ -1,8 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/utils/supabase/server";
 import { chatCompletion, type ChatMessage } from "@/lib/ai-providers";
 
 export async function POST(request: NextRequest) {
   try {
+    // Auth guard — must be signed in to use AI rewrite
+    const supabase = await createClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
     const { title, description, type, region } = body;
 

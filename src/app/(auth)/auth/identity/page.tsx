@@ -154,7 +154,7 @@ export default function IdentityPage() {
             YOUR PROFILE
           </kbd>
           <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-earth tracking-tight">
-            Tell Us About Yourself
+            Tell us about yourself
           </h1>
           <p className="text-sm text-muted-foreground leading-relaxed">
             Pick an avatar and add your name. Hosts want to know who they are welcoming.
