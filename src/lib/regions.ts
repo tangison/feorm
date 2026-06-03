@@ -8,7 +8,7 @@ export const NAMIBIAN_REGIONS = [
   "Erongo",
   "Hardap",
   "Omaheke",
-  "Karas",
+  "//Karas",
   "Kunene",
   "Ohangwena",
   "Oshana",

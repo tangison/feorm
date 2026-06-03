@@ -86,10 +86,10 @@ export default function AdminPage() {
         setPendingProviders((prev) => prev.filter((p) => p.id !== userId));
         toast({ title: "Provider approved" });
       } else {
-        toast({ title: "Failed to approve", description: "Please try again" });
+        toast({ title: "Could not approve this provider", description: "Something went wrong on our end. Please try again." });
       }
     } catch {
-      toast({ title: "Failed to approve", description: "Please try again" });
+      toast({ title: "Could not approve this provider", description: "Something went wrong on our end. Please try again." });
     }
     setProcessingIds((prev) => {
       const next = new Set(prev);
@@ -110,10 +110,10 @@ export default function AdminPage() {
         setPendingProviders((prev) => prev.filter((p) => p.id !== userId));
         toast({ title: "Provider rejected" });
       } else {
-        toast({ title: "Failed to reject", description: "Please try again" });
+        toast({ title: "Could not reject this provider", description: "Something went wrong on our end. Please try again." });
       }
     } catch {
-      toast({ title: "Failed to reject", description: "Please try again" });
+      toast({ title: "Could not reject this provider", description: "Something went wrong on our end. Please try again." });
     }
     setProcessingIds((prev) => {
       const next = new Set(prev);

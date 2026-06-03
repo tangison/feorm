@@ -172,7 +172,7 @@ export default function DashboardPage() {
       setRewriteResults(results);
       toast({ title: "Descriptions optimized" });
     } catch {
-      toast({ title: "Optimization failed", description: "Please try again" });
+      toast({ title: "Could not optimize descriptions", description: "Something went wrong. Please try again." });
     } finally {
       setRewriteLoading(false);
     }
@@ -206,7 +206,7 @@ export default function DashboardPage() {
                   id="ai-insights-heading"
                   className="font-serif-display text-lg text-earth"
                 >
-                  Listing Tips
+                  Listing tips
                 </h3>
                 <p className="text-xs text-muted-foreground">
                   Suggestions to help you get more bookings

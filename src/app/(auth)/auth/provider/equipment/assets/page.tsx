@@ -73,7 +73,7 @@ export default function ProviderEquipmentAssetsPage() {
         </div>
 
         <h1 className="font-serif-display text-3xl md:text-4xl mb-3 text-white tracking-tight">
-          Your Equipment
+          Your equipment
         </h1>
         <p className="text-sm text-white/60 leading-relaxed mb-8">
           Tell us about the equipment you want to list for rent.

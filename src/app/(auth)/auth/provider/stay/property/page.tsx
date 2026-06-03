@@ -74,7 +74,7 @@ export default function ProviderStayPropertyPage() {
         </div>
 
         <h1 className="font-serif-display text-3xl md:text-4xl mb-3 text-white tracking-tight">
-          Your Property
+          Your property
         </h1>
         <p className="text-sm text-white/60 leading-relaxed mb-8">
           Describe your farm stay so voyagers know what to expect.

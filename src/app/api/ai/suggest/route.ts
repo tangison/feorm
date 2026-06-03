@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/utils/supabase/server";
 import { chatCompletion, type ChatMessage } from "@/lib/ai-providers";
 
 const SUGGEST_SYSTEM_PROMPT = `You are a Namibian agrotourism advisor for Feorm. Generate 3 personalized recommendations. Format each as JSON: {title, description, category}. Categories: 'experience', 'equipment', 'optimization'. Keep descriptions under 40 words. Be specific to Namibian regions and agricultural context. Respond with ONLY a valid JSON array, no markdown or code blocks.`;
@@ -82,6 +83,16 @@ function parseSuggestions(raw: string): Suggestion[] {
 
 export async function POST(request: NextRequest) {
   try {
+    // Auth guard — must be signed in to use AI suggest
+    const supabase = await createClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     const body: SuggestBody = await request.json();
     const { role, interests = [], region } = body;
 
