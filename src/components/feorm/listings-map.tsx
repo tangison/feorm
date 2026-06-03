@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { formatPrice } from "@/lib/format";
 
 interface MapListing {
@@ -19,9 +18,19 @@ interface ListingsMapProps {
   listings: MapListing[];
 }
 
-// Default center: Windhoek, Namibia
-const DEFAULT_CENTER: [number, number] = [-22.5597, 17.0832];
-const DEFAULT_ZOOM = 6;
+// MapLibre uses [lng, lat] order (longitude first)
+const DEFAULT_CENTER: [number, number] = [17.0832, -22.5597]; // Windhoek, Namibia
+const DEFAULT_ZOOM = 5.5;
+
+// Restrict panning to southern Africa
+const MAP_BOUNDS: [[number, number], [number, number]] = [
+  [11.5, -29.5], // SW corner [lng, lat]
+  [25.5, -16.5], // NE corner [lng, lat]
+];
+
+// Custom marker colors
+const STAY_COLOR = "#5C8A5C";   // earth green
+const EQUIP_COLOR = "#8B6914";  // harvest brown
 
 export default function ListingsMap({ listings }: ListingsMapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
@@ -57,7 +66,7 @@ export default function ListingsMap({ listings }: ListingsMapProps) {
                 type: "raster",
                 tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
                 tileSize: 256,
-                attribution: "&copy; OpenStreetMap contributors",
+                attribution: "© OpenStreetMap contributors",
               },
             },
             layers: [
@@ -72,13 +81,11 @@ export default function ListingsMap({ listings }: ListingsMapProps) {
           },
           center: DEFAULT_CENTER,
           zoom: DEFAULT_ZOOM,
+          maxBounds: MAP_BOUNDS,
         });
 
+        // Zoom controls (+ / - buttons)
         map.addControl(new maplibregl.NavigationControl(), "top-right");
-        map.addControl(new maplibregl.GeolocateControl({
-          positionOptions: { enableHighAccuracy: true },
-          trackUserLocation: true,
-        }), "top-right");
 
         map.on("load", () => {
           if (!cancelled) {
@@ -113,27 +120,37 @@ export default function ListingsMap({ listings }: ListingsMapProps) {
     markersRef.current.forEach((marker) => marker.remove());
     markersRef.current = [];
 
-    // Filter listings with valid coordinates
+    // Filter listings with valid coordinates (skip silently if missing)
     const geoListings = listings.filter(
-      (l) => l.lat != null && l.lng != null && !isNaN(l.lat) && !isNaN(l.lng)
+      (l) =>
+        l.lat != null &&
+        l.lng != null &&
+        !isNaN(l.lat as number) &&
+        !isNaN(l.lng as number)
     );
 
     if (geoListings.length === 0) return;
 
-    const bounds = new (require("maplibre-gl") as any).LngLatBounds();
+    const maplibregl = require("maplibre-gl") as any;
+    const bounds = new maplibregl.LngLatBounds();
 
     geoListings.forEach((listing) => {
+      const isStay = listing.category === "stay";
+      const priceLabel = isStay
+        ? `${formatPrice(listing.price)}/night`
+        : `${formatPrice(listing.price)}/day`;
+
       // Create popup
-      const popup = new (require("maplibre-gl") as any).Popup({ offset: 25 }).setHTML(`
+      const popup = new maplibregl.Popup({ offset: 25 }).setHTML(`
         <div style="font-family: system-ui; padding: 4px;">
           <h3 style="font-size: 14px; font-weight: 600; margin: 0 0 4px 0; color: #3D2914;">
             ${listing.title}
           </h3>
           <p style="font-size: 12px; color: #6B5735; margin: 0 0 6px 0;">
-            ${listing.category === "stay" ? "Farm Stay" : "Equipment"} · ${listing.region}
+            ${isStay ? "Farm Stay" : "Equipment"} &middot; ${listing.region}
           </p>
           <p style="font-size: 14px; font-weight: 600; color: #3D2914; margin: 0;">
-            ${formatPrice(listing.price)} / day
+            ${priceLabel}
           </p>
           <a href="/listing/${listing.id}" style="
             display: inline-block;
@@ -146,7 +163,7 @@ export default function ListingsMap({ listings }: ListingsMapProps) {
             color: white;
             border-radius: 9999px;
             text-decoration: none;
-          ">View Details</a>
+          ">View Details &rarr;</a>
         </div>
       `);
 
@@ -164,11 +181,11 @@ export default function ListingsMap({ listings }: ListingsMapProps) {
         font-size: 12px;
         color: white;
         box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-        background: ${listing.category === "stay" ? "#5A7A50" : "#7A6530"};
+        background: ${isStay ? STAY_COLOR : EQUIP_COLOR};
       `;
-      el.textContent = listing.category === "stay" ? "S" : "E";
+      el.textContent = isStay ? "S" : "E";
 
-      const marker = new (require("maplibre-gl") as any).Marker({ element: el })
+      const marker = new maplibregl.Marker({ element: el })
         .setLngLat([listing.lng, listing.lat])
         .setPopup(popup)
         .addTo(map);
@@ -178,14 +195,14 @@ export default function ListingsMap({ listings }: ListingsMapProps) {
       bounds.extend([listing.lng, listing.lat]);
     });
 
-    // Fit bounds if we have markers
+    // Fit bounds if we have markers (don't override default view too aggressively)
     if (geoListings.length > 0) {
-      map.fitBounds(bounds, { padding: 50, maxZoom: 12 });
+      map.fitBounds(bounds, { padding: 50, maxZoom: 10 });
     }
   }, [listings, mapLoaded]);
 
   return (
-    <div className="relative w-full h-[500px] md:h-[600px] rounded-xl overflow-hidden border border-earth/10">
+    <div className="relative w-full h-[60vh] md:h-[calc(100vh-120px)] rounded-xl overflow-hidden border border-earth/10">
       <div ref={mapContainer} className="w-full h-full" />
       {!mapLoaded && (
         <div className="absolute inset-0 bg-fog flex items-center justify-center">
@@ -204,11 +221,11 @@ export default function ListingsMap({ listings }: ListingsMapProps) {
         </p>
         <div className="flex gap-3">
           <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded-full bg-[#5A7A50] border border-white" />
+            <div className="w-3 h-3 rounded-full border border-white" style={{ background: STAY_COLOR }} />
             <span className="text-[10px] text-earth">Farm Stay</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded-full bg-[#7A6530] border border-white" />
+            <div className="w-3 h-3 rounded-full border border-white" style={{ background: EQUIP_COLOR }} />
             <span className="text-[10px] text-earth">Equipment</span>
           </div>
         </div>
