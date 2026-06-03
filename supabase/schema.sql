@@ -10,7 +10,7 @@ create table if not exists profiles (
   surname text,
   phone text,
   region text,
-  role text check (role in ('voyager', 'provider', 'explorer')) default 'explorer',
+  role text check (role in ('guest', 'voyager', 'provider_stay', 'provider_equipment', 'admin')) default 'guest',
   avatar_url text,
   trust_score integer default 0,
   verified boolean default false,
@@ -58,6 +58,9 @@ alter table listings enable row level security;
 alter table bookings enable row level security;
 
 -- Profiles: users can read and update own profile
+create policy "Anyone can read basic profiles"
+  on profiles for select using (true);
+
 create policy "Users can read own profile"
   on profiles for select using (auth.uid() = id);
 
@@ -97,6 +100,37 @@ create policy "Providers can read bookings for own listings"
 create policy "Voyagers can create bookings"
   on bookings for insert with check (auth.uid() = voyager_id);
 
+-- ─── Admin RLS Policies ───────────────────────────────────
+create policy "Admin full access profiles"
+  on profiles for all
+  using (
+    exists (
+      select 1 from profiles
+      where id = auth.uid()
+      and role = 'admin'
+    )
+  );
+
+create policy "Admin full access listings"
+  on listings for all
+  using (
+    exists (
+      select 1 from profiles
+      where id = auth.uid()
+      and role = 'admin'
+    )
+  );
+
+create policy "Admin full access bookings"
+  on bookings for all
+  using (
+    exists (
+      select 1 from profiles
+      where id = auth.uid()
+      and role = 'admin'
+    )
+  );
+
 -- ─── Helper: Auto-create profile on signup ────────────────
 create or replace function public.handle_new_user()
 returns trigger
@@ -128,3 +162,25 @@ create index if not exists idx_listings_host_id on listings(host_id);
 create index if not exists idx_bookings_voyager_id on bookings(voyager_id);
 create index if not exists idx_bookings_listing_id on bookings(listing_id);
 create index if not exists idx_bookings_reference on bookings(reference);
+
+-- ─── Prevent double bookings ────────────────────────────────
+create or replace function check_double_booking()
+returns trigger as $$
+begin
+  if exists (
+    select 1 from bookings
+    where listing_id = NEW.listing_id
+    and status not in ('cancelled', 'disputed')
+    and daterange(check_in, check_out, '[)') &&
+        daterange(NEW.check_in, NEW.check_out, '[)')
+  ) then
+    raise exception 
+      'Listing already booked for these dates';
+  end if;
+  return NEW;
+end;
+$$ language plpgsql;
+
+create trigger prevent_double_booking
+  before insert on bookings
+  for each row execute function check_double_booking();

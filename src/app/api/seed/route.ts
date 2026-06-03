@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 
 /**
@@ -7,8 +7,17 @@ import { createClient } from "@/utils/supabase/server";
  * Tables seeded: profiles, listings
  * Call POST /api/seed to populate the database with sample data.
  */
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
+    // Protect seed route with secret key
+    const secret = request.headers.get("x-seed-secret");
+    if (secret !== process.env.SEED_SECRET) {
+      return NextResponse.json(
+        { error: "Forbidden" },
+        { status: 403 }
+      );
+    }
+
     const supabase = await createClient();
 
     // ─── Seed Profiles ──────────────────────────────────────────

@@ -108,7 +108,7 @@ export default function IdentityPage() {
         surname,
         phone: phone ? `+264${phone.replace(/\s/g, "")}` : undefined,
         region,
-        role: "explorer",
+        role: "guest",
       });
       setUser((prev: any) =>
         prev
@@ -119,7 +119,7 @@ export default function IdentityPage() {
               surname,
               phone,
               region,
-              role: "explorer",
+              role: "guest",
               verified: false,
               avatarUrl,
             }

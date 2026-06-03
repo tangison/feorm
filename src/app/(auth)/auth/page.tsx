@@ -1,20 +1,27 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useFeormAuth } from "@/context/feorm-context";
 import { ArrowRight, Mail } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
+import { Suspense } from "react";
 
-export default function AuthPage() {
+function AuthContent() {
   const { setPhone } = useFeormAuth();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+
+  const messageParam = searchParams.get("message");
+  const signInMessage = messageParam === "sign-in-to-book"
+    ? "Sign in to book or contact hosts"
+    : null;
 
   const handleRequestMagicLink = async () => {
     if (!email || !email.includes("@")) return;
@@ -101,6 +108,13 @@ export default function AuthPage() {
                 <kbd className="font-mono-feorm text-[10px] border border-soil/20 bg-white-feorm px-2 py-1 rounded text-muted-foreground mb-6 inline-block">
                   SIGN IN
                 </kbd>
+                {signInMessage && (
+                  <div className="mb-4 p-3 bg-harvest/10 border border-harvest/20 rounded-[4px]" role="note">
+                    <p className="text-sm text-earth font-medium">
+                      {signInMessage}
+                    </p>
+                  </div>
+                )}
                 <h1 className="font-serif-display text-3xl mb-3 text-earth tracking-tight">
                   Enter Your Email
                 </h1>
@@ -214,5 +228,24 @@ export default function AuthPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AuthPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex-grow flex items-center justify-center min-h-[60vh]">
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-harvest animate-pulse" />
+            <span className="font-mono-feorm text-[9px] text-muted-foreground uppercase tracking-widest">
+              Loading
+            </span>
+          </div>
+        </div>
+      }
+    >
+      <AuthContent />
+    </Suspense>
   );
 }

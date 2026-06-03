@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createClient } from "@/utils/supabase/server";
 import { requestMagicLink, getCurrentUser, signOut, setupIdentity } from "@/lib/auth";
 
 export async function POST(request: Request) {
@@ -20,6 +21,12 @@ export async function POST(request: Request) {
 
     // Step 2: Setup Identity (after magic link verification)
     if (action === "setup-identity") {
+      // Auth guard — must be signed in to set up identity
+      const supabase = await createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
       const user = await setupIdentity({ userId, name, surname, phone, region, role });
       return NextResponse.json({ success: true, user });
     }

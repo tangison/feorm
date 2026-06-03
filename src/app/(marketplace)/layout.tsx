@@ -1,6 +1,7 @@
 import FeormNav from "@/components/feorm/nav";
 import FeormFooter from "@/components/feorm/footer";
 import LazyTangisonChat from "@/components/feorm/lazy-tangison-chat";
+import GuestBanner from "@/components/feorm/guest-banner";
 
 export default function MarketplaceLayout({
   children,
@@ -24,6 +25,7 @@ export default function MarketplaceLayout({
         <FeormFooter />
       </div>
       <LazyTangisonChat />
+      <GuestBanner />
     </div>
   );
 }

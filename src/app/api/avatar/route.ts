@@ -1,10 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/utils/supabase/server";
 import ZAI from "z-ai-web-dev-sdk";
 import fs from "fs";
 import path from "path";
 
 export async function POST(request: NextRequest) {
   try {
+    // Auth guard — must be signed in to generate avatars
+    const supabase = await createClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { name, region } = await request.json();
 
     if (!name) {

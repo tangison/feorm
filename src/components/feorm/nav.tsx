@@ -27,7 +27,13 @@ export default function FeormNav() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const isProvider = selectedRole === "provider";
+  // Determine role from user context (more reliable than onboarding state)
+  const userRole = user?.role;
+  const isProvider = userRole === "provider_stay" || userRole === "provider_equipment";
+  const isAdmin = userRole === "admin";
+  const isVoyager = userRole === "voyager";
+  const isGuest = !user;
+
   const [moreOpen, setMoreOpen] = useState(false);
 
   // Close more menu (called from link click handlers)
@@ -57,12 +63,30 @@ export default function FeormNav() {
   // ── Resolve avatar display ──
   const avatarDisplay = resolveAvatarDisplay(avatarUrl);
 
-  // ── Migrate legacy emoji:// — handled by resolveAvatarDisplay ──
-  // If user has an old emoji:// URL, we just display the default humanoid avatar
-  // No state mutation needed — the display layer handles it
+  // ── Helper: role display label ──
+  const getRoleLabel = () => {
+    if (isAdmin) return "Admin";
+    if (userRole === "provider_stay") return "Stay Provider";
+    if (userRole === "provider_equipment") return "Equip Provider";
+    if (isVoyager) return "Voyager";
+    return "Guest";
+  };
 
-  // ── Mobile bottom nav: 3 essential tabs ──
-  const mobileTabs = isProvider
+  const getRoleTagStyle = () => {
+    if (isAdmin) return "bg-harvest/20 text-harvest";
+    if (isProvider) return "tag-verified";
+    return "tag-pastel";
+  };
+
+  // ── Mobile bottom nav: 3-4 essential tabs ──
+  const mobileTabs = isAdmin
+    ? [
+        { label: "Explore", href: "/marketplace", icon: MapPin, active: pathname === "/marketplace" || pathname.startsWith("/listing"), onClick: () => setMarketView("stays") },
+        { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, active: pathname === "/dashboard" },
+        { label: "Admin", href: "/admin", icon: Shield, active: pathname === "/admin" },
+        { label: "Profile", href: "/profile", icon: User, active: pathname === "/profile" },
+      ]
+    : isProvider
     ? [
         { label: "Listings", href: "/marketplace", icon: Tent, active: pathname === "/marketplace" || pathname.startsWith("/listing"), onClick: () => setMarketView("stays") },
         { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, active: pathname === "/dashboard" },
@@ -75,7 +99,13 @@ export default function FeormNav() {
       ];
 
   // ── More menu items ──
-  const moreItems = isProvider
+  const moreItems = isAdmin
+    ? [
+        { label: "Equipment", href: "/marketplace?view=equipment", icon: Wrench, onClick: () => setMarketView("equipment") },
+        { label: "Settings", href: "/settings", icon: Settings },
+        { label: "Support", href: "/support", icon: LifeBuoy },
+      ]
+    : isProvider
     ? [
         { label: "Equipment", href: "/marketplace?view=equipment", icon: Wrench, onClick: () => setMarketView("equipment") },
         { label: "Verification", href: "/verification", icon: Shield },
@@ -88,8 +118,9 @@ export default function FeormNav() {
         { label: "Support", href: "/support", icon: LifeBuoy },
       ];
 
-  const signOut = useCallback(() => {
-    // TODO: Replace with Supabase Auth — supabase.auth.signOut()
+  const signOut = useCallback(async () => {
+    const supab = (await import("@/utils/supabase/client")).createClient();
+    await supab.auth.signOut();
     setHasCompletedOnboarding(false);
     router.push("/");
   }, [setHasCompletedOnboarding, router]);
@@ -97,7 +128,6 @@ export default function FeormNav() {
   // ── Shared avatar rendering ──
   const renderAvatar = (size: number = 32) => {
     if (!avatarDisplay) {
-      // Default: show Amara avatar
       return (
         <div className="rounded-full overflow-hidden shrink-0 bg-fog" style={{ width: size, height: size }}>
           <Image src="/avatars/amara.svg" alt="Avatar" width={size} height={size} sizes={`${size}px`} className="w-full h-full object-cover" />
@@ -159,11 +189,9 @@ export default function FeormNav() {
 
           <div className="flex items-center gap-2">
             <span
-              className={`text-[7px] uppercase font-bold px-1.5 py-0.5 rounded-full tracking-wider ${
-                isProvider ? "tag-verified" : "tag-pastel"
-              }`}
+              className={`text-[7px] uppercase font-bold px-1.5 py-0.5 rounded-full tracking-wider ${getRoleTagStyle()}`}
             >
-              {isProvider ? "Provider" : "Voyager"}
+              {getRoleLabel()}
             </span>
             <button
               onClick={() => setMoreOpen(!moreOpen)}
@@ -177,7 +205,7 @@ export default function FeormNav() {
         </div>
       </header>
 
-      {/* Floating Bottom Tab Bar — 3 essential tabs */}
+      {/* Floating Bottom Tab Bar — 3-4 essential tabs */}
       <nav
         className="lg:hidden fixed bottom-4 left-4 right-4 z-40 bg-white-feorm/95 backdrop-blur-xl rounded-2xl shadow-lg shadow-earth/8 border border-earth/5 safe-area-bottom"
         role="navigation"
@@ -239,7 +267,7 @@ export default function FeormNav() {
                   {user?.name || "Guest"} {user?.surname || "User"}
                 </p>
                 <p className="font-mono-feorm text-[9px] text-muted-foreground uppercase tracking-widest">
-                  {isProvider ? "Provider" : "Voyager"}
+                  {getRoleLabel()}
                 </p>
               </div>
               <button
@@ -315,17 +343,26 @@ export default function FeormNav() {
         {/* Role Badge */}
         <div className="px-1 mb-5">
           <span
-            className={`text-[8px] uppercase font-semibold px-2.5 py-1 rounded-full tracking-wider ${
-              isProvider ? "tag-verified" : "tag-pastel"
-            }`}
+            className={`text-[8px] uppercase font-semibold px-2.5 py-1 rounded-full tracking-wider ${getRoleTagStyle()}`}
           >
-            {isProvider ? "Provider" : "Voyager"}
+            {getRoleLabel()}
           </span>
         </div>
 
         {/* Nav Items */}
         <nav className="flex-1 flex flex-col gap-0.5" role="navigation">
-          {(isProvider
+          {(isAdmin
+            ? [
+                { label: "Explore", href: "/marketplace", icon: MapPin, active: pathname === "/marketplace" || pathname.startsWith("/listing"), onClick: () => setMarketView("stays") },
+                { label: "Farm Stays", href: "/marketplace?view=stays", icon: Tent, active: false, onClick: () => setMarketView("stays") },
+                { label: "Equipment", href: "/marketplace?view=equipment", icon: Wrench, active: false, onClick: () => setMarketView("equipment") },
+                { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, active: pathname === "/dashboard" },
+                { label: "Admin", href: "/admin", icon: Shield, active: pathname === "/admin" },
+                { label: "Profile", href: "/profile", icon: User, active: pathname === "/profile" },
+                { label: "Settings", href: "/settings", icon: Settings, active: pathname === "/settings" },
+                { label: "Support", href: "/support", icon: LifeBuoy, active: pathname === "/support" },
+              ]
+            : isProvider
             ? [
                 { label: "Farm Stays", href: "/marketplace?view=stays", icon: Tent, active: pathname === "/marketplace", onClick: () => setMarketView("stays") },
                 { label: "Equipment", href: "/marketplace?view=equipment", icon: Wrench, active: pathname === "/marketplace", onClick: () => setMarketView("equipment") },
@@ -385,7 +422,7 @@ export default function FeormNav() {
                 {user?.name || "Guest"} {user?.surname || "User"}
               </p>
               <p className="font-mono-feorm text-[8px] text-muted-foreground uppercase tracking-widest truncate">
-                {isProvider ? "Provider" : "Voyager"}
+                {getRoleLabel()}
               </p>
             </div>
           </Link>
