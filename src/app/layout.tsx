@@ -34,9 +34,9 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Feorm | Premium Utilitarian",
+  title: "Feorm | Namibian Farmland Marketplace",
   description:
-    "A decentralized marketplace connecting Namibian farmland with those who require its provisions and equipment.",
+    "A marketplace connecting Namibian farmland with travellers and farmers who need stays and equipment.",
   keywords: [
     "Feorm",
     "Namibia",

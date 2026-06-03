@@ -120,7 +120,7 @@
     /* Prevent iOS bounce overscroll */
     overscroll-behavior: none;
   }
-  /* Premium mobile tap highlight */
+  /* Mobile tap highlight */
   html {
     -webkit-tap-highlight-color: transparent;
   }
@@ -154,7 +154,7 @@
 }
 
 /* ═══════════════════════════════════════════════════════
-   Feorm Design System — Premium Mobile Architecture
+   Feorm Design System — Mobile Architecture
    ═══════════════════════════════════════════════════════ */
 
 @layer utilities {
@@ -168,7 +168,7 @@
     font-family: var(--font-jetbrains-mono), 'JetBrains Mono', monospace;
   }
 
-  /* Card System — premium minimal */
+  /* Card System — minimal */
   .bento-card {
     background: var(--color-white-feorm);
     border: 1px solid rgba(60, 47, 26, 0.06);

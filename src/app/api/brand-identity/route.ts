@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
     <div class="swatch" style="background:#FEFDFB"></div>
   </div>
   
-  <div class="footer">Feorm Network 0.1 — Premium Utilitarian Minimalism — ${new Date().getFullYear()}</div>
+  <div class="footer">Feorm Network 0.1 — ${new Date().getFullYear()}</div>
 </div>
 </body>
 </html>`;

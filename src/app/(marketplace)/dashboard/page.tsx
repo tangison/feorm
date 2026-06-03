@@ -158,13 +158,13 @@ export default function DashboardPage() {
           } else {
             results.push({
               original: listing.title,
-              rewritten: `${listing.title} — Premium Experience`,
+              rewritten: `${listing.title}`,
             });
           }
         } catch {
           results.push({
             original: listing.title,
-            rewritten: `${listing.title} — Premium Experience`,
+            rewritten: `${listing.title}`,
           });
         }
       }

@@ -82,7 +82,7 @@ export default function VoyagerVerifyPage() {
               </div>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Upload a passport photo or link a social ID. Get the green verification badge and priority access to premium listings.
+              Upload a passport photo or link a social ID. Get the green verification badge and priority access to verified listings.
             </p>
           </button>
 
@@ -105,7 +105,7 @@ export default function VoyagerVerifyPage() {
           onClick={() => handleComplete(false)}
           className="w-full btn-primary-feorm px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 min-h-[44px]"
         >
-          Enter the Marketplace
+          Start Exploring
           <ArrowRight size={14} />
         </button>
 

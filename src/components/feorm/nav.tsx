@@ -315,7 +315,7 @@ export default function FeormNav() {
       )}
 
       {/* ═══════════════════════════════════════════════════════
-          DESKTOP: Premium Minimal Sidebar
+          DESKTOP: Minimal Sidebar
       ═══════════════════════════════════════════════════════ */}
       <aside
         className="hidden lg:flex flex-col fixed left-0 top-0 bottom-0 w-[240px] bg-white-feorm border-r border-earth/5 py-8 px-5 z-50"
