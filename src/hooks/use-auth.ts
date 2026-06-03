@@ -3,41 +3,33 @@
 import { useCallback } from "react";
 import { createClient } from "@/utils/supabase/client";
 
-// Auth hook — Supabase Auth integration
+// Auth hook — Supabase Auth integration (Email Magic Link)
 export function useAuthMutations() {
-  const requestOtp = useCallback(async (phone: string) => {
+  const requestMagicLink = useCallback(async (email: string) => {
     try {
-      const res = await fetch("/api/auth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "request-otp", phone }),
+      const supabase = createClient();
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          shouldCreateUser: true,
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
       });
-      const data = await res.json();
-      return data;
+      if (error) {
+        return { success: false, error: error.message };
+      }
+      return { success: true };
     } catch (error: any) {
-      return { success: false, error: error.message || "OTP request failed" };
+      return { success: false, error: error.message || "Magic link request failed" };
     }
   }, []);
 
-  const verifyOtp = useCallback(async (phone: string, otp: string) => {
-    try {
-      const res = await fetch("/api/auth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "verify-otp", phone, otp }),
-      });
-      const data = await res.json();
-      return data;
-    } catch (error: any) {
-      return { success: false, error: error.message || "Verification failed" };
-    }
-  }, []);
-
-  const setupIdentityMut = useCallback(
+  const setupIdentity = useCallback(
     async (data: {
-      phone: string;
+      userId: string;
       name: string;
-      surname: string;
+      surname?: string;
+      phone?: string;
       region: string;
       role: string;
     }) => {
@@ -56,7 +48,7 @@ export function useAuthMutations() {
     []
   );
 
-  const verifyUser = useCallback(async (phone: string) => {
+  const verifyUser = useCallback(async () => {
     try {
       const res = await fetch("/api/auth", {
         method: "POST",
@@ -78,5 +70,5 @@ export function useAuthMutations() {
     await supabase.auth.signOut();
   }, []);
 
-  return { requestOtp, verifyOtp, setupIdentity: setupIdentityMut, verifyUser, signOut };
+  return { requestMagicLink, setupIdentity, verifyUser, signOut };
 }

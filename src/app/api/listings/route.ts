@@ -39,6 +39,8 @@ export async function POST(request: Request) {
       hostName: body.hostName,
       hostPhone: body.hostPhone,
       available: true,
+      lat: body.lat,
+      lng: body.lng,
     });
     return NextResponse.json(listing, { status: 201 });
   } catch (error) {

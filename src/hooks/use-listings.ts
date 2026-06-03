@@ -50,6 +50,8 @@ export function useListings(type: "stay" | "equipment") {
             hostName: item.hostName,
             hostPhone: item.hostPhone,
             available: item.available,
+            lat: item.lat,
+            lng: item.lng,
           }));
           // Cache the result
           listingCache.set(cacheKey, { data: mapped, timestamp: Date.now() });
@@ -111,6 +113,8 @@ export function useListing(id: string) {
               hostName: found.hostName,
               hostPhone: found.hostPhone,
               available: found.available,
+              lat: found.lat,
+              lng: found.lng,
             });
             setIsLoading(false);
             return;

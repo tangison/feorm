@@ -12,8 +12,7 @@ export default function VerifyIdPage() {
 
   const handleVerify = async () => {
     try {
-      const fullPhone = user?.phone || `+264${phone.replace(/\s/g, "")}`;
-      await verifyUser(fullPhone);
+      await verifyUser();
     } catch {
       // Continue — verification state is managed by Supabase
     }

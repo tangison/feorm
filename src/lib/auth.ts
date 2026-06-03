@@ -1,17 +1,52 @@
 /**
- * Feorm Auth — Supabase Auth Integration
+ * Feorm Auth — Supabase Auth Integration (Email Magic Link)
  *
- * Uses: supabase.auth.signInWithOtp({ phone })
- * Uses: supabase.auth.verifyOtp({ phone, token })
+ * Uses: supabase.auth.signInWithOtp({ email })
  * Uses: supabase.auth.getSession()
  * Uses: supabase.auth.signOut()
  * Uses: supabase.auth.getUser()
+ * Uses: supabase.auth.exchangeCodeForSession() — for PKCE callback
  */
 
 import { createClient } from "@/utils/supabase/server";
-import { findOrCreateUser, updateUser } from "./db";
+import { findOrCreateUserById, updateUserById } from "./db";
 
 // ─── Server-side Auth ──────────────────────────────────────────
+
+/** Request a magic link via Supabase Auth (email) */
+export async function requestMagicLink(
+  email: string
+): Promise<{ success: boolean; error?: string }> {
+  const supabase = await createClient();
+
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: {
+      shouldCreateUser: true,
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || "https://feorm.vercel.app"}/auth/callback`,
+    },
+  });
+
+  if (error) {
+    console.error("requestMagicLink error:", error);
+    return { success: false, error: error.message };
+  }
+
+  return { success: true };
+}
+
+/** Exchange PKCE code for session (called from /auth/callback route) */
+export async function exchangeCodeForSession(code: string) {
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+
+  if (error) {
+    console.error("exchangeCodeForSession error:", error);
+    throw new Error(`Code exchange failed: ${error.message}`);
+  }
+
+  return data;
+}
 
 /** Get the current authenticated user's session */
 export async function getSession() {
@@ -32,11 +67,8 @@ export async function getCurrentUser() {
 
   if (error || !user) return null;
 
-  // Get the profile from the profiles table
-  const phone = user.phone ?? user.user_metadata?.phone;
-  if (!phone) return null;
-
-  return findOrCreateUser(phone);
+  // Get the profile from the profiles table using auth.uid()
+  return findOrCreateUserById(user.id, user.email);
 }
 
 /** Sign out the current user */
@@ -49,87 +81,19 @@ export async function signOut() {
   }
 }
 
-/** Request OTP via Supabase Auth */
-export async function requestOtp(
-  phone: string
-): Promise<{ success: boolean; userId?: string; error?: string }> {
-  const supabase = await createClient();
-
-  // Ensure phone has the +264 country code for Namibia
-  const formattedPhone = phone.startsWith("+") ? phone : `+264${phone}`;
-
-  const { error } = await supabase.auth.signInWithOtp({
-    phone: formattedPhone,
-  });
-
-  if (error) {
-    console.error("requestOtp error:", error);
-    return { success: false, error: error.message };
-  }
-
-  // Pre-create the profile if it doesn't exist
-  try {
-    const user = await findOrCreateUser(formattedPhone);
-    return { success: true, userId: user.id };
-  } catch {
-    // Profile creation can fail silently — it'll be created on verify
-    return { success: true };
-  }
-}
-
-/** Verify OTP via Supabase Auth */
-export async function verifyOtpCode(
-  phone: string,
-  otp: string
-): Promise<{ success: boolean; userId?: string; isNewUser?: boolean; error?: string }> {
-  const supabase = await createClient();
-
-  const formattedPhone = phone.startsWith("+") ? phone : `+264${phone}`;
-
-  const { data, error } = await supabase.auth.verifyOtp({
-    phone: formattedPhone,
-    token: otp,
-    type: "sms",
-  });
-
-  if (error) {
-    console.error("verifyOtpCode error:", error);
-    return { success: false, error: error.message };
-  }
-
-  // Ensure profile exists
-  try {
-    const user = await findOrCreateUser(formattedPhone);
-    const isNewUser = user.role === "explorer" && !user.name;
-
-    return {
-      success: true,
-      userId: user.id,
-      isNewUser,
-    };
-  } catch (profileError) {
-    console.error("Profile creation after OTP verify failed:", profileError);
-    return {
-      success: true,
-      userId: data.user?.id,
-      isNewUser: true,
-    };
-  }
-}
-
-/** Setup user identity (name, surname, region, role) after OTP verification */
+/** Setup user identity (name, region, role) after magic link verification */
 export async function setupIdentity(data: {
-  phone: string;
+  userId: string;
   name: string;
-  surname: string;
+  surname?: string;
+  phone?: string;
   region: string;
   role: string;
 }) {
-  const formattedPhone = data.phone.startsWith("+") ? data.phone : `+264${data.phone}`;
-
-  return updateUser(formattedPhone, {
+  return updateUserById(data.userId, {
     name: data.name,
     surname: data.surname,
+    phone: data.phone,
     region: data.region,
     role: data.role,
   });

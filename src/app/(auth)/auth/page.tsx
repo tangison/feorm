@@ -3,44 +3,51 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useFeormAuth } from "@/context/feorm-context";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Mail } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { createClient } from "@/utils/supabase/client";
 
 export default function AuthPage() {
-  const { phone, setPhone } = useFeormAuth();
+  const { setPhone } = useFeormAuth();
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [transitioning, setTransitioning] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleRequestOtp = async () => {
-    if (!phone || phone.length < 8) return;
+  const handleRequestMagicLink = async () => {
+    if (!email || !email.includes("@")) return;
     setLoading(true);
+    setError("");
+
     try {
-      await fetch("/api/auth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "request-otp",
-          phone: `+264${phone.replace(/\s/g, "")}`,
-        }),
+      // Use Supabase client directly for magic link
+      const supabase = createClient();
+      const { error: authError } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          shouldCreateUser: true,
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
       });
+
+      if (authError) {
+        setError(authError.message);
+        setLoading(false);
+        return;
+      }
+
+      setSent(true);
     } catch {
-      // Continue to verify page — user can retry
+      setError("Failed to send magic link. Please try again.");
     }
-    setTransitioning(true);
-    setTimeout(() => {
-      router.push("/auth/verify");
-    }, 300);
+    setLoading(false);
   };
 
   return (
     <div
-      className={`flex-grow grid md:grid-cols-2 min-h-screen transition-all duration-300 ease-out ${
-        transitioning
-          ? "opacity-0 scale-[0.98] blur-[2px]"
-          : "opacity-100 scale-100 blur-0"
-      }`}
+      className="flex-grow grid md:grid-cols-2 min-h-screen"
     >
       {/* Left: Desaturated Hero Image */}
       <div className="relative bg-earth overflow-hidden md:min-h-screen min-h-[35vh]">
@@ -84,59 +91,114 @@ export default function AuthPage() {
         </div>
       </div>
 
-      {/* Right: Phone Auth */}
+      {/* Right: Email Auth */}
       <div className="bg-fog flex items-center justify-center p-10 md:p-20">
         <div className="w-full max-w-sm reveal delay-2">
-          <div className="mb-12">
-            <kbd className="font-mono-feorm text-[10px] border border-soil/20 bg-white-feorm px-2 py-1 rounded text-muted-foreground mb-6 inline-block">
-              STEP 1 OF 2
-            </kbd>
-            <h1 className="font-serif-display text-3xl mb-3 text-earth tracking-tight">
-              Enter Your Number
-            </h1>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              We will send a 6-digit code to verify your number. No password needed.
-            </p>
-          </div>
-
-          <div className="space-y-6">
-            <div className="border border-soil/20 bg-white-feorm p-4 rounded-[4px] focus-within:border-earth transition-colors">
-              <label
-                htmlFor="phone-input"
-                className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-muted-foreground"
-              >
-                Mobile Number
-              </label>
-              <div className="flex items-center">
-                <span className="font-mono-feorm text-lg mr-3 text-soil" aria-hidden="true">
-                  +264
-                </span>
-                <input
-                  id="phone-input"
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="81 000 0000"
-                  autoComplete="tel-national"
-                  className="w-full bg-transparent outline-none text-lg text-earth placeholder-sand font-mono-feorm"
-                />
+          {!sent ? (
+            <>
+              <div className="mb-12">
+                <kbd className="font-mono-feorm text-[10px] border border-soil/20 bg-white-feorm px-2 py-1 rounded text-muted-foreground mb-6 inline-block">
+                  SIGN IN
+                </kbd>
+                <h1 className="font-serif-display text-3xl mb-3 text-earth tracking-tight">
+                  Enter Your Email
+                </h1>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  We will send you a magic link to sign in. No password needed.
+                </p>
               </div>
-            </div>
-            <button
-              onClick={handleRequestOtp}
-              disabled={!phone || phone.length < 8 || loading}
-              className="w-full btn-primary-feorm px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
-            >
-              {loading ? "Sending..." : "Send Verification Code"}
-              <ArrowRight size={14} aria-hidden="true" />
-            </button>
-          </div>
 
-          <div className="mt-6 p-4 bg-accent/30 border border-harvest/20 rounded-[4px]" role="note">
-            <p className="text-[10px] text-accent-foreground font-mono-feorm uppercase tracking-wide">
-              We will send a one-time verification code to your phone
-            </p>
-          </div>
+              <div className="space-y-6">
+                <div className="border border-soil/20 bg-white-feorm p-4 rounded-[4px] focus-within:border-earth transition-colors">
+                  <label
+                    htmlFor="email-input"
+                    className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-muted-foreground"
+                  >
+                    Email Address
+                  </label>
+                  <div className="flex items-center">
+                    <Mail size={16} className="text-soil mr-3 shrink-0" aria-hidden="true" />
+                    <input
+                      id="email-input"
+                      type="email"
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        setError("");
+                      }}
+                      placeholder="you@example.com"
+                      autoComplete="email"
+                      className="w-full bg-transparent outline-none text-lg text-earth placeholder-sand font-mono-feorm"
+                    />
+                  </div>
+                </div>
+
+                {error && (
+                  <p role="alert" className="text-xs text-destructive font-mono-feorm">{error}</p>
+                )}
+
+                <button
+                  onClick={handleRequestMagicLink}
+                  disabled={!email || !email.includes("@") || loading}
+                  className="w-full btn-primary-feorm px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
+                >
+                  {loading ? "Sending..." : "Send Magic Link"}
+                  <ArrowRight size={14} aria-hidden="true" />
+                </button>
+              </div>
+
+              <div className="mt-6 p-4 bg-accent/30 border border-harvest/20 rounded-[4px]" role="note">
+                <p className="text-[10px] text-accent-foreground font-mono-feorm uppercase tracking-wide">
+                  We will send a one-time login link to your email
+                </p>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="mb-12">
+                <kbd className="font-mono-feorm text-[10px] border border-harvest/30 bg-accent/30 px-2 py-1 rounded text-accent-foreground mb-6 inline-block">
+                  CHECK YOUR EMAIL
+                </kbd>
+                <h1 className="font-serif-display text-3xl mb-3 text-earth tracking-tight">
+                  Magic Link Sent
+                </h1>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  We sent a login link to <span className="font-medium text-earth">{email}</span>.
+                  Click the link in your email to sign in.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="p-6 border border-soil/10 bg-white-feorm rounded-[8px] text-center">
+                  <Mail size={32} className="mx-auto mb-4 text-harvest" />
+                  <p className="text-sm text-earth font-medium mb-2">
+                    Waiting for email verification
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    The page will redirect automatically once you click the link.
+                  </p>
+                </div>
+
+                <button
+                  onClick={() => {
+                    setSent(false);
+                    setEmail("");
+                  }}
+                  className="w-full btn-secondary-feorm px-5 py-3 text-xs uppercase tracking-widest min-h-[44px]"
+                >
+                  Use a Different Email
+                </button>
+
+                <button
+                  onClick={handleRequestMagicLink}
+                  disabled={loading}
+                  className="w-full border border-soil/10 px-5 py-3 text-xs uppercase tracking-widest text-muted-foreground hover:text-earth hover:border-soil/30 transition-colors min-h-[44px] rounded-full"
+                >
+                  {loading ? "Resending..." : "Resend Magic Link"}
+                </button>
+              </div>
+            </>
+          )}
 
           <p className="mt-8 text-[10px] text-muted-foreground uppercase tracking-wide leading-relaxed">
             By continuing, you agree to the{" "}

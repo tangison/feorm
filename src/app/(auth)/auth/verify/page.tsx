@@ -1,54 +1,58 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useFeormAuth } from "@/context/feorm-context";
-import { useAuthMutations } from "@/hooks/use-auth";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
+import { ArrowLeft, Mail, CheckCircle } from "lucide-react";
+import { Suspense } from "react";
 
-export default function VerifyPage() {
-  const { phone, setUser } = useFeormAuth();
-  const [otp, setOtp] = useState("");
-  const [otpError, setOtpError] = useState("");
-  const [loading, setLoading] = useState(false);
+function VerifyContent() {
+  const searchParams = useSearchParams();
   const router = useRouter();
+  const { user } = useFeormAuth();
+  const [verifying, setVerifying] = useState(false);
+  const [verified, setVerified] = useState(false);
+  const [error, setError] = useState("");
 
-  // Auth mutations — Supabase Auth
-  const { verifyOtp } = useAuthMutations();
-
-  const handleVerifyOtp = async () => {
-    if (otp.length !== 6) {
-      setOtpError("Please enter the full 6-digit code");
-      return;
-    }
-    setLoading(true);
-    setOtpError("");
-    try {
-      const fullPhone = `+264${phone.replace(/\s/g, "")}`;
-      const result = await verifyOtp(fullPhone, otp);
-      if (result.success) {
-        // Supabase Auth session is now active — the auth context
-        // will pick it up via onAuthStateChange
-        if (result.isNewUser) {
-          router.push("/auth/identity");
-        } else {
-          router.push("/marketplace");
+  // Check for auth code in URL (from magic link redirect)
+  useEffect(() => {
+    const code = searchParams.get("code");
+    if (code) {
+      setVerifying(true);
+      const supabase = createClient();
+      supabase.auth.exchangeCodeForSession(code).then(({ error: exchangeError }) => {
+        if (exchangeError) {
+          setError(exchangeError.message);
+          setVerifying(false);
+          return;
         }
-        return;
-      } else {
-        setOtpError(result.error || "Verification failed");
-      }
-    } catch (err: any) {
-      setOtpError(err.message || "Verification failed");
+        setVerified(true);
+        // The onAuthStateChange listener in the auth context will
+        // pick up the new session and update the user state
+        setTimeout(() => {
+          router.push("/auth/identity");
+        }, 1000);
+      });
     }
-    setLoading(false);
-  };
+  }, [searchParams, router]);
+
+  // If user is already authenticated, redirect
+  useEffect(() => {
+    if (user) {
+      if (!user.name) {
+        router.push("/auth/identity");
+      } else {
+        router.push("/marketplace");
+      }
+    }
+  }, [user, router]);
 
   return (
     <div className="flex-grow flex items-center justify-center p-6 md:p-12 min-h-screen bg-fog">
       <div className="max-w-md w-full">
         <button
-          onClick={() => router.push("/")}
+          onClick={() => router.push("/auth")}
           className="mb-8 flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-earth transition-colors min-h-[44px] rounded-full hover:bg-earth/5"
         >
           <ArrowLeft size={16} /> Back
@@ -56,57 +60,78 @@ export default function VerifyPage() {
 
         <div className="mb-10">
           <kbd className="font-mono-feorm text-[10px] border border-soil/20 bg-white-feorm px-2 py-1 rounded text-muted-foreground mb-6 inline-block">
-            STEP 2 OF 2
+            VERIFY EMAIL
           </kbd>
           <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-earth">
-            Verify Your Number
+            {verifying ? "Verifying..." : verified ? "Email Verified" : "Check Your Email"}
           </h1>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Enter the 6-digit code we sent to +264{phone}
+            {verifying
+              ? "Exchanging your login credentials..."
+              : verified
+              ? "Your email has been verified. Redirecting..."
+              : "Click the magic link we sent to your email to sign in."}
           </p>
         </div>
 
         <div className="space-y-6">
-          <div className="border border-soil/20 bg-white-feorm p-4 rounded-[4px] focus-within:border-earth transition-colors">
-            <label htmlFor="otp-input" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-muted-foreground">
-              Verification Code
-            </label>
-            <input
-              id="otp-input"
-              type="text"
-              value={otp}
-              onChange={(e) => {
-                setOtp(e.target.value.replace(/\D/g, "").slice(0, 6));
-                setOtpError("");
-              }}
-              placeholder="123456"
-              maxLength={6}
-              aria-invalid={otpError ? "true" : undefined}
-              aria-describedby={otpError ? "otp-error" : undefined}
-              className="w-full bg-transparent outline-none text-2xl text-earth placeholder-sand font-mono-feorm tracking-[0.3em] min-h-[44px]"
-            />
+          <div className="border border-soil/10 bg-white-feorm p-8 rounded-[8px] text-center">
+            {verifying ? (
+              <>
+                <div className="w-3 h-3 rounded-full bg-harvest animate-pulse mx-auto mb-4" />
+                <p className="text-sm text-earth font-medium">Verifying your email...</p>
+              </>
+            ) : verified ? (
+              <>
+                <CheckCircle size={32} className="mx-auto mb-4 text-verified" />
+                <p className="text-sm text-earth font-medium">Email verified successfully</p>
+              </>
+            ) : (
+              <>
+                <Mail size={32} className="mx-auto mb-4 text-harvest" />
+                <p className="text-sm text-earth font-medium mb-2">
+                  Waiting for email verification
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Click the link in your email. This page will update automatically.
+                </p>
+              </>
+            )}
           </div>
 
-          {otpError && (
-            <p id="otp-error" role="alert" className="text-xs text-destructive font-mono-feorm">{otpError}</p>
+          {error && (
+            <p role="alert" className="text-xs text-destructive font-mono-feorm">{error}</p>
           )}
 
-          <button
-            onClick={handleVerifyOtp}
-            disabled={otp.length !== 6 || loading}
-            className="w-full btn-primary-feorm px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
-          >
-            {loading ? "Verifying..." : "Verify & Continue"}
-            <ArrowRight size={14} />
-          </button>
-        </div>
-
-        <div className="mt-6 p-4 bg-accent/30 border border-harvest/20 rounded-[4px]" role="note">
-          <p className="text-[10px] text-accent-foreground font-mono-feorm uppercase tracking-wide">
-            A 6-digit code has been sent to your phone
-          </p>
+          {!verifying && !verified && (
+            <button
+              onClick={() => router.push("/auth")}
+              className="w-full btn-secondary-feorm px-5 py-3 text-xs uppercase tracking-widest min-h-[44px]"
+            >
+              Use a Different Email
+            </button>
+          )}
         </div>
       </div>
     </div>
+  );
+}
+
+export default function VerifyPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex-grow flex items-center justify-center min-h-[60vh]">
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-harvest animate-pulse" />
+            <span className="font-mono-feorm text-[9px] text-muted-foreground uppercase tracking-widest">
+              Loading
+            </span>
+          </div>
+        </div>
+      }
+    >
+      <VerifyContent />
+    </Suspense>
   );
 }

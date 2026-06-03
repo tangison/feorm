@@ -13,7 +13,8 @@ import { createClient } from "@/utils/supabase/client";
 // ─── Types ────────────────────────────────────────────────────────
 interface FeormUser {
   id: string;
-  phone: string;
+  email?: string;
+  phone?: string;
   name?: string;
   surname?: string;
   region?: string;
@@ -26,12 +27,14 @@ interface FeormUser {
 
 interface FeormAuthState {
   user: FeormUser | null;
+  email: string;
   phone: string;
   avatarUrl: string;
 }
 
 interface FeormAuthContextType extends FeormAuthState {
   setUser: React.Dispatch<React.SetStateAction<FeormUser | null>>;
+  setEmail: (email: string) => void;
   setPhone: (phone: string) => void;
   setAvatarUrl: (url: string) => void;
   loading: boolean;
@@ -42,12 +45,14 @@ const FeormAuthContext = createContext<FeormAuthContextType | null>(null);
 // ─── Default state ────────────────────────────────────────────────
 const DEFAULTS: FeormAuthState = Object.freeze({
   user: null,
+  email: "",
   phone: "",
   avatarUrl: "",
 });
 
 export function FeormAuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<FeormUser | null>(DEFAULTS.user);
+  const [email, setEmail] = useState(DEFAULTS.email);
   const [phone, setPhone] = useState(DEFAULTS.phone);
   const [avatarUrl, setAvatarUrl] = useState(DEFAULTS.avatarUrl);
   const [loading, setLoading] = useState(true);
@@ -60,6 +65,7 @@ export function FeormAuthProvider({ children }: { children: ReactNode }) {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
         const meta = session.user.user_metadata ?? {};
+        setEmail(session.user.email ?? meta.email ?? "");
         setPhone(session.user.phone ?? meta.phone ?? "");
 
         // Fetch profile from our API
@@ -70,6 +76,7 @@ export function FeormAuthProvider({ children }: { children: ReactNode }) {
               const profile = data.user;
               setUser({
                 id: profile.id,
+                email: session.user.email,
                 phone: profile.phone,
                 name: profile.name,
                 surname: profile.surname,
@@ -79,7 +86,7 @@ export function FeormAuthProvider({ children }: { children: ReactNode }) {
                 avatarUrl: profile.avatarUrl ?? profile.avatar_url,
                 hasCompletedOnboarding: !!profile.name && !!profile.role && profile.role !== "explorer",
               });
-              setPhone(profile.phone);
+              if (profile.phone) setPhone(profile.phone);
               if (profile.avatarUrl ?? profile.avatar_url) {
                 setAvatarUrl(profile.avatarUrl ?? profile.avatar_url);
               }
@@ -98,6 +105,7 @@ export function FeormAuthProvider({ children }: { children: ReactNode }) {
     } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
         const meta = session.user.user_metadata ?? {};
+        setEmail(session.user.email ?? meta.email ?? "");
         setPhone(session.user.phone ?? meta.phone ?? "");
 
         // Fetch profile on auth change
@@ -108,6 +116,7 @@ export function FeormAuthProvider({ children }: { children: ReactNode }) {
               const profile = data.user;
               setUser({
                 id: profile.id,
+                email: session.user.email,
                 phone: profile.phone,
                 name: profile.name,
                 surname: profile.surname,
@@ -117,6 +126,7 @@ export function FeormAuthProvider({ children }: { children: ReactNode }) {
                 avatarUrl: profile.avatarUrl ?? profile.avatar_url,
                 hasCompletedOnboarding: !!profile.name && !!profile.role && profile.role !== "explorer",
               });
+              if (profile.phone) setPhone(profile.phone);
               if (profile.avatarUrl ?? profile.avatar_url) {
                 setAvatarUrl(profile.avatarUrl ?? profile.avatar_url);
               }
@@ -125,6 +135,7 @@ export function FeormAuthProvider({ children }: { children: ReactNode }) {
           .catch(console.error);
       } else {
         setUser(null);
+        setEmail("");
         setPhone("");
         setAvatarUrl("");
       }
@@ -133,6 +144,10 @@ export function FeormAuthProvider({ children }: { children: ReactNode }) {
     return () => {
       subscription.unsubscribe();
     };
+  }, []);
+
+  const setEmailCallback = useCallback((value: string) => {
+    setEmail(value);
   }, []);
 
   const setPhoneCallback = useCallback((value: string) => {
@@ -147,9 +162,11 @@ export function FeormAuthProvider({ children }: { children: ReactNode }) {
     <FeormAuthContext.Provider
       value={{
         user,
+        email,
         phone,
         avatarUrl,
         setUser,
+        setEmail: setEmailCallback,
         setPhone: setPhoneCallback,
         setAvatarUrl: setAvatarUrlCallback,
         loading,

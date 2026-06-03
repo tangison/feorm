@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 import { useFeormAuth, useFeormOnboarding } from "@/context/feorm-context";
 import { formatPrice } from "@/lib/format";
 import {
@@ -82,6 +83,7 @@ const recentActivity = [
 export default function DashboardPage() {
   const { user } = useFeormAuth();
   const { providerAssets } = useFeormOnboarding();
+  const router = useRouter();
 
   const [aiLoading, setAiLoading] = useState(false);
   const [aiInsights, setAiInsights] = useState<Array<{ title: string; description: string; category: string }> | null>(null);
@@ -469,7 +471,7 @@ export default function DashboardPage() {
             <button
               className="btn-harvest flex items-center gap-2 px-5 py-3 text-xs uppercase tracking-widest min-h-[44px]"
               type="button"
-              onClick={() => toast({ title: "Add listing flow coming soon" })}
+              onClick={() => router.push("/listing/new")}
             >
               <Plus size={14} />
               Add New Listing

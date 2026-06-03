@@ -6,8 +6,15 @@ import { useFeormMarket } from "@/context/feorm-context";
 import ListingCard from "@/components/feorm/listing-card";
 import Image from "next/image";
 import { useListings } from "@/hooks/use-listings";
-import { ChevronDown, X, SlidersHorizontal } from "lucide-react";
+import { ChevronDown, X, SlidersHorizontal, Map, LayoutGrid } from "lucide-react";
 import { NAMIBIAN_REGIONS } from "@/lib/regions";
+import dynamic from "next/dynamic";
+
+// Dynamic import for map (SSR: false — MapLibre needs browser APIs)
+const ListingsMap = dynamic(
+  () => import("@/components/feorm/listings-map"),
+  { ssr: false }
+);
 
 const REGION_OPTIONS = ["All Regions", ...NAMIBIAN_REGIONS] as const;
 
@@ -26,8 +33,12 @@ function transformItem(item: any) {
     hostName: item.hostName,
     hostPhone: item.hostPhone,
     available: item.available,
+    lat: item.lat,
+    lng: item.lng,
   };
 }
+
+type ViewMode = "grid" | "map";
 
 function MarketplaceContent() {
   const { marketView, setMarketView } = useFeormMarket();
@@ -38,6 +49,7 @@ function MarketplaceContent() {
   const [selectedRegion, setSelectedRegion] = useState(regionFromParams);
   const [regionDropdownOpen, setRegionDropdownOpen] = useState(false);
   const [showAvailableOnly, setShowAvailableOnly] = useState(false);
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
 
   useEffect(() => {
     if (!regionDropdownOpen) return;
@@ -132,6 +144,36 @@ function MarketplaceContent() {
         <span className="hidden md:inline-block font-mono-feorm text-[9px] text-muted-foreground uppercase tracking-widest ml-3">
           {transformedListings?.length || 0} listings
         </span>
+
+        {/* Grid/Map Toggle */}
+        <div className="ml-auto flex items-center border border-earth/8 rounded-full overflow-hidden">
+          <button
+            onClick={() => setViewMode("grid")}
+            className={`px-3 py-2 text-[10px] uppercase tracking-wider transition-colors flex items-center gap-1 min-h-[36px] ${
+              viewMode === "grid"
+                ? "bg-earth text-white-feorm"
+                : "bg-white-feorm text-muted-foreground hover:bg-fog"
+            }`}
+            aria-label="Grid view"
+            aria-pressed={viewMode === "grid"}
+          >
+            <LayoutGrid size={12} />
+            <span className="hidden sm:inline">Grid</span>
+          </button>
+          <button
+            onClick={() => setViewMode("map")}
+            className={`px-3 py-2 text-[10px] uppercase tracking-wider transition-colors flex items-center gap-1 min-h-[36px] ${
+              viewMode === "map"
+                ? "bg-earth text-white-feorm"
+                : "bg-white-feorm text-muted-foreground hover:bg-fog"
+            }`}
+            aria-label="Map view"
+            aria-pressed={viewMode === "map"}
+          >
+            <Map size={12} />
+            <span className="hidden sm:inline">Map</span>
+          </button>
+        </div>
       </div>
 
       {/* Title + Filters */}
@@ -249,8 +291,21 @@ function MarketplaceContent() {
         </div>
       )}
 
-      {/* Grid */}
-      {!isLoading && transformedListings && transformedListings.length > 0 && (
+      {/* Map View */}
+      {!isLoading && viewMode === "map" && (
+        <div>
+          <ListingsMap listings={transformedListings} />
+          {/* Below the map, show a compact list */}
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            {transformedListings.map((item) => (
+              <ListingCard key={item.id} item={item} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Grid View */}
+      {!isLoading && viewMode === "grid" && transformedListings && transformedListings.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 stagger-reveal">
           {transformedListings.map((item) => (
             <ListingCard key={item.id} item={item} />

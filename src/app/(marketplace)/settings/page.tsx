@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useFeormAuth, useFeormOnboarding } from "@/context/feorm-context";
+import { useAuthMutations } from "@/hooks/use-auth";
 import {
   Shield,
   Download,
@@ -18,17 +19,22 @@ import { toast } from "@/hooks/use-toast";
 
 export default function SettingsPage() {
   const router = useRouter();
-  const { user, phone, avatarUrl } = useFeormAuth();
+  const { user, email, phone, avatarUrl } = useFeormAuth();
   const { selectedRole, interests, hasCompletedOnboarding, providerAssets, setHasCompletedOnboarding } = useFeormOnboarding();
+  const { signOut } = useAuthMutations();
 
   const [aiLoading, setAiLoading] = useState(false);
   const [aiSuggestions, setAiSuggestions] = useState<Array<{ title: string; description: string; category: string }> | null>(null);
   const [brandLoading, setBrandLoading] = useState(false);
 
   // ─── Session Management ─────────────────────────────────────
-  const handleClearSession = () => {
-    // TODO: Replace with Supabase Auth — supabase.auth.signOut()
-    router.push("/");
+  const handleClearSession = async () => {
+    try {
+      await signOut();
+      router.push("/");
+    } catch {
+      router.push("/");
+    }
   };
 
   // ─── Download Brand Identity ────────────────────────────────
@@ -103,9 +109,13 @@ export default function SettingsPage() {
   };
 
   // ─── Full System Reset ─────────────────────────────────────
-  const handleFullReset = () => {
-    // TODO: Replace with Supabase Auth — supabase.auth.signOut() + clear local state
-    router.push("/");
+  const handleFullReset = async () => {
+    try {
+      await signOut();
+      router.push("/");
+    } catch {
+      router.push("/");
+    }
   };
 
   // ─── AI Smart Profile Enhancement ──────────────────────────
@@ -173,16 +183,16 @@ export default function SettingsPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
             <div>
               <label
-                htmlFor="session-phone"
+                htmlFor="session-email"
                 className="font-mono-feorm text-[9px] uppercase tracking-widest text-muted-foreground block mb-1"
               >
-                Phone
+                Email
               </label>
               <p
-                id="session-phone"
+                id="session-email"
                 className="text-sm text-earth font-medium"
               >
-                {phone || "Not set"}
+                {email || "Not set"}
               </p>
             </div>
             <div>

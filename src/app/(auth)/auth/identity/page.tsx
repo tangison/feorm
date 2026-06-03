@@ -18,10 +18,11 @@ import {
 import { NAMIBIAN_REGIONS } from "@/lib/regions";
 
 export default function IdentityPage() {
-  const { phone, setUser, setAvatarUrl, avatarUrl } = useFeormAuth();
-  const [name, setName] = useState("");
-  const [surname, setSurname] = useState("");
-  const [region, setRegion] = useState("Khomas");
+  const { user, setUser, setAvatarUrl, avatarUrl } = useFeormAuth();
+  const [name, setName] = useState(user?.name || "");
+  const [surname, setSurname] = useState(user?.surname || "");
+  const [phone, setPhoneLocal] = useState(user?.phone || "");
+  const [region, setRegion] = useState(user?.region || "Khomas");
   const [loading, setLoading] = useState(false);
   const [generatingAvatar, setGeneratingAvatar] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
@@ -92,25 +93,31 @@ export default function IdentityPage() {
 
   // ── Identity Setup ──
   const handleIdentitySetup = useCallback(async () => {
-    if (!name || !surname) return;
+    if (!name) return;
     setLoading(true);
     try {
-      const fullPhone = `+264${phone.replace(/\s/g, "")}`;
+      const userId = user?.id;
+      if (!userId) {
+        router.push("/auth");
+        return;
+      }
+
       await setupIdentity({
-        phone: fullPhone,
+        userId,
         name,
         surname,
+        phone: phone ? `+264${phone.replace(/\s/g, "")}` : undefined,
         region,
         role: "explorer",
       });
       setUser((prev: any) =>
         prev
-          ? { ...prev, name, surname, region, avatarUrl }
+          ? { ...prev, name, surname, phone, region, avatarUrl }
           : {
-              id: "pending",
-              phone: fullPhone,
+              id: userId,
               name,
               surname,
+              phone,
               region,
               role: "explorer",
               verified: false,
@@ -122,7 +129,7 @@ export default function IdentityPage() {
       router.push("/auth/role");
     }
     setLoading(false);
-  }, [name, surname, region, phone, avatarUrl, setupIdentity, setUser, router]);
+  }, [name, surname, phone, region, user?.id, avatarUrl, setupIdentity, setUser, router]);
 
   // Resolve selected avatar info
   const selectedInfo = useMemo(() => {
@@ -136,7 +143,7 @@ export default function IdentityPage() {
     <div className="flex-grow flex items-center justify-center p-6 md:p-12 min-h-screen bg-fog">
       <div className="max-w-md w-full">
         <button
-          onClick={() => router.push("/auth/verify")}
+          onClick={() => router.push("/auth")}
           className="mb-8 flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-earth transition-colors min-h-[44px] rounded-full hover:bg-earth/5"
         >
           <ArrowLeft size={16} /> Back
@@ -195,7 +202,7 @@ export default function IdentityPage() {
               </div>
             </div>
 
-            {/* Humanoid Avatar Selection — 5 brand-aligned illustrated characters */}
+            {/* Humanoid Avatar Selection */}
             <div className="mb-6">
               <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-sand mb-4 text-center">
                 Choose Your Character
@@ -225,7 +232,6 @@ export default function IdentityPage() {
                   </button>
                 ))}
               </div>
-              {/* Show selected character info */}
               {selectedInfo && (
                 <div className="text-center mt-3">
                   <p className="font-serif-display text-sm text-earth">{selectedInfo.label}</p>
@@ -323,6 +329,27 @@ export default function IdentityPage() {
             />
           </div>
 
+          {/* Phone (optional) */}
+          <div className="border border-soil/20 bg-white-feorm p-4 rounded-[4px] focus-within:border-earth transition-colors">
+            <label htmlFor="phone-input" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-muted-foreground">
+              Phone Number (Optional)
+            </label>
+            <div className="flex items-center">
+              <span className="font-mono-feorm text-lg mr-3 text-soil" aria-hidden="true">
+                +264
+              </span>
+              <input
+                id="phone-input"
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhoneLocal(e.target.value)}
+                placeholder="81 000 0000"
+                autoComplete="tel-national"
+                className="w-full bg-transparent outline-none text-lg text-earth placeholder-sand font-mono-feorm"
+              />
+            </div>
+          </div>
+
           {/* Region */}
           <div className="border border-soil/20 bg-white-feorm p-4 rounded-[4px] focus-within:border-earth transition-colors">
             <label htmlFor="region-select" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-muted-foreground">
@@ -343,7 +370,7 @@ export default function IdentityPage() {
           {/* Continue */}
           <button
             onClick={handleIdentitySetup}
-            disabled={!name || !surname || loading}
+            disabled={!name || loading}
             className="w-full btn-primary-feorm px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
             type="button"
           >
