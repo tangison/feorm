@@ -3,6 +3,7 @@
 import { useFeormAuth, useFeormOnboarding } from "@/context/feorm-context";
 import { useRouter } from "next/navigation";
 import { Compass, Tractor, ArrowRight } from "lucide-react";
+import Image from "next/image";
 
 export default function RolePage() {
   const { setUser } = useFeormAuth();
@@ -21,8 +22,17 @@ export default function RolePage() {
   };
 
   return (
-    <div className="flex-grow flex items-center justify-center p-6 md:p-12 min-h-screen bg-fog">
-      <div className="max-w-3xl w-full">
+    <div className="flex-grow flex items-center justify-center p-6 md:p-12 min-h-screen bg-fog relative">
+      {/* Background aerial farm image */}
+      <div className="absolute inset-0 overflow-hidden">
+        <Image
+          src="/images/onboard-role-bg.png"
+          alt=""
+          fill
+          className="object-cover opacity-10"
+        />
+      </div>
+      <div className="max-w-3xl w-full relative z-10">
         <div className="mb-12 text-center">
           <kbd className="font-mono-feorm text-[10px] border border-soil/20 bg-white-feorm px-2 py-1 rounded text-muted-foreground mb-6 inline-block">
             CHOOSE YOUR ROLE
@@ -64,15 +74,15 @@ export default function RolePage() {
           {/* Provider Card */}
           <button
             onClick={() => handleRoleSelect("provider")}
-            className="group p-8 md:p-10 text-left border-2 border-soil/10 rounded-[12px] transition-all duration-300 hover:border-[#346538] hover:shadow-[0_8px_32px_rgba(52,101,56,0.08)] bg-white-feorm active:scale-[0.98]"
+            className="group p-8 md:p-10 text-left border-2 border-soil/10 rounded-[12px] transition-all duration-300 hover:border-verified hover:shadow-[0_8px_32px_rgba(52,101,56,0.08)] bg-white-feorm active:scale-[0.98]"
           >
-            <div className="w-14 h-14 rounded-[12px] bg-[#EDF3EC] flex items-center justify-center mb-6 group-hover:bg-[#346538] transition-colors duration-300">
-              <Tractor size={24} className="text-[#346538] group-hover:text-white-feorm transition-colors" />
+            <div className="w-14 h-14 rounded-[12px] bg-verified-bg flex items-center justify-center mb-6 group-hover:bg-verified transition-colors duration-300">
+              <Tractor size={24} className="text-verified group-hover:text-white-feorm transition-colors" />
             </div>
             <h3 className="font-serif-display text-2xl md:text-3xl mb-3 text-earth">
               I am a Provider
             </h3>
-            <p className="text-[10px] uppercase tracking-widest text-[#346538] font-mono-feorm font-medium mb-4">
+            <p className="text-[10px] uppercase tracking-widest text-verified font-mono-feorm font-medium mb-4">
               Host / Farmer
             </p>
             <p className="text-sm text-muted-foreground leading-relaxed mb-8">

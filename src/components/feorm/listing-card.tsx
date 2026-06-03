@@ -17,7 +17,7 @@ function ListingCard({ item }: { item: Listing }) {
       <div className="h-44 md:h-56 p-1.5 md:p-2 bg-white-feorm">
         <div className="w-full h-full relative rounded-md overflow-hidden bg-fog">
           <Image
-            src={item.imageUrl}
+            src={item.imageUrl || (item.type === "stay" ? "/images/listing-stay-hero.png" : "/images/listing-equip-hero.png")}
             alt={item.title}
             width={400}
             height={300}

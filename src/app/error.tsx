@@ -15,11 +15,7 @@ export default function GlobalError({
   }, [error]);
 
   const handleSystemReset = () => {
-    try {
-      localStorage.removeItem("feorm-session");
-    } catch {
-      // localStorage may be unavailable in certain environments
-    }
+    // TODO: Replace with Supabase Auth — supabase.auth.signOut()
     window.location.href = "/";
   };
 

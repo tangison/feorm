@@ -12,6 +12,7 @@ import {
   Shield,
   Loader2,
 } from "lucide-react";
+import { SUPPORT_WHATSAPP_URL, SUPPORT_PHONE, SUPPORT_WHATSAPP_NUMBER } from "@/lib/config";
 
 interface Suggestion {
   title: string;
@@ -69,13 +70,13 @@ export default function SupportPage() {
       <div className="space-y-4">
         {/* ── WhatsApp Support (prominent) ──────────────────────── */}
         <a
-          href="https://wa.me/264853411522?text=Hello%2C%20I%20need%20help%20with%20Feorm."
+          href={`${SUPPORT_WHATSAPP_URL}?text=Hello%2C%20I%20need%20help%20with%20Feorm.`}
           target="_blank"
           rel="noopener noreferrer"
-          className="bento-card bento-card-lift p-5 flex items-center gap-4 hover:border-[#25D366]/30 transition-colors group"
+          className="bento-card bento-card-lift p-5 flex items-center gap-4 hover:border-whatsapp/30 transition-colors group"
         >
-          <div className="w-12 h-12 rounded-full bg-[#25D366]/10 flex items-center justify-center shrink-0">
-            <MessageCircle size={20} className="text-[#25D366]" />
+          <div className="w-12 h-12 rounded-full bg-whatsapp/10 flex items-center justify-center shrink-0">
+            <MessageCircle size={20} className="text-whatsapp" />
           </div>
           <div className="flex-grow">
             <h3 className="text-sm font-medium text-earth">
@@ -84,8 +85,8 @@ export default function SupportPage() {
             <p className="text-xs text-muted-foreground mb-1">
               Direct line to the Feorm team. Mon–Fri, 08:00–17:00 CAT.
             </p>
-            <p className="font-mono-feorm text-[11px] text-[#25D366] font-medium tracking-wide">
-              +264 85 341 1522
+            <p className="font-mono-feorm text-[11px] text-whatsapp font-medium tracking-wide">
+              +{SUPPORT_WHATSAPP_NUMBER.replace(/(\d{3})(\d{2})(\d{3})(\d{4})/, "$1 $2 $3 $4")}
             </p>
           </div>
           <ChevronRight
@@ -96,7 +97,7 @@ export default function SupportPage() {
 
         {/* ── Direct Call ───────────────────────────────────────── */}
         <a
-          href="tel:+264853411522"
+          href={`tel:${SUPPORT_PHONE}`}
           className="bento-card bento-card-lift p-5 flex items-center gap-4 hover:border-earth/20 transition-colors group"
         >
           <div className="w-12 h-12 rounded-full bg-earth/5 flex items-center justify-center shrink-0">
@@ -200,7 +201,7 @@ export default function SupportPage() {
           {/* Error state */}
           {aiError && (
             <div
-              className="mt-4 p-4 rounded-[8px] border border-destructive/20 bg-[#FDEBEC]"
+              className="mt-4 p-4 rounded-[8px] border border-destructive/20 bg-destructive-bg"
               role="alert"
             >
               <p className="text-xs text-destructive">{aiError}</p>

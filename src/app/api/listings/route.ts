@@ -37,7 +37,7 @@ export async function POST(request: Request) {
       features: body.features,
       hostId: body.hostId,
       hostName: body.hostName,
-      hostPhone: body.hostPhone || "+264810000000",
+      hostPhone: body.hostPhone,
       available: true,
     });
     return NextResponse.json(listing, { status: 201 });

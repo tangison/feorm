@@ -26,7 +26,7 @@ export default function AuthPage() {
         }),
       });
     } catch {
-      // Demo mode: proceed anyway
+      // Continue to verify page — user can retry
     }
     setTransitioning(true);
     setTimeout(() => {
@@ -44,12 +44,22 @@ export default function AuthPage() {
     >
       {/* Left: Desaturated Hero Image */}
       <div className="relative bg-earth overflow-hidden md:min-h-screen min-h-[35vh]">
+        {/* Mobile hero — vertical portrait */}
+        <Image
+          src="/images/hero-gateway-mobile.png"
+          alt="Namibian horizon"
+          fill
+          sizes="100vw"
+          className="object-cover opacity-60 saturate-[0.6] md:hidden"
+          priority
+        />
+        {/* Desktop hero — wide landscape */}
         <Image
           src="/images/hero-gateway.png"
           alt="Namibian horizon"
           fill
-          sizes="(max-width: 768px) 100vw, 50vw"
-          className="object-cover opacity-60 saturate-[0.6]"
+          sizes="50vw"
+          className="object-cover opacity-60 saturate-[0.6] hidden md:block"
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-t from-earth via-earth/60 to-transparent md:bg-gradient-to-r md:from-transparent md:via-earth/40 md:to-earth" />
@@ -124,7 +134,7 @@ export default function AuthPage() {
 
           <div className="mt-6 p-4 bg-accent/30 border border-harvest/20 rounded-[4px]" role="note">
             <p className="text-[10px] text-accent-foreground font-mono-feorm uppercase tracking-wide">
-              Demo Mode: Enter any number, then use OTP <strong>123456</strong>
+              We will send a one-time verification code to your phone
             </p>
           </div>
 

@@ -6,6 +6,8 @@ import { useListing } from "@/hooks/use-listings";
 import { useCreateBooking } from "@/hooks/use-bookings";
 import { formatPrice } from "@/lib/format";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useFeormAuth } from "@/context/feorm-context";
+import { calculateEscrow } from "@/lib/config";
 
 export default function BookPage() {
   const params = useParams<{ id: string }>();
@@ -14,6 +16,7 @@ export default function BookPage() {
   const [withOperator, setWithOperator] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { user } = useFeormAuth();
 
   // REST API query for listing details
   const { data: listing, isLoading: listingLoading } = useListing(params.id);
@@ -35,7 +38,10 @@ export default function BookPage() {
   const rentalPrice = listing ? listing.price * days : 0;
   const serviceFee = Math.round(rentalPrice * 0.1);
   const operatorFee = withOperator ? 50000 * days : 0;
-  const totalPrice = rentalPrice + serviceFee + 150000 + operatorFee;
+  // Escrow: 10% of total, minimum N$500 (50000 cents)
+  const subtotal = rentalPrice + serviceFee + operatorFee;
+  const escrowAmount = calculateEscrow(subtotal);
+  const totalPrice = subtotal + escrowAmount;
 
   // Date validation
   const today = new Date();
@@ -49,23 +55,26 @@ export default function BookPage() {
     if (!listing || !startDate || !endDate) return;
     setLoading(true);
     try {
+      const userId = user?.id;
+      if (!userId) {
+        throw new Error("Not authenticated — please sign in to create a booking");
+      }
+
       const result = await createBooking({
         listingId: listing._id,
-        userId: "demo-user",
+        userId,
         startDate,
         endDate,
         totalPrice,
-        escrowAmount: 150000,
+        escrowAmount,
         serviceFee,
         withOperator,
       });
 
       // Navigate to success page with reference
       router.push(`/booking/success?ref=${result.reference}`);
-    } catch {
-      // Fallback for demo
-      const ref = `FE-${Date.now().toString(36).toUpperCase()}`;
-      router.push(`/booking/success?ref=${ref}`);
+    } catch (err: any) {
+      alert(err.message || "Booking failed. Please try again.");
     }
     setLoading(false);
   };
@@ -155,7 +164,7 @@ export default function BookPage() {
         </div>
 
         {startDate && endDate && (startDateInvalid || endDateInvalid) && (
-          <div className="mt-4 p-4 rounded-[4px] bg-[#FDEBEC] text-destructive text-sm">
+          <div className="mt-4 p-4 rounded-[4px] bg-destructive-bg text-destructive text-sm">
             {startDateInvalid && <p>Start date must be today or later.</p>}
             {endDateInvalid && <p>End date must be after start date.</p>}
           </div>
@@ -183,7 +192,7 @@ export default function BookPage() {
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Security Escrow</span>
-                <span className="font-mono-feorm text-earth">N$ 1,500</span>
+                <span className="font-mono-feorm text-earth">{formatPrice(escrowAmount)}</span>
               </div>
               {withOperator && (
                 <div className="flex justify-between">

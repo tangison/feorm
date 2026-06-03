@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- Background: rounded square, Feorm deep forest green -->
+  <rect x="0" y="0" width="200" height="200" rx="32" fill="#2D3D2E"/>
+  <!-- Icon: Layered landscape lines (land/water/sky) with intelligence notch -->
+  <g stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- Bottom line (widest — land) -->
+    <path d="M48 132 Q100 118 152 132"/>
+    <!-- Middle line (water) -->
+    <path d="M56 106 Q100 92 144 106"/>
+    <!-- Top line (sky) with upward triangular notch at center suggesting intelligence/signal -->
+    <path d="M64 80 Q88 68 96 68 L100 58 L104 68 Q112 68 136 80"/>
+  </g>
+</svg>

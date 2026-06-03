@@ -4,10 +4,11 @@ import React, {
   createContext,
   useContext,
   useState,
+  useEffect,
   useCallback,
-  useSyncExternalStore,
   type ReactNode,
 } from "react";
+import { createClient } from "@/utils/supabase/client";
 
 // ─── Types ────────────────────────────────────────────────────────
 interface FeormUser {
@@ -33,124 +34,126 @@ interface FeormAuthContextType extends FeormAuthState {
   setUser: React.Dispatch<React.SetStateAction<FeormUser | null>>;
   setPhone: (phone: string) => void;
   setAvatarUrl: (url: string) => void;
+  loading: boolean;
 }
 
 const FeormAuthContext = createContext<FeormAuthContextType | null>(null);
 
-// Server-safe defaults — must match what SSR produces
-const SERVER_DEFAULTS: FeormAuthState = Object.freeze({
+// ─── Default state ────────────────────────────────────────────────
+const DEFAULTS: FeormAuthState = Object.freeze({
   user: null,
   phone: "",
   avatarUrl: "",
 });
 
-const STORAGE_KEY = "feorm-session";
-let listeners: Array<() => void> = [];
-
-function emitChange() {
-  for (const listener of listeners) {
-    listener();
-  }
-}
-
-function subscribe(listener: () => void) {
-  listeners = [...listeners, listener];
-  return () => {
-    listeners = listeners.filter((l) => l !== listener);
-  };
-}
-
-// ─── Cached snapshot to prevent infinite loops ──────────────────
-// useSyncExternalStore requires getSnapshot to return the same
-// reference when data hasn't changed. Without caching, every call
-// creates a new object → React detects a change → infinite re-render.
-let cachedRaw: string | null = null;
-let cachedSnapshot: FeormAuthState = SERVER_DEFAULTS;
-
-function getSnapshot(): FeormAuthState {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw === cachedRaw) return cachedSnapshot;
-
-    if (raw) {
-      const session = JSON.parse(raw);
-      cachedSnapshot = {
-        user: session.user || null,
-        phone: session.phone || "",
-        avatarUrl: session.avatarUrl || "",
-      };
-    } else {
-      cachedSnapshot = { ...SERVER_DEFAULTS };
-    }
-    cachedRaw = raw;
-    return cachedSnapshot;
-  } catch {
-    return cachedSnapshot;
-  }
-}
-
-function getServerSnapshot(): FeormAuthState {
-  return SERVER_DEFAULTS;
-}
-
-function persistToStorage(state: FeormAuthState) {
-  try {
-    const json = JSON.stringify(state);
-    localStorage.setItem(STORAGE_KEY, json);
-    // Invalidate cache so next getSnapshot() returns fresh data
-    cachedRaw = json;
-    cachedSnapshot = state;
-    emitChange();
-  } catch {
-    // Ignore localStorage errors
-  }
-}
-
 export function FeormAuthProvider({ children }: { children: ReactNode }) {
-  // Sync from localStorage — uses server snapshot during SSR, client snapshot after hydration
-  const persisted = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const [user, setUser] = useState<FeormUser | null>(DEFAULTS.user);
+  const [phone, setPhone] = useState(DEFAULTS.phone);
+  const [avatarUrl, setAvatarUrl] = useState(DEFAULTS.avatarUrl);
+  const [loading, setLoading] = useState(true);
 
-  // Local state tracks both persisted + transient overrides
-  const [user, setUserRaw] = useState<FeormUser | null>(persisted.user);
-  const [phone, setPhoneRaw] = useState(persisted.phone);
-  const [avatarUrl, setAvatarUrlRaw] = useState(persisted.avatarUrl);
+  // ─── Subscribe to Supabase Auth state changes ─────────────────
+  useEffect(() => {
+    const supabase = createClient();
 
-  const setUser = useCallback(
-    (action: React.SetStateAction<FeormUser | null>) => {
-      setUserRaw((prev) => {
-        const next = typeof action === "function" ? action(prev) : action;
-        persistToStorage({ user: next, phone, avatarUrl });
-        return next;
-      });
-    },
-    [phone, avatarUrl]
-  );
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        const meta = session.user.user_metadata ?? {};
+        setPhone(session.user.phone ?? meta.phone ?? "");
 
-  const setPhone = useCallback((value: string) => {
-    setPhoneRaw(value);
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      const session = saved ? JSON.parse(saved) : {};
-      persistToStorage({ ...session, user: session.user || null, phone: value, avatarUrl: session.avatarUrl || "" });
-    } catch {
-      persistToStorage({ user: null, phone: value, avatarUrl: "" });
-    }
+        // Fetch profile from our API
+        fetch("/api/auth?action=me")
+          .then((res) => (res.ok ? res.json() : null))
+          .then((data) => {
+            if (data?.user) {
+              const profile = data.user;
+              setUser({
+                id: profile.id,
+                phone: profile.phone,
+                name: profile.name,
+                surname: profile.surname,
+                region: profile.region,
+                role: profile.role ?? "explorer",
+                verified: profile.verified ?? false,
+                avatarUrl: profile.avatarUrl ?? profile.avatar_url,
+                hasCompletedOnboarding: !!profile.name && !!profile.role && profile.role !== "explorer",
+              });
+              setPhone(profile.phone);
+              if (profile.avatarUrl ?? profile.avatar_url) {
+                setAvatarUrl(profile.avatarUrl ?? profile.avatar_url);
+              }
+            }
+          })
+          .catch(console.error)
+          .finally(() => setLoading(false));
+      } else {
+        setLoading(false);
+      }
+    });
+
+    // Listen for auth state changes (sign in, sign out, token refresh)
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        const meta = session.user.user_metadata ?? {};
+        setPhone(session.user.phone ?? meta.phone ?? "");
+
+        // Fetch profile on auth change
+        fetch("/api/auth?action=me")
+          .then((res) => (res.ok ? res.json() : null))
+          .then((data) => {
+            if (data?.user) {
+              const profile = data.user;
+              setUser({
+                id: profile.id,
+                phone: profile.phone,
+                name: profile.name,
+                surname: profile.surname,
+                region: profile.region,
+                role: profile.role ?? "explorer",
+                verified: profile.verified ?? false,
+                avatarUrl: profile.avatarUrl ?? profile.avatar_url,
+                hasCompletedOnboarding: !!profile.name && !!profile.role && profile.role !== "explorer",
+              });
+              if (profile.avatarUrl ?? profile.avatar_url) {
+                setAvatarUrl(profile.avatarUrl ?? profile.avatar_url);
+              }
+            }
+          })
+          .catch(console.error);
+      } else {
+        setUser(null);
+        setPhone("");
+        setAvatarUrl("");
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
-  const setAvatarUrl = useCallback((value: string) => {
-    setAvatarUrlRaw(value);
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      const session = saved ? JSON.parse(saved) : {};
-      persistToStorage({ ...session, user: session.user || null, phone: session.phone || "", avatarUrl: value });
-    } catch {
-      persistToStorage({ user: null, phone: "", avatarUrl: value });
-    }
+  const setPhoneCallback = useCallback((value: string) => {
+    setPhone(value);
+  }, []);
+
+  const setAvatarUrlCallback = useCallback((value: string) => {
+    setAvatarUrl(value);
   }, []);
 
   return (
     <FeormAuthContext.Provider
-      value={{ user, phone, avatarUrl, setUser, setPhone, setAvatarUrl }}
+      value={{
+        user,
+        phone,
+        avatarUrl,
+        setUser,
+        setPhone: setPhoneCallback,
+        setAvatarUrl: setAvatarUrlCallback,
+        loading,
+      }}
     >
       {children}
     </FeormAuthContext.Provider>

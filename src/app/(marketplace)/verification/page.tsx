@@ -31,7 +31,7 @@ export default function VerificationPage() {
   // ─── ID Upload Simulation ──────────────────────────────────
   const handleIdUpload = () => {
     toast({
-      title: "ID upload simulated in demo mode",
+      title: "ID upload simulated",
       description: "In production, this would upload your National ID or Passport for verification.",
     });
     setIdUploaded(true);
@@ -126,7 +126,7 @@ export default function VerificationPage() {
             </div>
             <ShieldCheck
               size={20}
-              className={isVerified ? "text-[#346538]" : "text-accent-foreground"}
+              className={isVerified ? "text-verified" : "text-accent-foreground"}
             />
           </div>
 
@@ -177,7 +177,7 @@ export default function VerificationPage() {
             /* Verification Timeline */
             <div className="space-y-0">
               <div className="flex items-center gap-3 mb-6">
-                <CheckCircle2 size={16} className="text-[#346538]" />
+                <CheckCircle2 size={16} className="text-verified" />
                 <span className="text-sm font-medium text-earth">
                   Document uploaded successfully
                 </span>
@@ -194,7 +194,7 @@ export default function VerificationPage() {
                         <div
                           className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
                             step.status === "completed"
-                              ? "bg-[#EDF3EC] text-[#346538]"
+                              ? "bg-verified-bg text-verified"
                               : step.status === "in_progress"
                               ? "bg-accent text-accent-foreground animate-pulse"
                               : "bg-cream text-muted-foreground"
@@ -206,7 +206,7 @@ export default function VerificationPage() {
                           <div
                             className={`w-px h-8 ${
                               step.status === "completed"
-                                ? "bg-[#346538]/30"
+                                ? "bg-verified/30"
                                 : "bg-soil/10"
                             }`}
                           />
@@ -218,7 +218,7 @@ export default function VerificationPage() {
                         <p
                           className={`text-sm font-medium ${
                             step.status === "completed"
-                              ? "text-[#346538]"
+                              ? "text-verified"
                               : step.status === "in_progress"
                               ? "text-accent-foreground"
                               : "text-muted-foreground"
@@ -253,8 +253,8 @@ export default function VerificationPage() {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className="bento-card p-6 flex items-start gap-3">
-            <div className="w-9 h-9 rounded-full bg-[#EDF3EC] flex items-center justify-center shrink-0">
-              <Award size={14} className="text-[#346538]" />
+            <div className="w-9 h-9 rounded-full bg-verified-bg flex items-center justify-center shrink-0">
+              <Award size={14} className="text-verified" />
             </div>
             <div>
               <p className="text-sm font-medium text-earth mb-1">
@@ -356,8 +356,8 @@ export default function VerificationPage() {
           )}
 
           {aiTips && !aiLoading && (
-            <div className="mt-5 bento-card p-6 bg-[#EDF3EC]/30">
-              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#346538] mb-4">
+            <div className="mt-5 bento-card p-6 bg-verified-bg/30">
+              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-verified mb-4">
                 Verification Tips
               </p>
               <div className="space-y-3">
@@ -368,7 +368,7 @@ export default function VerificationPage() {
                   >
                     <ChevronRight
                       size={14}
-                      className="text-[#346538] shrink-0 mt-0.5"
+                      className="text-verified shrink-0 mt-0.5"
                     />
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 mb-1">

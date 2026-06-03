@@ -89,6 +89,9 @@ export function isPresetAvatar(url: string): boolean {
 }
 
 /** Legacy: Get gradient for preset avatar */
+// NOTE: Hex colors in gradients below are intentional — they are component colors
+// in a multi-stop linear-gradient, not standalone design tokens. Do NOT replace
+// with CSS variable references (e.g., #346538 is part of "desert-sage" gradient).
 const LEGACY_PRESETS: Record<string, string> = {
   "preset://amber-dunes": "linear-gradient(135deg, #E8C96A 0%, #D4A853 50%, #B8862D 100%)",
   "preset://red-kalahari": "linear-gradient(135deg, #9F2F2D 0%, #C44536 50%, #772E2E 100%)",

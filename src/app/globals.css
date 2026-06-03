@@ -52,6 +52,18 @@
   --color-cream: #F2EDE2;
   --color-fog: #FAF7F2;
   --color-white-feorm: #FEFDFB;
+
+  /* Semantic Tokens */
+  --color-verified: #346538;
+  --color-verified-bg: #EDF3EC;
+  --color-verified-hover: #dde9dd;
+  --color-destructive-bg: #FDEBEC;
+  --color-destructive-hover: #f5d5d6;
+  --color-destructive-dark: #8a2826;
+  --color-whatsapp: #25D366;
+  --color-whatsapp-bg: rgba(37, 211, 102, 0.05);
+  --color-machinery: #1F6C9F;
+  --color-machinery-bg: #E1F3FE;
 }
 
 :root {
@@ -87,6 +99,14 @@
   --sidebar-accent-foreground: #1E1A14;
   --sidebar-border: rgba(60, 47, 26, 0.08);
   --sidebar-ring: #5C4A2A;
+
+  /* Semantic Tokens (CSS variable references) */
+  --verified: #346538;
+  --verified-bg: #EDF3EC;
+  --destructive-bg: #FDEBEC;
+  --whatsapp: #25D366;
+  --machinery: #1F6C9F;
+  --machinery-bg: #E1F3FE;
 }
 
 @layer base {
@@ -217,21 +237,21 @@
   }
 
   .tag-verified {
-    background-color: #EDF3EC;
-    color: #346538;
+    background-color: var(--color-verified-bg);
+    color: var(--color-verified);
     border-radius: 9999px;
     letter-spacing: 0.05em;
   }
 
   .tag-machinery {
-    background-color: #E1F3FE;
-    color: #1F6C9F;
+    background-color: var(--color-machinery-bg);
+    color: var(--color-machinery);
     border-radius: 9999px;
     letter-spacing: 0.05em;
   }
 
   .tag-alert {
-    background-color: #FDEBEC;
+    background-color: var(--color-destructive-bg);
     color: var(--destructive);
     border-radius: 9999px;
     letter-spacing: 0.05em;

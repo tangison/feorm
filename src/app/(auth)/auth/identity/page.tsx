@@ -85,7 +85,7 @@ export default function IdentityPage() {
         }
       }
     } catch {
-      setAvatarUrl("/images/avatar-placeholder.png");
+      setAvatarUrl("/avatars/amara.svg");
     }
     setGeneratingAvatar(false);
   }, [name, surname, region, setAvatarUrl]);
@@ -107,7 +107,7 @@ export default function IdentityPage() {
         prev
           ? { ...prev, name, surname, region, avatarUrl }
           : {
-              id: "demo",
+              id: "pending",
               phone: fullPhone,
               name,
               surname,

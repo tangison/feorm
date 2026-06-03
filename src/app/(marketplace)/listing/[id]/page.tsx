@@ -21,11 +21,13 @@ export default function ListingDetailPage() {
   const [suggestions, setSuggestions] = useState<Array<{ title: string; description: string; category: string }> | null>(null);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
 
-  const triggerWhatsApp = (title: string) => {
+  const triggerWhatsApp = (title: string, hostPhone: string) => {
     const msg = encodeURIComponent(
       `Hi, I'm interested in [${title}] on Feorm. Can you tell me more?`
     );
-    window.open(`https://wa.me/264853411522?text=${msg}`, "_blank");
+    // Use host's actual phone number, stripped of non-digits and leading +
+    const phone = hostPhone.replace(/[^\d]/g, "");
+    window.open(`https://wa.me/${phone}?text=${msg}`, "_blank");
   };
 
   const handleRewriteDescription = async () => {
@@ -114,7 +116,7 @@ export default function ListingDetailPage() {
           {/* Left: Image */}
           <div className="w-full md:w-1/2 bg-fog relative h-[35vh] md:h-auto border-b md:border-b-0 md:border-r border-soil/10">
             <Image
-              src={listing.image}
+              src={listing.image || (listing.type === "stay" ? "/images/listing-stay-hero.png" : "/images/listing-equip-hero.png")}
               alt={listing.title}
               width={600}
               height={450}
@@ -306,7 +308,7 @@ export default function ListingDetailPage() {
               <div className="flex justify-between text-sm mb-4">
                 <span className="text-muted-foreground">Security Escrow</span>
                 <span className="font-medium font-mono-feorm text-earth">
-                  N$ 1,500
+                  10% (min N$ 500)
                 </span>
               </div>
               <button
@@ -317,8 +319,8 @@ export default function ListingDetailPage() {
                 <ArrowRight size={14} aria-hidden="true" />
               </button>
               <button
-                onClick={() => triggerWhatsApp(listing.title)}
-                className="w-full mt-3 border border-[#25D366] text-[#25D366] px-5 py-3 text-xs uppercase tracking-widest flex justify-center items-center gap-2 rounded-full hover:bg-[#25D366]/5 transition-colors min-h-[44px]"
+                onClick={() => triggerWhatsApp(listing.title, listing.hostPhone)}
+                className="w-full mt-3 border border-whatsapp text-whatsapp px-5 py-3 text-xs uppercase tracking-widest flex justify-center items-center gap-2 rounded-full hover:bg-whatsapp/5 transition-colors min-h-[44px]"
               >
                 <MessageCircle size={14} /> WhatsApp Inquiry
               </button>

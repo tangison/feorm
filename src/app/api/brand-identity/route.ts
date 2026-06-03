@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
   .sub { font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; color: #787774; font-family: monospace; margin-bottom: 60px; }
   .label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: #787774; font-family: monospace; margin-bottom: 6px; }
   .value { font-size: 24px; color: #1E1A14; margin-bottom: 32px; font-weight: 300; }
-  .role-badge { display: inline-block; padding: 6px 16px; border-radius: 9999px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 32px; ${role === "provider" ? "background: #EDF3EC; color: #346538;" : "background: #FBF3DB; color: #956400;"} }
+  .role-badge { display: inline-block; padding: 6px 16px; border-radius: 9999px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 32px; ${role === "provider" ? "background: var(--color-verified-bg, #EDF3EC); color: var(--color-verified, #346538);" : "background: #FBF3DB; color: #956400;"} }
   .divider { border: none; border-top: 1px solid rgba(60,47,26,0.1); margin: 32px 0; }
   .interests { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
   .interest { padding: 4px 12px; border-radius: 9999px; border: 1px solid rgba(60,47,26,0.1); font-size: 10px; color: #787774; text-transform: uppercase; letter-spacing: 0.05em; }
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
   <div class="sub">Brand Identity Document</div>
   
   <div class="label">Identity</div>
-  <div class="value">${name || "Demo"} ${surname || "User"}</div>
+  <div class="value">${name || "Guest"} ${surname || "User"}</div>
   
   <div class="label">Persona</div>
   <div class="role-badge">${role === "provider" ? "Provider / Host" : "Voyager / Guest"}</div>

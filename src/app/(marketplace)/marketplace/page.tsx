@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useFeormMarket } from "@/context/feorm-context";
 import ListingCard from "@/components/feorm/listing-card";
+import Image from "next/image";
 import { useListings } from "@/hooks/use-listings";
 import { ChevronDown, X, SlidersHorizontal } from "lucide-react";
 import { NAMIBIAN_REGIONS } from "@/lib/regions";
@@ -210,13 +211,24 @@ function MarketplaceContent() {
           {hasActiveFilters && (
             <button
               onClick={clearFilters}
-              className="border border-destructive/15 px-2.5 py-1.5 rounded-full text-[10px] text-destructive hover:bg-[#FDEBEC] transition-colors min-h-[36px] flex items-center gap-1"
+              className="border border-destructive/15 px-2.5 py-1.5 rounded-full text-[10px] text-destructive hover:bg-destructive-bg transition-colors min-h-[36px] flex items-center gap-1"
               aria-label="Clear all filters"
             >
               <X size={10} />
             </button>
           )}
         </div>
+      </div>
+
+      {/* Category Banner */}
+      <div className="relative w-full h-32 md:h-40 rounded-xl overflow-hidden mb-6 md:mb-8">
+        <Image
+          src={marketView === "stays" ? "/images/banner-stays.png" : "/images/banner-equipment.png"}
+          alt={marketView === "stays" ? "Farm stays across Namibia" : "Equipment rental across Namibia"}
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-earth/50 to-transparent" />
       </div>
 
       {/* Loading skeleton */}
@@ -249,6 +261,13 @@ function MarketplaceContent() {
       {/* Empty */}
       {transformedListings?.length === 0 && !isLoading && (
         <div className="border border-dashed border-sand/40 bg-white-feorm rounded-lg p-10 text-center">
+          <Image
+            src="/images/empty-listings.png"
+            alt=""
+            width={200}
+            height={200}
+            className="mx-auto mb-4 rounded-lg opacity-80"
+          />
           <p className="text-xs text-muted-foreground mb-4">
             No listings found{selectedRegion !== "All Regions" ? ` in ${selectedRegion}` : ""}.
           </p>

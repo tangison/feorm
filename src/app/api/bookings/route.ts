@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getBookings, createBooking } from "@/lib/db";
+import { getBookings, getBookingByReference, createBooking } from "@/lib/db";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -8,14 +8,14 @@ export async function GET(request: Request) {
 
   try {
     if (reference) {
-      // Reference lookup — search demo data
-      try {
-        const { DEMO_BOOKINGS } = await import("@/data/demo-bookings");
-        const found = DEMO_BOOKINGS.find((b) => b.reference === reference);
-        return NextResponse.json(found || { error: "Not found" }, { status: found ? 200 : 404 });
-      } catch {
-        return NextResponse.json({ error: "Not found" }, { status: 404 });
+      const booking = await getBookingByReference(reference);
+      if (!booking) {
+        return NextResponse.json(
+          { error: "Booking not found" },
+          { status: 404 }
+        );
       }
+      return NextResponse.json(booking);
     }
 
     if (!userId) {
@@ -26,7 +26,10 @@ export async function GET(request: Request) {
     return NextResponse.json(bookings);
   } catch (error) {
     console.error("Bookings GET error:", error);
-    return NextResponse.json({ error: "Failed to fetch bookings" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch bookings" },
+      { status: 500 }
+    );
   }
 }
 
@@ -45,6 +48,9 @@ export async function POST(request: Request) {
     return NextResponse.json(booking, { status: 201 });
   } catch (error) {
     console.error("Bookings POST error:", error);
-    return NextResponse.json({ error: "Failed to create booking" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to create booking" },
+      { status: 500 }
+    );
   }
 }

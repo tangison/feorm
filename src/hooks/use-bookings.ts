@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { DEMO_BOOKINGS } from "@/data/demo-bookings";
 
 // ─── Request Deduplication Cache ────────────────────────────────
 const bookingCache = new Map<string, { data: any[]; timestamp: number }>();
@@ -22,11 +21,11 @@ interface BookingData {
   listing?: any;
 }
 
-// Hook for user's bookings — REST API primary, demo fallback
+// Hook for user's bookings — REST API only, no demo fallback
 export function useBookings(userId: string) {
-  // Initialize with demo data so there's no loading flash
   const [data, setData] = useState<BookingData[] | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!userId) {
@@ -40,6 +39,9 @@ export function useBookings(userId: string) {
     const controller = new AbortController();
 
     async function fetchBookings() {
+      setIsLoading(true);
+      setError(null);
+
       // Check cache first
       const cacheKey = `bookings-${userId}`;
       const cached = bookingCache.get(cacheKey);
@@ -72,22 +74,16 @@ export function useBookings(userId: string) {
                 listing: b.listing,
               }))
             : [];
-          // Cache the result
-          bookingCache.set(cacheKey, {
-            data: mapped,
-            timestamp: Date.now(),
-          });
+          bookingCache.set(cacheKey, { data: mapped, timestamp: Date.now() });
           setData(mapped);
           setIsLoading(false);
           return;
         }
+        throw new Error(`Failed to fetch bookings: ${res.status}`);
       } catch (err: any) {
-        // AbortError means cancelled — don't fall back
         if (err?.name === "AbortError") return;
-        // REST failed
+        setError(err.message || "Failed to load bookings");
       }
-      // Demo mode: return demo bookings
-      setData(DEMO_BOOKINGS as BookingData[]);
       setIsLoading(false);
     }
 
@@ -98,13 +94,14 @@ export function useBookings(userId: string) {
     };
   }, [userId]);
 
-  return { data, isLoading };
+  return { data, isLoading, error };
 }
 
-// Hook for booking by reference — REST API
+// Hook for booking by reference — REST API only
 export function useBookingByReference(reference: string) {
   const [data, setData] = useState<any>(undefined);
   const [isLoading, setIsLoading] = useState(!!reference);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!reference) {
@@ -137,23 +134,11 @@ export function useBookingByReference(reference: string) {
             return;
           }
         }
+        throw new Error(`Booking not found: ${reference}`);
       } catch (err: any) {
         if (err?.name === "AbortError") return;
-        // REST failed
+        setError(err.message || "Failed to load booking");
       }
-      // Demo fallback
-      const demoBooking = DEMO_BOOKINGS.find(
-        (b) => b.reference === reference
-      );
-      setData(
-        demoBooking || {
-          _id: reference,
-          reference,
-          status: "confirmed",
-          totalPrice: 0,
-          listing: null,
-        }
-      );
       setIsLoading(false);
     }
 
@@ -164,10 +149,10 @@ export function useBookingByReference(reference: string) {
     };
   }, [reference]);
 
-  return { data, isLoading };
+  return { data, isLoading, error };
 }
 
-// Create booking via REST API
+// Create booking via REST API only — no demo fallback
 export function useCreateBooking() {
   const createBooking = useCallback(
     async (bookingData: {
@@ -180,25 +165,16 @@ export function useCreateBooking() {
       serviceFee: number;
       withOperator: boolean;
     }) => {
-      try {
-        const res = await fetch("/api/bookings", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(bookingData),
-        });
-        if (res.ok) {
-          const result = await res.json();
-          return { reference: result.referenceNumber };
-        }
-      } catch {
-        // Fallback for demo
+      const res = await fetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(bookingData),
+      });
+      if (!res.ok) {
+        throw new Error(`Booking creation failed: ${res.status}`);
       }
-      // Demo fallback
-      const ref = `FE-${Date.now().toString(36).toUpperCase()}-${Math.random()
-        .toString(36)
-        .substring(2, 6)
-        .toUpperCase()}`;
-      return { reference: ref };
+      const result = await res.json();
+      return { reference: result.referenceNumber };
     },
     []
   );

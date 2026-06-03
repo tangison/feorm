@@ -13,12 +13,12 @@ export default function VerifyPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  // Auth mutations with REST primary + demo fallback
+  // Auth mutations — Supabase Auth
   const { verifyOtp } = useAuthMutations();
 
   const handleVerifyOtp = async () => {
-    if (otp !== "123456") {
-      setOtpError("Invalid code. Demo: use 123456");
+    if (otp.length !== 6) {
+      setOtpError("Please enter the full 6-digit code");
       return;
     }
     setLoading(true);
@@ -27,12 +27,8 @@ export default function VerifyPage() {
       const fullPhone = `+264${phone.replace(/\s/g, "")}`;
       const result = await verifyOtp(fullPhone, otp);
       if (result.success) {
-        setUser({
-          id: result.userId || "demo-user",
-          phone: fullPhone,
-          role: "explorer",
-          verified: false,
-        });
+        // Supabase Auth session is now active — the auth context
+        // will pick it up via onAuthStateChange
         if (result.isNewUser) {
           router.push("/auth/identity");
         } else {
@@ -107,7 +103,7 @@ export default function VerifyPage() {
 
         <div className="mt-6 p-4 bg-accent/30 border border-harvest/20 rounded-[4px]" role="note">
           <p className="text-[10px] text-accent-foreground font-mono-feorm uppercase tracking-wide">
-            Demo Mode: Use OTP <strong>123456</strong>
+            A 6-digit code has been sent to your phone
           </p>
         </div>
       </div>

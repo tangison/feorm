@@ -11,7 +11,7 @@ const onboardingSlides = [
     desc: "Every equipment rental includes a refundable N$1,500 escrow deposit. The money is held until both you and the owner confirm the asset came back in good condition.",
   },
   {
-    icon: <CheckCircle size={32} className="text-[#346538]" />,
+    icon: <CheckCircle size={32} className="text-verified" />,
     title: "N$10,000 Damage Cover",
     desc: "If something goes wrong, the Feorm communal insurance covers up to N$10,000 in damage. Only available for verified members.",
   },

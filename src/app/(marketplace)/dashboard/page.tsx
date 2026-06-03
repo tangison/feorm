@@ -27,7 +27,9 @@ const RevenueChart = dynamic(
   }
 );
 
-// ─── Demo Data ────────────────────────────────────────────────
+// ─── Placeholder Data ──────────────────────────────────────────
+// REVIEW: Replace with Supabase queries when dashboard is wired up
+// Table: listings (for utilization), bookings (for stats/requests/activity)
 const equipmentUtilization = [
   { name: "Tractor", utilization: 85 },
   { name: "Pump", utilization: 62 },
@@ -128,7 +130,8 @@ export default function DashboardPage() {
     setRewriteLoading(true);
     setRewriteResults(null);
     try {
-      const demoListings = [
+      // REVIEW: Replace with user's actual listings from Supabase
+      const sampleListings = [
         { title: "Erongo Granite Lodge", description: "A farm stay in the Erongo region", type: "stay", region: "Erongo" },
         { title: "John Deere 5075E Tractor", description: "Reliable tractor for rent in Otjozondjupa", type: "equipment", region: "Otjozondjupa" },
         { title: "5kW Solar Panel Array", description: "Solar power equipment available in Khomas", type: "equipment", region: "Khomas" },
@@ -136,7 +139,7 @@ export default function DashboardPage() {
 
       const results: Array<{ original: string; rewritten: string }> = [];
 
-      for (const listing of demoListings) {
+      for (const listing of sampleListings) {
         try {
           const res = await fetch("/api/ai/rewrite", {
             method: "POST",
@@ -268,7 +271,7 @@ export default function DashboardPage() {
             </p>
             <p
               className={`font-mono-feorm text-2xl md:text-3xl ${
-                s.accent ? "text-[#346538]" : "text-earth"
+                s.accent ? "text-verified" : "text-earth"
               }`}
             >
               {s.value}
@@ -291,7 +294,7 @@ export default function DashboardPage() {
               <p className="font-mono-feorm text-2xl text-earth">
                 N$ 35,920
               </p>
-              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-[#346538] flex items-center gap-1 mt-1">
+              <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-verified flex items-center gap-1 mt-1">
                 <TrendingUp size={10} />
                 +18.4% vs prior period
               </p>
@@ -322,7 +325,7 @@ export default function DashboardPage() {
                   <span
                     className={`font-mono-feorm text-xs ${
                       item.utilization >= 80
-                        ? "text-[#346538]"
+                        ? "text-verified"
                         : item.utilization >= 60
                         ? "text-accent-foreground"
                         : "text-destructive"
@@ -338,7 +341,7 @@ export default function DashboardPage() {
                       width: `${item.utilization}%`,
                       backgroundColor:
                         item.utilization >= 80
-                          ? "#346538"
+                          ? "var(--color-verified)"
                           : item.utilization >= 60
                           ? "var(--color-harvest)"
                           : "var(--destructive)",
@@ -396,7 +399,7 @@ export default function DashboardPage() {
                         setProcessedRequests((prev) => new Set(prev).add(req.id));
                         toast({ title: `Accepted: ${req.title}` });
                       }}
-                      className="px-4 py-2 text-xs uppercase tracking-widest bg-[#EDF3EC] text-[#346538] rounded-full hover:bg-[#dde9dd] transition-colors active:scale-[0.98] min-h-[44px]"
+                      className="px-4 py-2 text-xs uppercase tracking-widest bg-verified-bg text-verified rounded-full hover:bg-verified-hover transition-colors active:scale-[0.98] min-h-[44px]"
                       type="button"
                     >
                       Accept
@@ -406,7 +409,7 @@ export default function DashboardPage() {
                         setProcessedRequests((prev) => new Set(prev).add(req.id));
                         toast({ title: `Declined: ${req.title}` });
                       }}
-                      className="px-4 py-2 text-xs uppercase tracking-widest bg-[#FDEBEC] text-destructive rounded-full hover:bg-[#f5d5d6] transition-colors active:scale-[0.98] min-h-[44px]"
+                      className="px-4 py-2 text-xs uppercase tracking-widest bg-destructive-bg text-destructive rounded-full hover:bg-destructive-hover transition-colors active:scale-[0.98] min-h-[44px]"
                       type="button"
                     >
                       Decline

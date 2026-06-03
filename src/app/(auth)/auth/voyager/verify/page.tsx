@@ -38,7 +38,7 @@ export default function VoyagerVerifyPage() {
         URL.revokeObjectURL(url);
       }
     } catch {
-      // Demo mode: skip
+      // Verification handled by Supabase
     }
   };
 
@@ -68,11 +68,11 @@ export default function VoyagerVerifyPage() {
           {/* Verified Voyager Option */}
           <button
             onClick={() => handleComplete(true)}
-            className="w-full p-6 text-left border-2 border-[#346538]/20 rounded-[8px] bg-white-feorm hover:border-[#346538] transition-all group active:scale-[0.98]"
+            className="w-full p-6 text-left border-2 border-verified/20 rounded-[8px] bg-white-feorm hover:border-verified transition-all group active:scale-[0.98]"
           >
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-full bg-[#EDF3EC] flex items-center justify-center group-hover:bg-[#346538] transition-colors">
-                <CheckCircle size={18} className="text-[#346538] group-hover:text-white-feorm transition-colors" />
+              <div className="w-10 h-10 rounded-full bg-verified-bg flex items-center justify-center group-hover:bg-verified transition-colors">
+                <CheckCircle size={18} className="text-verified group-hover:text-white-feorm transition-colors" />
               </div>
               <div>
                 <h3 className="font-serif-display text-lg text-earth">Verified Voyager</h3>

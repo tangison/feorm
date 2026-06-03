@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { DEMO_STAYS, DEMO_EQUIPMENT, ALL_DEMO } from "@/data/demo-listings";
 
 // ─── Request Deduplication Cache ────────────────────────────────
 const listingCache = new Map<string, { data: any[]; timestamp: number }>();
@@ -10,9 +9,9 @@ const CACHE_TTL = 30_000; // 30 seconds
 // ─── Hooks ─────────────────────────────────────────────────────
 
 export function useListings(type: "stay" | "equipment") {
-  // Initialize with demo data so there's no loading flash when offline
-  const initialData = type === "stay" ? DEMO_STAYS : DEMO_EQUIPMENT;
-  const [data, setData] = useState<any[]>(initialData);
+  const [data, setData] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const currentTypeRef = useRef(type);
 
   useEffect(() => {
@@ -20,11 +19,15 @@ export function useListings(type: "stay" | "equipment") {
     const controller = new AbortController();
 
     async function fetchListings() {
+      setIsLoading(true);
+      setError(null);
+
       // Check cache first for deduplication
       const cacheKey = `listings-${type}`;
       const cached = listingCache.get(cacheKey);
       if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
         setData(cached.data);
+        setIsLoading(false);
         return;
       }
 
@@ -53,14 +56,15 @@ export function useListings(type: "stay" | "equipment") {
           if (currentTypeRef.current === type) {
             setData(mapped);
           }
+          setIsLoading(false);
           return;
         }
+        throw new Error(`Failed to fetch listings: ${res.status}`);
       } catch (err: any) {
-        // AbortError means the request was cancelled (type changed) — don't fall back
         if (err?.name === "AbortError") return;
-        // REST failed, use demo data
+        setError(err.message || "Failed to load listings");
       }
-      // Fallback: already have demo data from initial state
+      setIsLoading(false);
     }
 
     fetchListings();
@@ -70,21 +74,23 @@ export function useListings(type: "stay" | "equipment") {
     };
   }, [type]);
 
-  // Never loading since we start with demo data
-  return { data, isLoading: false, source: "rest" };
+  return { data, isLoading, error, source: "rest" };
 }
 
 export function useListing(id: string) {
-  // Pre-populate from demo data for instant render (no loading flash)
-  const demoFallback = ALL_DEMO.find((item) => item._id === id) || null;
-  const [data, setData] = useState<any | null>(demoFallback);
+  const [data, setData] = useState<any | null>(null);
   const [notFound, setNotFound] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!id) return;
     const controller = new AbortController();
 
     async function fetchListing() {
+      setIsLoading(true);
+      setError(null);
+
       try {
         const res = await fetch(`/api/listings?id=${encodeURIComponent(id)}`, {
           signal: controller.signal,
@@ -106,20 +112,17 @@ export function useListing(id: string) {
               hostPhone: found.hostPhone,
               available: found.available,
             });
+            setIsLoading(false);
             return;
           }
         }
+        throw new Error(`Listing not found: ${id}`);
       } catch (err: any) {
         if (err?.name === "AbortError") return;
-        // REST failed
-      }
-      // Fallback to static demo data
-      const demoItem = ALL_DEMO.find((item) => item._id === id);
-      if (demoItem) {
-        setData(demoItem);
-      } else {
+        setError(err.message || "Failed to load listing");
         setNotFound(true);
       }
+      setIsLoading(false);
     }
 
     fetchListing();
@@ -129,6 +132,5 @@ export function useListing(id: string) {
     };
   }, [id]);
 
-  // Not loading if we already have demo data
-  return { data, isLoading: data === null && !notFound, notFound };
+  return { data, isLoading: isLoading && data === null && !notFound, notFound, error };
 }

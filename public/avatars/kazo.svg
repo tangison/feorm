@@ -1,49 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
-  <!-- Background circle -->
-  <circle cx="100" cy="100" r="100" fill="#F2EDE2"/>
-  <!-- Head -->
-  <ellipse cx="100" cy="92" rx="40" ry="44" fill="#8D5524"/>
-  <!-- Hair - short curly -->
-  <circle cx="70" cy="62" r="12" fill="#1E1A14"/>
-  <circle cx="82" cy="54" r="12" fill="#1E1A14"/>
-  <circle cx="96" cy="50" r="13" fill="#1E1A14"/>
-  <circle cx="110" cy="52" r="12" fill="#1E1A14"/>
-  <circle cx="122" cy="58" r="12" fill="#1E1A14"/>
-  <circle cx="130" cy="68" r="10" fill="#1E1A14"/>
-  <circle cx="68" cy="72" r="10" fill="#1E1A14"/>
-  <!-- Sun hat brim -->
-  <ellipse cx="100" cy="58" rx="55" ry="10" fill="#D4C4A0"/>
-  <ellipse cx="100" cy="55" rx="55" ry="10" fill="#E8D5A8"/>
-  <!-- Hat crown -->
-  <path d="M70 55 Q70 28 100 24 Q130 28 130 55" fill="#D4C4A0"/>
-  <path d="M74 55 Q74 32 100 28 Q126 32 126 55" fill="#E8D5A8"/>
-  <!-- Hat band -->
-  <rect x="70" y="50" width="60" height="6" rx="2" fill="#5C4A2A"/>
-  <!-- Eyes -->
-  <ellipse cx="84" cy="90" rx="5" ry="5.5" fill="#1E1A14"/>
-  <ellipse cx="116" cy="90" rx="5" ry="5.5" fill="#1E1A14"/>
-  <ellipse cx="86" cy="88" rx="2" ry="2.2" fill="#FEFDFB"/>
-  <ellipse cx="118" cy="88" rx="2" ry="2.2" fill="#FEFDFB"/>
-  <!-- Eyebrows -->
-  <path d="M75 82 Q84 77 93 82" stroke="#1E1A14" stroke-width="2.2" stroke-linecap="round" fill="none"/>
-  <path d="M107 82 Q116 77 125 82" stroke="#1E1A14" stroke-width="2.2" stroke-linecap="round" fill="none"/>
-  <!-- Nose -->
-  <path d="M97 96 Q100 101 103 96" stroke="#6B3A1A" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-  <!-- Smile - wide and friendly -->
-  <path d="M84 108 Q100 122 116 108" stroke="#1E1A14" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-  <!-- Teeth -->
-  <path d="M90 110 Q100 116 110 110" fill="#FEFDFB"/>
-  <!-- Cheeks -->
-  <ellipse cx="74" cy="102" rx="7" ry="4" fill="#E8A08A" opacity="0.35"/>
-  <ellipse cx="126" cy="102" rx="7" ry="4" fill="#E8A08A" opacity="0.35"/>
-  <!-- Neck -->
-  <rect x="90" y="130" width="20" height="14" rx="4" fill="#8D5524"/>
-  <!-- Shoulders/Body - linen shirt -->
-  <path d="M55 200 Q55 150 100 144 Q145 150 145 200Z" fill="#F2EDE2"/>
-  <!-- Shirt collar -->
-  <path d="M80 144 L90 158 L100 150 L110 158 L120 144" stroke="#D4C4A0" stroke-width="2" fill="none" stroke-linecap="round"/>
-  <!-- Vest -->
-  <path d="M65 200 Q65 156 90 148 L100 155 L110 148 Q135 156 135 200Z" fill="#3C2F1A" opacity="0.9"/>
-  <!-- Vest opening -->
-  <path d="M88 155 L100 175 L112 155" stroke="#5C4A2A" stroke-width="1.5" fill="none"/>
+  <!-- Background: rounded square, dark bark brown -->
+  <rect x="0" y="0" width="200" height="200" rx="32" fill="#5C4A1E"/>
+  <!-- Icon: Simplified compass rose -->
+  <g stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- North point (elongated) -->
+    <path d="M100 52 L108 88 L100 80 L92 88 Z"/>
+    <!-- South point (elongated) -->
+    <path d="M100 148 L92 112 L100 120 L108 112 Z"/>
+    <!-- East point (shorter) -->
+    <path d="M148 100 L112 92 L120 100 L112 108 Z"/>
+    <!-- West point (shorter) -->
+    <path d="M52 100 L88 108 L80 100 L88 92 Z"/>
+    <!-- Center circle -->
+    <circle cx="100" cy="100" r="6" fill="white" stroke="white" stroke-width="1"/>
+  </g>
 </svg>

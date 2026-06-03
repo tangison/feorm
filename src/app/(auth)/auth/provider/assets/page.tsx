@@ -91,7 +91,7 @@ export default function ProviderAssetsPage() {
             onClick={() => toggleAsset("equipment")}
             className={`w-full p-6 text-left border-2 rounded-[8px] transition-all duration-300 active:scale-[0.98] ${
               assets.includes("equipment")
-                ? "border-[#1F6C9F] bg-[#E1F3FE]/30"
+                ? "border-machinery bg-machinery-bg/30"
                 : "border-soil/10 bg-white-feorm hover:border-soil/20"
             }`}
           >
@@ -99,7 +99,7 @@ export default function ProviderAssetsPage() {
               <div
                 className={`w-12 h-12 rounded-[10px] flex items-center justify-center transition-colors ${
                   assets.includes("equipment")
-                    ? "bg-[#E1F3FE]"
+                    ? "bg-machinery-bg"
                     : "bg-fog"
                 }`}
               >
@@ -107,7 +107,7 @@ export default function ProviderAssetsPage() {
                   size={22}
                   className={
                     assets.includes("equipment")
-                      ? "text-[#1F6C9F]"
+                      ? "text-machinery"
                       : "text-muted-foreground"
                   }
                 />
@@ -121,8 +121,8 @@ export default function ProviderAssetsPage() {
                 </p>
               </div>
               {assets.includes("equipment") && (
-                <div className="ml-auto w-6 h-6 rounded-full bg-[#E1F3FE] flex items-center justify-center">
-                  <div className="w-2 h-2 rounded-full bg-[#1F6C9F]" />
+                <div className="ml-auto w-6 h-6 rounded-full bg-machinery-bg flex items-center justify-center">
+                  <div className="w-2 h-2 rounded-full bg-machinery" />
                 </div>
               )}
             </div>

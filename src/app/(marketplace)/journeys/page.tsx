@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useBookings } from "@/hooks/use-bookings";
 import { Clock, ArrowRight, MapPin } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { formatPrice } from "@/lib/format";
 
 export default function JourneysPage() {
@@ -12,7 +13,7 @@ export default function JourneysPage() {
   const router = useRouter();
 
   const { data: bookings, isLoading: bookingsLoading } = useBookings(
-    user?.phone || `+264${phone.replace(/\s/g, "")}` || "demo"
+    user?.phone || `+264${phone.replace(/\s/g, "")}` || "unknown"
   );
 
   return (
@@ -27,7 +28,7 @@ export default function JourneysPage() {
         <p className="text-sm text-muted-foreground">
           Active, upcoming, and past bookings.{" "}
           <span className="inline-flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#346538] animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-verified animate-pulse" />
             <span className="font-mono-feorm text-[9px] uppercase tracking-widest">Live</span>
           </span>
         </p>
@@ -50,7 +51,13 @@ export default function JourneysPage() {
 
       {!bookingsLoading && bookings?.length === 0 && (
         <div className="border border-dashed border-sand/50 bg-white-feorm rounded-[8px] p-12 text-center">
-          <Clock size={32} className="text-sand mx-auto mb-4" />
+          <Image
+            src="/images/empty-journeys.png"
+            alt=""
+            width={200}
+            height={200}
+            className="mx-auto mb-4 rounded-lg opacity-80"
+          />
           <p className="text-sm text-muted-foreground mb-6">
             No bookings yet. Browse the marketplace to make your first one.
           </p>
@@ -89,7 +96,7 @@ export default function JourneysPage() {
                     {b.reference}
                   </span>
                   {b.status === "confirmed" && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#346538] animate-pulse" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-verified animate-pulse" />
                   )}
                 </div>
                 <h3 className="font-serif-display text-lg text-earth">

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Send, X, Sparkles, Zap, ChevronDown } from "lucide-react";
+import Image from "next/image";
+import { Send, X, Zap, ChevronDown } from "lucide-react";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -187,9 +188,13 @@ export default function TangisonChat() {
         className="fixed bottom-24 right-5 lg:bottom-8 lg:right-8 z-30 w-14 h-14 rounded-full bg-earth text-white-feorm shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group hover:scale-105 active:scale-[0.98]"
         aria-label="Open Tangison AI assistant"
       >
-        <Sparkles
-          size={20}
-          className="text-harvest group-hover:rotate-12 transition-transform"
+        <Image
+          src="/ai-agent-icon.svg"
+          alt="Tangison AI"
+          width={32}
+          height={32}
+          sizes="32px"
+          className="group-hover:scale-110 transition-transform"
         />
       </button>
     );
@@ -210,7 +215,13 @@ export default function TangisonChat() {
       <div className="bg-earth text-white-feorm px-4 py-3 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-full bg-harvest/20 flex items-center justify-center">
-            <Sparkles size={16} className="text-harvest" />
+            <Image
+              src="/ai-agent-icon.svg"
+              alt="Tangison"
+              width={18}
+              height={18}
+              sizes="18px"
+            />
           </div>
           <div>
             <h4 className="text-sm font-medium leading-tight">Tangison</h4>

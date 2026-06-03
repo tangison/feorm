@@ -27,7 +27,7 @@ export default function SettingsPage() {
 
   // ─── Session Management ─────────────────────────────────────
   const handleClearSession = () => {
-    localStorage.removeItem("feorm-session");
+    // TODO: Replace with Supabase Auth — supabase.auth.signOut()
     router.push("/");
   };
 
@@ -104,7 +104,7 @@ export default function SettingsPage() {
 
   // ─── Full System Reset ─────────────────────────────────────
   const handleFullReset = () => {
-    localStorage.clear();
+    // TODO: Replace with Supabase Auth — supabase.auth.signOut() + clear local state
     router.push("/");
   };
 
@@ -164,7 +164,7 @@ export default function SettingsPage() {
         </h2>
         <div className="bento-card p-6">
           <div className="flex items-center gap-3 mb-5">
-            <div className="w-2.5 h-2.5 rounded-full bg-[#346538] animate-pulse" />
+            <div className="w-2.5 h-2.5 rounded-full bg-verified animate-pulse" />
             <span className="text-sm font-medium text-earth">
               Session Active
             </span>
@@ -277,7 +277,7 @@ export default function SettingsPage() {
           System Reset
         </h2>
         <div className="bento-card p-6 border-destructive/20">
-          <div className="flex items-start gap-3 mb-5 p-4 rounded-[8px] bg-[#FDEBEC]/50">
+          <div className="flex items-start gap-3 mb-5 p-4 rounded-[8px] bg-destructive-bg/50">
             <AlertTriangle size={16} className="text-destructive shrink-0 mt-0.5" />
             <p className="text-xs text-destructive leading-relaxed">
               These actions are irreversible. Resetting will clear your
@@ -288,7 +288,7 @@ export default function SettingsPage() {
           <div className="flex flex-col sm:flex-row gap-3">
             <button
               onClick={handleResetOnboarding}
-              className="flex items-center gap-2 px-5 py-3 text-xs uppercase tracking-widest min-h-[44px] rounded-full border border-destructive/30 text-destructive hover:bg-[#FDEBEC] transition-colors active:scale-[0.98]"
+              className="flex items-center gap-2 px-5 py-3 text-xs uppercase tracking-widest min-h-[44px] rounded-full border border-destructive/30 text-destructive hover:bg-destructive-bg transition-colors active:scale-[0.98]"
               type="button"
             >
               <RotateCcw size={14} />
@@ -296,7 +296,7 @@ export default function SettingsPage() {
             </button>
             <button
               onClick={handleFullReset}
-              className="flex items-center gap-2 px-5 py-3 text-xs uppercase tracking-widest min-h-[44px] rounded-full bg-destructive text-white hover:bg-[#8a2826] transition-colors active:scale-[0.98]"
+              className="flex items-center gap-2 px-5 py-3 text-xs uppercase tracking-widest min-h-[44px] rounded-full bg-destructive text-white hover:bg-destructive-dark transition-colors active:scale-[0.98]"
               type="button"
             >
               <AlertTriangle size={14} />

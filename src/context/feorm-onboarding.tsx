@@ -5,7 +5,6 @@ import React, {
   useContext,
   useState,
   useCallback,
-  useSyncExternalStore,
   type ReactNode,
 } from "react";
 
@@ -23,133 +22,22 @@ interface FeormOnboardingContextType {
   setProviderAssets: (assets: ("stay" | "equipment")[]) => void;
 }
 
-interface OnboardingState {
-  selectedRole: "voyager" | "provider" | null;
-  interests: string[];
-  hasCompletedOnboarding: boolean;
-  providerAssets: ("stay" | "equipment")[];
-}
-
 const FeormOnboardingContext = createContext<FeormOnboardingContextType | null>(
   null
 );
-
-// Server-safe defaults — must match what SSR produces
-const SERVER_DEFAULTS: OnboardingState = Object.freeze({
-  selectedRole: null,
-  interests: [],
-  hasCompletedOnboarding: false,
-  providerAssets: [],
-});
-
-const STORAGE_KEY = "feorm-session";
-let listeners: Array<() => void> = [];
-
-function emitChange() {
-  for (const listener of listeners) {
-    listener();
-  }
-}
-
-function subscribe(listener: () => void) {
-  listeners = [...listeners, listener];
-  return () => {
-    listeners = listeners.filter((l) => l !== listener);
-  };
-}
-
-// ─── Cached snapshot to prevent infinite loops ──────────────────
-let cachedRaw: string | null = null;
-let cachedSnapshot: OnboardingState = SERVER_DEFAULTS;
-
-function getSnapshot(): OnboardingState {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw === cachedRaw) return cachedSnapshot;
-
-    if (raw) {
-      const session = JSON.parse(raw);
-      cachedSnapshot = {
-        selectedRole: session.selectedRole || null,
-        interests: session.interests || [],
-        hasCompletedOnboarding: session.hasCompletedOnboarding || false,
-        providerAssets: session.providerAssets || [],
-      };
-    } else {
-      cachedSnapshot = { ...SERVER_DEFAULTS };
-    }
-    cachedRaw = raw;
-    return cachedSnapshot;
-  } catch {
-    return cachedSnapshot;
-  }
-}
-
-function getServerSnapshot(): OnboardingState {
-  return SERVER_DEFAULTS;
-}
-
-function persistToStorage(patch: Partial<OnboardingState>) {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    const session = saved ? JSON.parse(saved) : {};
-    const merged = { ...session, ...patch };
-    const json = JSON.stringify(merged);
-    localStorage.setItem(STORAGE_KEY, json);
-    // Invalidate cache so next getSnapshot() returns fresh data
-    cachedRaw = json;
-    // Rebuild onboarding portion of the snapshot
-    cachedSnapshot = {
-      selectedRole: merged.selectedRole || null,
-      interests: merged.interests || [],
-      hasCompletedOnboarding: merged.hasCompletedOnboarding || false,
-      providerAssets: merged.providerAssets || [],
-    };
-    emitChange();
-  } catch {
-    // Ignore localStorage errors
-  }
-}
 
 export function FeormOnboardingProvider({
   children,
 }: {
   children: ReactNode;
 }) {
-  // Sync from localStorage — uses server snapshot during SSR
-  const persisted = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-
+  // TODO: Replace with Supabase-backed state
+  // Uses: supabase.from('profiles').select('role, interests, onboarding_completed, provider_assets')
   const [onboardingStep, setOnboardingStep] = useState(0);
-  const [selectedRole, setSelectedRoleRaw] = useState<"voyager" | "provider" | null>(
-    persisted.selectedRole
-  );
-  const [interests, setInterestsRaw] = useState<string[]>(persisted.interests);
-  const [hasCompletedOnboarding, setHasCompletedOnboardingRaw] = useState(
-    persisted.hasCompletedOnboarding
-  );
-  const [providerAssets, setProviderAssetsRaw] = useState<("stay" | "equipment")[]>(
-    persisted.providerAssets
-  );
-
-  const setSelectedRole = useCallback((role: "voyager" | "provider" | null) => {
-    setSelectedRoleRaw(role);
-    persistToStorage({ selectedRole: role });
-  }, []);
-
-  const setInterests = useCallback((items: string[]) => {
-    setInterestsRaw(items);
-    persistToStorage({ interests: items });
-  }, []);
-
-  const setHasCompletedOnboarding = useCallback((completed: boolean) => {
-    setHasCompletedOnboardingRaw(completed);
-    persistToStorage({ hasCompletedOnboarding: completed });
-  }, []);
-
-  const setProviderAssets = useCallback((assets: ("stay" | "equipment")[]) => {
-    setProviderAssetsRaw(assets);
-    persistToStorage({ providerAssets: assets });
-  }, []);
+  const [selectedRole, setSelectedRole] = useState<"voyager" | "provider" | null>(null);
+  const [interests, setInterests] = useState<string[]>([]);
+  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
+  const [providerAssets, setProviderAssets] = useState<("stay" | "equipment")[]>([]);
 
   return (
     <FeormOnboardingContext.Provider
@@ -159,11 +47,11 @@ export function FeormOnboardingProvider({
         selectedRole,
         setSelectedRole,
         interests,
-        setInterests,
+        setInterests: useCallback((items: string[]) => setInterests(items), []),
         hasCompletedOnboarding,
-        setHasCompletedOnboarding,
+        setHasCompletedOnboarding: useCallback((completed: boolean) => setHasCompletedOnboarding(completed), []),
         providerAssets,
-        setProviderAssets,
+        setProviderAssets: useCallback((assets: ("stay" | "equipment")[]) => setProviderAssets(assets), []),
       }}
     >
       {children}

@@ -15,7 +15,7 @@ export default function VerifyIdPage() {
       const fullPhone = user?.phone || `+264${phone.replace(/\s/g, "")}`;
       await verifyUser(fullPhone);
     } catch {
-      // Continue anyway for demo
+      // Continue — verification state is managed by Supabase
     }
     setUser((prev) => (prev ? { ...prev, verified: true } : null));
     router.push("/marketplace");

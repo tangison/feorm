@@ -89,7 +89,7 @@ export default function FeormNav() {
       ];
 
   const signOut = useCallback(() => {
-    localStorage.removeItem("feorm-session");
+    // TODO: Replace with Supabase Auth — supabase.auth.signOut()
     setHasCompletedOnboarding(false);
     router.push("/");
   }, [setHasCompletedOnboarding, router]);
@@ -236,7 +236,7 @@ export default function FeormNav() {
               {renderAvatar(40)}
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-earth truncate">
-                  {user?.name || "Demo"} {user?.surname || "User"}
+                  {user?.name || "Guest"} {user?.surname || "User"}
                 </p>
                 <p className="font-mono-feorm text-[9px] text-muted-foreground uppercase tracking-widest">
                   {isProvider ? "Provider" : "Voyager"}
@@ -276,7 +276,7 @@ export default function FeormNav() {
             <div className="px-2 pb-4 pt-1 border-t border-earth/5 mx-2">
               <button
                 onClick={signOut}
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-destructive hover:bg-[#FDEBEC] transition-colors w-full min-h-[44px]"
+                className="flex items-center gap-3 px-4 py-3 rounded-xl text-destructive hover:bg-destructive-bg transition-colors w-full min-h-[44px]"
               >
                 <LogOut size={18} aria-hidden="true" />
                 <span className="text-sm font-medium">Sign Out</span>
@@ -382,7 +382,7 @@ export default function FeormNav() {
             {renderAvatar(32)}
             <div className="flex-1 min-w-0">
               <p className="text-xs font-medium text-earth truncate">
-                {user?.name || "Demo"} {user?.surname || "User"}
+                {user?.name || "Guest"} {user?.surname || "User"}
               </p>
               <p className="font-mono-feorm text-[8px] text-muted-foreground uppercase tracking-widest truncate">
                 {isProvider ? "Provider" : "Voyager"}
@@ -391,7 +391,7 @@ export default function FeormNav() {
           </Link>
           <button
             onClick={signOut}
-            className="flex items-center gap-2.5 rounded-lg px-4 py-2 text-destructive/70 hover:bg-[#FDEBEC] transition-all duration-150 w-full min-h-[40px]"
+            className="flex items-center gap-2.5 rounded-lg px-4 py-2 text-destructive/70 hover:bg-destructive-bg transition-all duration-150 w-full min-h-[40px]"
           >
             <LogOut size={14} aria-hidden="true" />
             <span className="font-mono-feorm text-[10px] uppercase tracking-[0.06em] font-medium">

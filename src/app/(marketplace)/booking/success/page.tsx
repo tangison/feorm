@@ -5,7 +5,9 @@ import { useFeormMarket } from "@/context/feorm-context";
 import { CheckCircle, MessageCircle } from "lucide-react";
 import { useBookingByReference } from "@/hooks/use-bookings";
 import { Suspense } from "react";
+import Image from "next/image";
 import { formatPrice } from "@/lib/format";
+import { SUPPORT_WHATSAPP_URL } from "@/lib/config";
 
 function SuccessContent() {
   const { selectedListing } = useFeormMarket();
@@ -13,7 +15,7 @@ function SuccessContent() {
   const router = useRouter();
   const ref = searchParams.get("ref") || "";
 
-  // Look up booking by reference via REST API (demo fallback)
+  // Look up booking by reference via REST API
   const { data: booking } = useBookingByReference(ref);
 
   const listingTitle = booking?.listing?.title || selectedListing?.title || "Feorm Booking";
@@ -22,14 +24,24 @@ function SuccessContent() {
     const msg = encodeURIComponent(
       `Hi, I just booked [${listingTitle}] on Feorm. My ref: ${ref}. When can we arrange the details?`
     );
-    window.open(`https://wa.me/264853411522?text=${msg}`, "_blank");
+    window.open(`${SUPPORT_WHATSAPP_URL}?text=${msg}`, "_blank");
   };
 
   return (
     <div className="flex-grow flex items-center justify-center p-6 md:p-12 min-h-[60vh] bg-fog">
       <div className="max-w-md w-full text-center">
-        <div className="w-16 h-16 rounded-full bg-[#EDF3EC] flex items-center justify-center mx-auto mb-8">
-          <CheckCircle size={32} className="text-[#346538]" />
+        {/* Booking success hero image */}
+        <div className="relative w-full h-40 rounded-xl overflow-hidden mb-8">
+          <Image
+            src="/images/booking-success.png"
+            alt="Booking confirmed"
+            fill
+            className="object-cover opacity-70"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-earth/40 to-transparent" />
+        </div>
+        <div className="w-16 h-16 rounded-full bg-verified-bg flex items-center justify-center mx-auto -mt-12 relative z-10">
+          <CheckCircle size={32} className="text-verified" />
         </div>
 
         <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-earth">
@@ -58,7 +70,7 @@ function SuccessContent() {
         <div className="space-y-3">
           <button
             onClick={triggerWhatsApp}
-            className="w-full border border-[#25D366] text-[#25D366] px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 rounded-full hover:bg-[#25D366]/5 transition-colors min-h-[44px]"
+            className="w-full border border-whatsapp text-whatsapp px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 rounded-full hover:bg-whatsapp/5 transition-colors min-h-[44px]"
           >
             <MessageCircle size={14} /> Connect via WhatsApp
           </button>
