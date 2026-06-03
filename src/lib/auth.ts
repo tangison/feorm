@@ -23,7 +23,7 @@ export async function requestMagicLink(
     email,
     options: {
       shouldCreateUser: true,
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || "https://feorm.vercel.app"}/auth/callback`,
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || "https://feorm-git-main-tangison-s-projects.vercel.app"}/auth/callback`,
     },
   });
 
