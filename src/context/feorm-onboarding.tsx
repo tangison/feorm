@@ -12,8 +12,8 @@ import React, {
 interface FeormOnboardingContextType {
   onboardingStep: number;
   setOnboardingStep: (step: number) => void;
-  selectedRole: "voyager" | "provider" | null;
-  setSelectedRole: (role: "voyager" | "provider" | null) => void;
+  selectedRole: "voyager" | "provider_stay" | "provider_equipment" | null;
+  setSelectedRole: (role: "voyager" | "provider_stay" | "provider_equipment" | null) => void;
   interests: string[];
   setInterests: (interests: string[]) => void;
   hasCompletedOnboarding: boolean;
@@ -34,7 +34,7 @@ export function FeormOnboardingProvider({
   // TODO: Replace with Supabase-backed state
   // Uses: supabase.from('profiles').select('role, interests, onboarding_completed, provider_assets')
   const [onboardingStep, setOnboardingStep] = useState(0);
-  const [selectedRole, setSelectedRole] = useState<"voyager" | "provider" | null>(null);
+  const [selectedRole, setSelectedRole] = useState<"voyager" | "provider_stay" | "provider_equipment" | null>(null);
   const [interests, setInterests] = useState<string[]>([]);
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
   const [providerAssets, setProviderAssets] = useState<("stay" | "equipment")[]>([]);

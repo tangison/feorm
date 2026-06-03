@@ -2,99 +2,165 @@
 
 import { useFeormAuth, useFeormOnboarding } from "@/context/feorm-context";
 import { useRouter } from "next/navigation";
-import { Compass, Tractor, ArrowRight } from "lucide-react";
+import { Compass, Tent, Tractor, Building2 } from "lucide-react";
 import Image from "next/image";
+
+const ROLE_CARDS = [
+  {
+    id: "voyager" as const,
+    icon: Compass,
+    title: "I want to explore & book",
+    subtitle: "Voyager",
+    description:
+      "Find farm stays, rent equipment, and experience real Namibian agrotourism.",
+    route: "/auth/voyager/profile",
+    hoverBorder: "hover:border-harvest",
+    hoverShadow: "hover:shadow-[0_8px_32px_rgba(232,201,106,0.08)]",
+    iconBg: "bg-accent group-hover:bg-harvest",
+    iconColor: "text-accent-foreground group-hover:text-earth",
+    subtitleColor: "text-harvest",
+  },
+  {
+    id: "provider_stay" as const,
+    icon: Tent,
+    title: "I have a farm stay to list",
+    subtitle: "Stay Provider",
+    description:
+      "List your farm accommodation — bush camps, farmhouses, tent camps, lodges, or homestays.",
+    route: "/auth/provider/stay/profile",
+    hoverBorder: "hover:border-verified",
+    hoverShadow: "hover:shadow-[0_8px_32px_rgba(52,101,56,0.08)]",
+    iconBg: "bg-verified-bg group-hover:bg-verified",
+    iconColor: "text-verified group-hover:text-white-feorm",
+    subtitleColor: "text-verified",
+  },
+  {
+    id: "provider_equipment" as const,
+    icon: Tractor,
+    title: "I have equipment to rent out",
+    subtitle: "Equipment Provider",
+    description:
+      "List tractors, irrigation systems, power equipment, and more for rent by the day.",
+    route: "/auth/provider/equipment/profile",
+    hoverBorder: "hover:border-machinery",
+    hoverShadow: "hover:shadow-[0_8px_32px_rgba(139,92,42,0.08)]",
+    iconBg: "bg-machinery-bg group-hover:bg-machinery",
+    iconColor: "text-machinery group-hover:text-white-feorm",
+    subtitleColor: "text-machinery",
+  },
+  {
+    id: "provider_equipment_company" as const,
+    icon: Building2,
+    title: "I represent a company",
+    subtitle: "Equipment Provider",
+    description:
+      "Register your agribusiness and lease equipment to farmers across Namibia.",
+    route: "/auth/provider/equipment/profile",
+    hoverBorder: "hover:border-machinery",
+    hoverShadow: "hover:shadow-[0_8px_32px_rgba(139,92,42,0.08)]",
+    iconBg: "bg-machinery-bg group-hover:bg-machinery",
+    iconColor: "text-machinery group-hover:text-white-feorm",
+    subtitleColor: "text-machinery",
+  },
+] as const;
 
 export default function RolePage() {
   const { setUser } = useFeormAuth();
   const { setSelectedRole } = useFeormOnboarding();
   const router = useRouter();
 
-  const handleRoleSelect = (role: "voyager" | "provider") => {
+  const handleRoleSelect = (role: "voyager" | "provider_stay" | "provider_equipment", route: string) => {
     setSelectedRole(role);
     setUser((prev: any) => (prev ? { ...prev, role } : null));
-
-    if (role === "voyager") {
-      router.push("/auth/voyager/interests");
-    } else {
-      router.push("/auth/provider/assets");
-    }
+    router.push(route);
   };
 
   return (
-    <div className="flex-grow flex items-center justify-center p-6 md:p-12 min-h-screen bg-fog relative">
-      {/* Background aerial farm image */}
+    <div className="relative flex-grow flex items-center justify-center p-6 md:p-12 min-h-screen">
+      {/* Full bleed background */}
       <div className="absolute inset-0 overflow-hidden">
         <Image
           src="/images/onboard-role-bg.png"
           alt=""
           fill
-          className="object-cover opacity-10"
+          className="object-cover"
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.7) 100%)",
+          }}
         />
       </div>
+
       <div className="max-w-3xl w-full relative z-10">
-        <div className="mb-12 text-center">
-          <kbd className="font-mono-feorm text-[10px] border border-soil/20 bg-white-feorm px-2 py-1 rounded text-muted-foreground mb-6 inline-block">
-            CHOOSE YOUR ROLE
-          </kbd>
-          <h1 className="font-serif-display text-3xl md:text-5xl mb-4 text-earth tracking-tight">
+        {/* Feorm Logo */}
+        <div className="text-center mb-10">
+          <Image
+            src="/feorm-logo.png"
+            alt="Feorm"
+            width={40}
+            height={40}
+            className="mx-auto mb-4 rounded-[4px]"
+          />
+          <h1 className="font-serif-display text-3xl md:text-5xl mb-4 text-white tracking-tight">
             How will you use the land?
           </h1>
-          <p className="text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
-            Pick the role that fits. You can change it later in Settings. 
+          <p className="text-sm text-white/70 max-w-md mx-auto leading-relaxed">
+            Pick the role that fits. You can change it later in Settings.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* Voyager Card */}
-          <button
-            onClick={() => handleRoleSelect("voyager")}
-            className="group p-8 md:p-10 text-left border-2 border-soil/10 rounded-[12px] transition-all duration-300 hover:border-harvest hover:shadow-[0_8px_32px_rgba(232,201,106,0.08)] bg-white-feorm active:scale-[0.98]"
-          >
-            <div className="w-14 h-14 rounded-[12px] bg-accent flex items-center justify-center mb-6 group-hover:bg-harvest transition-colors duration-300">
-              <Compass size={24} className="text-accent-foreground group-hover:text-earth transition-colors" />
-            </div>
-            <h3 className="font-serif-display text-2xl md:text-3xl mb-3 text-earth">
-              I am a Voyager
-            </h3>
-            <p className="text-[10px] uppercase tracking-widest text-harvest font-mono-feorm font-medium mb-4">
-              Guest / Traveler
-            </p>
-            <p className="text-sm text-muted-foreground leading-relaxed mb-8">
-              Find farm stays, rent equipment, and experience real Namibian agrotourism. Your booking is protected by escrow and N$10,000 damage cover.
-            </p>
-            <div className="flex items-center gap-2 text-muted-foreground group-hover:text-earth transition-colors">
-              <span className="font-mono-feorm text-[10px] uppercase tracking-widest font-medium">
-                Explore listings
-              </span>
-              <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-200" />
-            </div>
-          </button>
+        {/* Progress dots — step 1 of 1 for role selection */}
+        <div className="flex justify-center gap-2 mb-8">
+          <div className="w-2 h-2 rounded-full bg-harvest" />
+        </div>
 
-          {/* Provider Card */}
-          <button
-            onClick={() => handleRoleSelect("provider")}
-            className="group p-8 md:p-10 text-left border-2 border-soil/10 rounded-[12px] transition-all duration-300 hover:border-verified hover:shadow-[0_8px_32px_rgba(52,101,56,0.08)] bg-white-feorm active:scale-[0.98]"
-          >
-            <div className="w-14 h-14 rounded-[12px] bg-verified-bg flex items-center justify-center mb-6 group-hover:bg-verified transition-colors duration-300">
-              <Tractor size={24} className="text-verified group-hover:text-white-feorm transition-colors" />
-            </div>
-            <h3 className="font-serif-display text-2xl md:text-3xl mb-3 text-earth">
-              I am a Provider
-            </h3>
-            <p className="text-[10px] uppercase tracking-widest text-verified font-mono-feorm font-medium mb-4">
-              Host / Farmer
-            </p>
-            <p className="text-sm text-muted-foreground leading-relaxed mb-8">
-              List your farmland, accommodation, or machinery and earn income. Escrow protection and verified bookings keep every transaction safe.
-            </p>
-            <div className="flex items-center gap-2 text-muted-foreground group-hover:text-earth transition-colors">
-              <span className="font-mono-feorm text-[10px] uppercase tracking-widest font-medium">
-                Start earning
-              </span>
-              <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-200" />
-            </div>
-          </button>
+        <div className="grid sm:grid-cols-2 gap-4">
+          {ROLE_CARDS.map((card) => {
+            const Icon = card.icon;
+            return (
+              <button
+                key={card.id + card.title}
+                onClick={() =>
+                  handleRoleSelect(
+                    card.id === "provider_equipment_company"
+                      ? "provider_equipment"
+                      : card.id,
+                    card.route
+                  )
+                }
+                className={`group p-6 md:p-8 text-left border transition-all duration-300 ${card.hoverBorder} ${card.hoverShadow} active:scale-[0.98]`}
+                style={{
+                  background: "rgba(255,255,255,0.12)",
+                  borderColor: "rgba(255,255,255,0.2)",
+                  backdropFilter: "blur(8px)",
+                  borderRadius: "12px",
+                }}
+              >
+                <div
+                  className={`w-12 h-12 rounded-[10px] ${card.iconBg} flex items-center justify-center mb-5 transition-colors duration-300`}
+                >
+                  <Icon
+                    size={22}
+                    className={`${card.iconColor} transition-colors`}
+                  />
+                </div>
+                <h3 className="font-serif-display text-xl md:text-2xl mb-2 text-white">
+                  {card.title}
+                </h3>
+                <p
+                  className={`text-[10px] uppercase tracking-widest ${card.subtitleColor} font-mono-feorm font-medium mb-3`}
+                >
+                  {card.subtitle}
+                </p>
+                <p className="text-sm text-white/60 leading-relaxed">
+                  {card.description}
+                </p>
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

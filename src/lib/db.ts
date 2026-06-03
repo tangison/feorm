@@ -273,7 +273,7 @@ export async function findOrCreateUserById(
     .insert({
       id: authUserId,
       name: email ? email.split("@")[0] : null,
-      role: "explorer",
+      role: "guest",
       verified: false,
     })
     .select()
@@ -314,7 +314,7 @@ export async function findOrCreateUser(phone: string): Promise<UserData> {
     .from("profiles")
     .insert({
       phone,
-      role: "explorer",
+      role: "guest",
       verified: false,
     })
     .select()

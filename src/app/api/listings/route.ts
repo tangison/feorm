@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createClient } from "@/utils/supabase/server";
 import { getListings, getListingById, createListing } from "@/lib/db";
 
 export async function GET(request: Request) {
@@ -25,6 +26,16 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    // Auth guard — must be signed in to create listings
+    const supabase = await createClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
     const listing = await createListing({
       title: body.title,

@@ -3,6 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useListing } from "@/hooks/use-listings";
+import { useFeormAuth } from "@/context/feorm-context";
 import { formatPrice } from "@/lib/format";
 import Image from "next/image";
 import { ChevronLeft, MessageCircle, ArrowRight, Sparkles } from "lucide-react";
@@ -10,6 +11,7 @@ import { ChevronLeft, MessageCircle, ArrowRight, Sparkles } from "lucide-react";
 export default function ListingDetailPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
+  const { user } = useFeormAuth();
 
   const { data: listing, isLoading, notFound } = useListing(params.id);
 
@@ -312,14 +314,26 @@ export default function ListingDetailPage() {
                 </span>
               </div>
               <button
-                onClick={() => router.push(`/listing/${params.id}/book`)}
+                onClick={() => {
+                  if (!user) {
+                    router.push("/auth?message=sign-in-to-book");
+                    return;
+                  }
+                  router.push(`/listing/${params.id}/book`);
+                }}
                 className="w-full btn-harvest px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 min-h-[44px]"
               >
                 {listing.type === "stay" ? "Request Stay" : "Rent Machinery"}
                 <ArrowRight size={14} aria-hidden="true" />
               </button>
               <button
-                onClick={() => triggerWhatsApp(listing.title, listing.hostPhone)}
+                onClick={() => {
+                  if (!user) {
+                    router.push("/auth?message=sign-in-to-book");
+                    return;
+                  }
+                  triggerWhatsApp(listing.title, listing.hostPhone);
+                }}
                 className="w-full mt-3 border border-whatsapp text-whatsapp px-5 py-3 text-xs uppercase tracking-widest flex justify-center items-center gap-2 rounded-full hover:bg-whatsapp/5 transition-colors min-h-[44px]"
               >
                 <MessageCircle size={14} /> WhatsApp Inquiry

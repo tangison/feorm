@@ -18,7 +18,7 @@ interface FeormUser {
   name?: string;
   surname?: string;
   region?: string;
-  role: "explorer" | "lister" | "voyager" | "provider";
+  role: "guest" | "voyager" | "provider_stay" | "provider_equipment" | "admin";
   verified: boolean;
   avatarUrl?: string;
   interests?: string[];
@@ -81,10 +81,10 @@ export function FeormAuthProvider({ children }: { children: ReactNode }) {
                 name: profile.name,
                 surname: profile.surname,
                 region: profile.region,
-                role: profile.role ?? "explorer",
+                role: profile.role ?? "guest",
                 verified: profile.verified ?? false,
                 avatarUrl: profile.avatarUrl ?? profile.avatar_url,
-                hasCompletedOnboarding: !!profile.name && !!profile.role && profile.role !== "explorer",
+                hasCompletedOnboarding: !!profile.name && !!profile.role && profile.role !== "guest",
               });
               if (profile.phone) setPhone(profile.phone);
               if (profile.avatarUrl ?? profile.avatar_url) {
@@ -121,10 +121,10 @@ export function FeormAuthProvider({ children }: { children: ReactNode }) {
                 name: profile.name,
                 surname: profile.surname,
                 region: profile.region,
-                role: profile.role ?? "explorer",
+                role: profile.role ?? "guest",
                 verified: profile.verified ?? false,
                 avatarUrl: profile.avatarUrl ?? profile.avatar_url,
-                hasCompletedOnboarding: !!profile.name && !!profile.role && profile.role !== "explorer",
+                hasCompletedOnboarding: !!profile.name && !!profile.role && profile.role !== "guest",
               });
               if (profile.phone) setPhone(profile.phone);
               if (profile.avatarUrl ?? profile.avatar_url) {

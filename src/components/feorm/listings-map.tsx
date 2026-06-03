@@ -140,32 +140,37 @@ export default function ListingsMap({ listings }: ListingsMapProps) {
         ? `${formatPrice(listing.price)}/night`
         : `${formatPrice(listing.price)}/day`;
 
-      // Create popup
-      const popup = new maplibregl.Popup({ offset: 25 }).setHTML(`
-        <div style="font-family: system-ui; padding: 4px;">
-          <h3 style="font-size: 14px; font-weight: 600; margin: 0 0 4px 0; color: #3D2914;">
-            ${listing.title}
-          </h3>
-          <p style="font-size: 12px; color: #6B5735; margin: 0 0 6px 0;">
-            ${isStay ? "Farm Stay" : "Equipment"} &middot; ${listing.region}
-          </p>
-          <p style="font-size: 14px; font-weight: 600; color: #3D2914; margin: 0;">
-            ${priceLabel}
-          </p>
-          <a href="/listing/${listing.id}" style="
-            display: inline-block;
-            margin-top: 8px;
-            padding: 4px 12px;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            background: #C4933A;
-            color: white;
-            border-radius: 9999px;
-            text-decoration: none;
-          ">View Details &rarr;</a>
-        </div>
-      `);
+      // Create popup using DOM elements (prevents XSS via setHTML)
+      const container = document.createElement("div");
+      container.className = "map-popup";
+      container.style.cssText =
+        "font-family: system-ui; padding: 4px;";
+
+      const title = document.createElement("p");
+      title.className = "popup-title";
+      title.style.cssText =
+        "font-size: 14px; font-weight: 600; margin: 0 0 4px 0; color: #3D2914;";
+      title.textContent = listing.title;
+
+      const region = document.createElement("p");
+      region.style.cssText =
+        "font-size: 12px; color: #6B5735; margin: 0 0 6px 0;";
+      region.textContent = `${isStay ? "Farm Stay" : "Equipment"} · ${listing.region}`;
+
+      const price = document.createElement("p");
+      price.style.cssText =
+        "font-size: 14px; font-weight: 600; color: #3D2914; margin: 0;";
+      price.textContent = priceLabel;
+
+      const link = document.createElement("a");
+      link.href = `/listing/${listing.id}`;
+      link.textContent = "View Details →";
+      link.style.cssText =
+        "display: inline-block; margin-top: 8px; padding: 4px 12px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; background: #C4933A; color: white; border-radius: 9999px; text-decoration: none;";
+
+      container.append(title, region, price, link);
+
+      const popup = new maplibregl.Popup({ offset: 25 }).setDOMContent(container);
 
       // Create marker with category color
       const el = document.createElement("div");

@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { createClient } from "@/utils/supabase/server";
 import { getBookings, getBookingByReference, createBooking } from "@/lib/db";
 
 export async function GET(request: Request) {
@@ -6,7 +8,16 @@ export async function GET(request: Request) {
   const userId = searchParams.get("userId");
   const reference = searchParams.get("reference");
 
+  // Auth guard — must be signed in to view bookings
   try {
+    const supabase = await createClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
     if (reference) {
       const booking = await getBookingByReference(reference);
       if (!booking) {
@@ -35,6 +46,16 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    // Auth guard — must be signed in to create bookings
+    const supabase = await createClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
     const booking = await createBooking({
       userId: body.userId,

@@ -11,7 +11,12 @@ import { type NextRequest, NextResponse } from "next/server";
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/marketplace";
+  // Validate the next param — only allow relative paths starting with /
+  // Reject absolute URLs (http://) and protocol-relative URLs (//)
+  const rawNext = searchParams.get("next") ?? "/marketplace";
+  const next = rawNext.startsWith("/") && !rawNext.startsWith("//")
+    ? rawNext
+    : "/marketplace";
 
   if (code) {
     try {
@@ -28,15 +33,15 @@ export async function GET(request: NextRequest) {
           // Check if profile has a name (indicates onboarding completed)
           const { data: profile } = await supabase
             .from("profiles")
-            .select("name")
+            .select("name, role")
             .eq("id", user.id)
             .maybeSingle();
 
-          if (profile?.name) {
+          if (profile?.name && profile?.role && profile.role !== "guest") {
             return NextResponse.redirect(`${origin}/marketplace`);
           }
-          // New user or incomplete profile — go to identity setup
-          return NextResponse.redirect(`${origin}/auth/identity`);
+          // New user or incomplete profile — go to role selection
+          return NextResponse.redirect(`${origin}/auth/role`);
         }
 
         return NextResponse.redirect(`${origin}${next}`);
