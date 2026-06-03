@@ -104,7 +104,7 @@ export default function BookPage() {
 
         <div className="mb-10">
           <kbd className="font-mono-feorm text-[10px] border border-soil/20 bg-white-feorm px-2 py-1 rounded text-muted-foreground mb-6 inline-block">
-            ORDER CONFIGURATION
+            BOOK YOUR STAY
           </kbd>
           <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-earth">
             {listing.title}
@@ -217,7 +217,7 @@ export default function BookPage() {
           disabled={!startDate || !endDate || loading || startDateInvalid || endDateInvalid}
           className="w-full mt-8 btn-harvest px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
         >
-          {loading ? "Processing..." : "Initialize Contract"}
+          {loading ? "Processing..." : "Confirm Booking"}
           <ArrowRight size={14} />
         </button>
       </div>

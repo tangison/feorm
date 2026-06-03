@@ -100,7 +100,7 @@ export default function FeormFooter() {
         {/* Bottom */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-3 pt-5 border-t border-earth/5">
           <p className="font-mono-feorm text-[8px] uppercase tracking-widest text-muted-foreground">
-            Premium Utilitarian Minimalism
+            Simple, honest, built for the land
           </p>
           <p className="font-mono-feorm text-[8px] uppercase tracking-widest text-muted-foreground">
             Namibia — Built for the Land

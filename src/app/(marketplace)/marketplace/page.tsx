@@ -324,7 +324,7 @@ function MarketplaceContent() {
             className="mx-auto mb-4 rounded-lg opacity-80"
           />
           <p className="text-xs text-muted-foreground mb-4">
-            No listings found{selectedRegion !== "All Regions" ? ` in ${selectedRegion}` : ""}.
+            No listings yet{selectedRegion !== "All Regions" ? ` in ${selectedRegion}. Be the first to list here.` : ". Be the first to list on Feorm."}
           </p>
           {hasActiveFilters && (
             <button

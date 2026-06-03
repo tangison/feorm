@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     const genderHint = name.toLowerCase().endsWith("a") || name.toLowerCase().endsWith("na") ? "female" : "male";
     const regionContext = region ? ` from the ${region} region of Namibia` : " from Namibia";
 
-    const prompt = `Professional editorial headshot of a ${genderHint} person${regionContext}. Style: Premium Utilitarian. Lighting: Natural golden hour. Colors: Desaturated earth tones. Texture: High skin detail, cinematic depth of field. The person looks confident and welcoming. Neutral, dignified expression. 8k, photorealistic, studio portrait, warm earthy background`;
+    const prompt = `Professional editorial headshot of a ${genderHint} person${regionContext}. Style: Warm and natural. Lighting: Natural golden hour. Colors: Desaturated earth tones. Texture: High skin detail, cinematic depth of field. The person looks confident and welcoming. Neutral, dignified expression. 8k, photorealistic, studio portrait, warm earthy background`;
 
     const zai = await ZAI.create();
 

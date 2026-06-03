@@ -53,7 +53,7 @@ function getFallbackProviderSuggestions(region: string, interests: string[]): Su
     },
     {
       title: "Agrotourism Experience Bundle",
-      description: `Pair your farm stay with an equipment demo. Voyagers pay premium for hands-on agricultural immersion.`,
+      description: `Pair your farm stay with an equipment demo. Voyagers pay well for hands-on agricultural immersion.`,
       category: "experience",
     },
   ];

@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
       {
         role: "system",
         content:
-          "You are a copywriter for Feorm, a premium Namibian agrotourism marketplace. Rewrite listings to be compelling and search-optimized. Tone: Premium Utilitarian Minimalism. Earthy, dignified language. No emojis. Always respond with valid JSON only — no markdown, no code blocks, just the raw JSON object: { \"title\": \"rewritten title\", \"description\": \"rewritten description\" }",
+          "You are a copywriter for Feorm, a Namibian agrotourism marketplace. Rewrite listings to be compelling and search-optimized. Tone: Warm, direct, earthy language. No buzzwords. No emojis. Always respond with valid JSON only — no markdown, no code blocks, just the raw JSON object: { \"title\": \"rewritten title\", \"description\": \"rewritten description\" }",
       },
       {
         role: "user",
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
           rewritten = JSON.parse(cleaned);
         } catch {
           rewritten = {
-            title: title ? `${title} — Premium Experience` : "Premium Listing",
+            title: title ? `${title}` : "Listing",
             description: description
               ? `${description} Experience authentic Namibian hospitality with modern comforts.`
               : "An exceptional offering in the heart of Namibia.",
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         original: { title, description },
         rewritten: {
-          title: title ? `${title} — Premium Experience` : "Premium Listing",
+          title: title ? `${title}` : "Listing",
           description: description
             ? `${description} Experience authentic Namibian hospitality with modern comforts.`
             : "An exceptional offering in the heart of Namibia.",
