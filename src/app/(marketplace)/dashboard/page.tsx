@@ -31,15 +31,6 @@ const RevenueChart = dynamic(
 // ─── Placeholder Data ──────────────────────────────────────────
 // REVIEW: Replace with Supabase queries when dashboard is wired up
 // Table: listings (for utilization), bookings (for stats/requests/activity)
-const equipmentUtilization = [
-  { name: "Tractor", utilization: 85 },
-  { name: "Pump", utilization: 62 },
-  { name: "Harrow", utilization: 45 },
-  { name: "Drill Rig", utilization: 91 },
-  { name: "Solar", utilization: 78 },
-  { name: "Harvester", utilization: 55 },
-];
-
 const stats = [
   { label: "Active Listings", value: "14", accent: false },
   { label: "Earnings Available", value: "N$ 8,420", accent: true },
@@ -48,14 +39,6 @@ const stats = [
 ];
 
 const pendingRequests = [
-  {
-    id: 1,
-    title: "John Deere 5075E — Rental Request",
-    requester: "Anna //Khaoes",
-    duration: "3 days",
-    amount: 475000,
-    type: "equipment",
-  },
   {
     id: 2,
     title: "Otjozondjupa Bushveld Station — Stay Request",
@@ -77,7 +60,6 @@ const pendingRequests = [
 const recentActivity = [
   { action: "Payment received", detail: "Erongo Granite Lodge — N$ 2,400", time: "2h ago" },
   { action: "Booking confirmed", detail: "Hardap Kalahari Goat Station — 3 nights", time: "5h ago" },
-  { action: "Equipment returned", detail: "Disc Harrow Implement — Condition: Good", time: "1d ago" },
 ];
 
 export default function DashboardPage() {
@@ -104,7 +86,7 @@ export default function DashboardPage() {
         body: JSON.stringify({
           role: "provider",
           region: user?.region || "Namibia",
-          interests: providerAssets || ["stay", "equipment"],
+          interests: providerAssets || ["stay"],
         }),
       });
 
@@ -114,8 +96,8 @@ export default function DashboardPage() {
       setAiInsights(data.suggestions || []);
     } catch {
       setAiInsights([
-        { title: "Add Operator Pricing", description: "Your tractor listing could attract 40% more bookings by adding operator-included pricing options.", category: "optimization" },
-        { title: "Weekly Rate Opportunity", description: "Consider offering weekly rates for the Solar Panel Array — extended rentals are trending in your region.", category: "optimization" },
+        { title: "Seasonal Demand Pricing", description: "Adjust your rates for peak and off-peak seasons. Demand in your region typically peaks from March to May.", category: "optimization" },
+        { title: "Weekly Rate Opportunity", description: "Consider offering weekly rates — extended stays are trending in your region and attract longer bookings.", category: "optimization" },
         { title: "Photo Differentiation", description: "Adding river access photos to your Kunene listing would differentiate it from similar camps.", category: "optimization" },
       ]);
     } finally {
@@ -135,8 +117,6 @@ export default function DashboardPage() {
       // REVIEW: Replace with user's actual listings from Supabase
       const sampleListings = [
         { title: "Erongo Granite Lodge", description: "A farm stay in the Erongo region", type: "stay", region: "Erongo" },
-        { title: "John Deere 5075E Tractor", description: "Reliable tractor for rent in Otjozondjupa", type: "equipment", region: "Otjozondjupa" },
-        { title: "5kW Solar Panel Array", description: "Solar power equipment available in Khomas", type: "equipment", region: "Khomas" },
       ];
 
       const results: Array<{ original: string; rewritten: string }> = [];
@@ -308,54 +288,6 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      {/* ─── Equipment Utilization ──────────────────────────── */}
-      <section className="mb-10" aria-labelledby="utilization-heading">
-        <h3
-          id="utilization-heading"
-          className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-4"
-        >
-          Equipment Utilization
-        </h3>
-        <div className="bento-card p-6">
-          <div className="space-y-4">
-            {equipmentUtilization.map((item) => (
-              <div key={item.name}>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-earth font-medium">
-                    {item.name}
-                  </span>
-                  <span
-                    className={`font-mono-feorm text-xs ${
-                      item.utilization >= 80
-                        ? "text-verified"
-                        : item.utilization >= 60
-                        ? "text-accent-foreground"
-                        : "text-destructive"
-                    }`}
-                  >
-                    {item.utilization}%
-                  </span>
-                </div>
-                <div className="w-full h-2 rounded-full bg-cream">
-                  <div
-                    className="h-full rounded-full transition-all duration-500"
-                    style={{
-                      width: `${item.utilization}%`,
-                      backgroundColor:
-                        item.utilization >= 80
-                          ? "var(--color-verified)"
-                          : item.utilization >= 60
-                          ? "var(--color-harvest)"
-                          : "var(--destructive)",
-                    }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ─── Pending Requests ───────────────────────────────── */}
       <section className="mb-10" aria-labelledby="pending-heading">
         <h3
@@ -373,14 +305,12 @@ export default function DashboardPage() {
               <div className="flex-grow">
                 <div className="flex items-center gap-3 mb-2">
                   <span
-                    className={`text-[9px] uppercase font-semibold px-2 py-0.5 rounded-full tracking-wider ${
-                      req.type === "stay" ? "tag-pastel" : "tag-machinery"
-                    }`}
+                    className="text-[9px] uppercase font-semibold px-2 py-0.5 rounded-full tracking-wider tag-pastel"
                   >
                     Pending
                   </span>
                   <span className="font-mono-feorm text-[9px] text-muted-foreground uppercase tracking-widest">
-                    {req.type === "stay" ? "Stay" : "Equipment"}
+                    Stay
                   </span>
                 </div>
                 <h4 className="font-serif-display text-lg text-earth">

@@ -9,7 +9,6 @@ import {
   XCircle,
   Users,
   Tent,
-  Wrench,
   Calendar,
   RefreshCw,
 } from "lucide-react";
@@ -241,10 +240,7 @@ export default function AdminPage() {
               const displayName =
                 [provider.name, provider.surname].filter(Boolean).join(" ") ||
                 "Unknown";
-              const roleLabel =
-                provider.role === "provider_stay"
-                  ? "Stay Provider"
-                  : "Equipment Provider";
+              const roleLabel = "Stay Provider";
 
               return (
                 <div
@@ -254,11 +250,7 @@ export default function AdminPage() {
                   <div className="flex-grow">
                     <div className="flex items-center gap-3 mb-2">
                       <span
-                        className={`text-[9px] uppercase font-semibold px-2 py-0.5 rounded-full tracking-wider ${
-                          provider.role === "provider_stay"
-                            ? "tag-pastel"
-                            : "tag-machinery"
-                        }`}
+                        className="text-[9px] uppercase font-semibold px-2 py-0.5 rounded-full tracking-wider tag-pastel"
                       >
                         {roleLabel}
                       </span>

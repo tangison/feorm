@@ -13,7 +13,6 @@ export default function BookPage() {
   const params = useParams<{ id: string }>();
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [withOperator, setWithOperator] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { user } = useFeormAuth();
@@ -37,9 +36,8 @@ export default function BookPage() {
 
   const rentalPrice = listing ? listing.price * days : 0;
   const serviceFee = Math.round(rentalPrice * 0.1);
-  const operatorFee = withOperator ? 50000 * days : 0;
   // Escrow: 10% of total, minimum N$500 (50000 cents)
-  const subtotal = rentalPrice + serviceFee + operatorFee;
+  const subtotal = rentalPrice + serviceFee;
   const escrowAmount = calculateEscrow(subtotal);
   const totalPrice = subtotal + escrowAmount;
 
@@ -68,7 +66,6 @@ export default function BookPage() {
         totalPrice,
         escrowAmount,
         serviceFee,
-        withOperator,
       });
 
       // Navigate to success page with reference
@@ -110,8 +107,7 @@ export default function BookPage() {
             {listing.title}
           </h1>
           <p className="text-sm text-muted-foreground">
-            Configure your{" "}
-            {listing.type === "stay" ? "stay" : "rental"} dates and options.
+            Configure your stay dates and options.
           </p>
         </div>
 
@@ -143,24 +139,6 @@ export default function BookPage() {
             </div>
           </div>
 
-          {listing.type === "equipment" && (
-            <label className="flex items-start gap-3 p-4 border border-soil/10 bg-white-feorm rounded-[4px] cursor-pointer">
-              <input
-                type="checkbox"
-                checked={withOperator}
-                onChange={(e) => setWithOperator(e.target.checked)}
-                className="mt-1 w-4 h-4 accent-earth"
-              />
-              <div>
-                <p className="text-sm font-medium text-earth">
-                  Operator Required
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  Include a trained operator for this equipment (+N$ 500/day)
-                </p>
-              </div>
-            </label>
-          )}
         </div>
 
         {startDate && endDate && (startDateInvalid || endDateInvalid) && (
@@ -194,14 +172,6 @@ export default function BookPage() {
                 <span className="text-muted-foreground">Security Escrow</span>
                 <span className="font-mono-feorm text-earth">{formatPrice(escrowAmount)}</span>
               </div>
-              {withOperator && (
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Operator Fee (N$ 500 x {days} days)</span>
-                  <span className="font-mono-feorm text-earth">
-                    {formatPrice(operatorFee)}
-                  </span>
-                </div>
-              )}
               <div className="flex justify-between pt-3 border-t border-soil/10 font-medium">
                 <span className="text-earth">Total to Pay</span>
                 <span className="font-mono-feorm text-earth text-lg">

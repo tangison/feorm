@@ -17,7 +17,7 @@ function ListingCard({ item }: { item: Listing }) {
       <div className="h-44 md:h-56 p-1.5 md:p-2 bg-white-feorm">
         <div className="w-full h-full relative rounded-md overflow-hidden bg-fog">
           <Image
-            src={item.imageUrl || (item.type === "stay" ? "/images/listing-stay-hero.png" : "/images/listing-equip-hero.png")}
+            src={item.imageUrl || "/images/listing-stay-hero.png"}
             alt={item.title}
             width={400}
             height={300}
@@ -28,9 +28,7 @@ function ListingCard({ item }: { item: Listing }) {
           <div className="absolute inset-0 bg-earth opacity-0 group-hover:opacity-[0.04] transition-opacity duration-300" />
           {/* Category Tag */}
           <span
-            className={`absolute top-2.5 left-2.5 text-[8px] uppercase font-semibold px-2 py-0.5 rounded-full tracking-wider ${
-              item.type === "stay" ? "tag-pastel" : "tag-machinery"
-            }`}
+            className="absolute top-2.5 left-2.5 text-[8px] uppercase font-semibold px-2 py-0.5 rounded-full tracking-wider tag-pastel"
           >
             {item.category}
           </span>

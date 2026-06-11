@@ -35,7 +35,6 @@ interface Booking {
   serviceFee: number;
   status: string;
   referenceNumber: string;
-  withOperator: boolean;
   listing: Listing;
 }
 

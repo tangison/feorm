@@ -24,7 +24,7 @@ export default function FeormFooter() {
               </span>
             </Link>
             <p className="text-[11px] text-muted-foreground leading-relaxed max-w-[240px]">
-              Farm stays and equipment rental from Namibian landowners. Escrow-protected. Verified hosts.
+              Farm stays from Namibian landowners. Escrow-protected. Verified hosts.
             </p>
           </div>
 
@@ -36,9 +36,6 @@ export default function FeormFooter() {
             <div className="space-y-2">
               <Link href="/marketplace?view=stays" className="block text-[11px] text-soil hover:text-earth transition-colors">
                 Farm Stays
-              </Link>
-              <Link href="/marketplace?view=equipment" className="block text-[11px] text-soil hover:text-earth transition-colors">
-                Equipment Exchange
               </Link>
               <Link href="/journeys" className="block text-[11px] text-soil hover:text-earth transition-colors">
                 My Journeys

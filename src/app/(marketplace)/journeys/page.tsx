@@ -105,9 +105,6 @@ export default function JourneysPage() {
                 <p className="text-xs text-muted-foreground mt-1 font-mono-feorm flex items-center gap-1">
                   <MapPin size={10} aria-hidden="true" />
                   {b.listing?.region || "Namibia"} — {b.startDate} to {b.endDate}
-                  {b.withOperator && (
-                    <span className="tag-machinery text-[8px] px-1.5 py-0.5 ml-2">w/ Operator</span>
-                  )}
                 </p>
               </div>
               <div className="text-right shrink-0">

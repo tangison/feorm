@@ -3,14 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useFeormOnboarding } from "@/context/feorm-context";
-import { ArrowLeft, ArrowRight, Tent, Wrench } from "lucide-react";
+import { ArrowLeft, ArrowRight, Tent } from "lucide-react";
 
 export default function ProviderAssetsPage() {
   const { providerAssets, setProviderAssets } = useFeormOnboarding();
-  const [assets, setAssets] = useState<("stay" | "equipment")[]>(providerAssets);
+  const [assets, setAssets] = useState<("stay")[]>(providerAssets);
   const router = useRouter();
 
-  const toggleAsset = (type: "stay" | "equipment") => {
+  const toggleAsset = (type: "stay") => {
     setAssets((prev) =>
       prev.includes(type) ? prev.filter((a) => a !== type) : [...prev, type]
     );
@@ -86,47 +86,7 @@ export default function ProviderAssetsPage() {
             </div>
           </button>
 
-          {/* Equipment Toggle */}
-          <button
-            onClick={() => toggleAsset("equipment")}
-            className={`w-full p-6 text-left border-2 rounded-[8px] transition-all duration-300 active:scale-[0.98] ${
-              assets.includes("equipment")
-                ? "border-machinery bg-machinery-bg/30"
-                : "border-soil/10 bg-white-feorm hover:border-soil/20"
-            }`}
-          >
-            <div className="flex items-center gap-4">
-              <div
-                className={`w-12 h-12 rounded-[10px] flex items-center justify-center transition-colors ${
-                  assets.includes("equipment")
-                    ? "bg-machinery-bg"
-                    : "bg-fog"
-                }`}
-              >
-                <Wrench
-                  size={22}
-                  className={
-                    assets.includes("equipment")
-                      ? "text-machinery"
-                      : "text-muted-foreground"
-                  }
-                />
-              </div>
-              <div>
-                <h3 className="font-serif-display text-lg text-earth">
-                  Equipment
-                </h3>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Machinery, irrigation, attachments, energy systems
-                </p>
-              </div>
-              {assets.includes("equipment") && (
-                <div className="ml-auto w-6 h-6 rounded-full bg-machinery-bg flex items-center justify-center">
-                  <div className="w-2 h-2 rounded-full bg-machinery" />
-                </div>
-              )}
-            </div>
-          </button>
+
         </div>
 
         <button

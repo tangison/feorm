@@ -64,7 +64,6 @@ export async function POST(request: Request) {
       endDate: body.endDate,
       totalPrice: body.totalPrice,
       serviceFee: body.serviceFee,
-      withOperator: body.withOperator,
     });
     return NextResponse.json(booking, { status: 201 });
   } catch (error) {

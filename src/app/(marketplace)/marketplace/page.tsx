@@ -62,7 +62,7 @@ function MarketplaceContent() {
 
   useEffect(() => {
     const view = searchParams.get("view");
-    if (view === "stays" || view === "equipment") {
+    if (view === "stays") {
       setMarketView(view);
     }
   }, [searchParams, setMarketView]);
@@ -72,9 +72,7 @@ function MarketplaceContent() {
     setSelectedRegion(currentParamRegion);
   }, [currentParamRegion]);
 
-  const { data: listings, isLoading } = useListings(
-    marketView === "stays" ? "stay" : "equipment"
-  );
+  const { data: listings, isLoading } = useListings("stay");
 
   const transformedListings = useMemo(() => {
     if (!listings) return [];
@@ -113,34 +111,8 @@ function MarketplaceContent() {
 
   return (
     <div className="flex-grow w-full max-w-6xl mx-auto px-4 md:px-6 py-6 md:py-12 lg:py-16">
-      {/* View Toggle */}
+      {/* View Header */}
       <div className="flex items-center gap-2 mb-5 md:mb-8">
-        <button
-          onClick={() => {
-            setMarketView("stays");
-            router.push("/marketplace?view=stays");
-          }}
-          className={`px-4 py-2 rounded-full text-[10px] uppercase tracking-[0.08em] font-medium transition-all duration-200 min-h-[40px] ${
-            marketView === "stays"
-              ? "bg-earth text-white-feorm"
-              : "bg-transparent border border-earth/8 text-muted-foreground hover:bg-fog"
-          }`}
-        >
-          Farm Stays
-        </button>
-        <button
-          onClick={() => {
-            setMarketView("equipment");
-            router.push("/marketplace?view=equipment");
-          }}
-          className={`px-4 py-2 rounded-full text-[10px] uppercase tracking-[0.08em] font-medium transition-all duration-200 min-h-[40px] ${
-            marketView === "equipment"
-              ? "bg-earth text-white-feorm"
-              : "bg-transparent border border-earth/8 text-muted-foreground hover:bg-fog"
-          }`}
-        >
-          Equipment
-        </button>
         <span className="hidden md:inline-block font-mono-feorm text-[9px] text-muted-foreground uppercase tracking-widest ml-3">
           {transformedListings?.length || 0} listings
         </span>
@@ -180,12 +152,10 @@ function MarketplaceContent() {
       <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4 md:gap-6 mb-6 md:mb-10">
         <div>
           <h1 className="font-serif-display text-3xl md:text-4xl lg:text-5xl text-earth mb-1.5 tracking-tight">
-            {marketView === "stays" ? "Farm Stays" : "Equipment Exchange"}
+            Farm Stays
           </h1>
           <p className="text-xs md:text-sm text-muted-foreground max-w-md leading-relaxed">
-            {marketView === "stays"
-              ? "Find farm stays across Namibia."
-              : "Rent tractors, pumps, and more from local owners."}
+            Find farm stays across Namibia.
           </p>
         </div>
 
@@ -265,8 +235,8 @@ function MarketplaceContent() {
       {/* Category Banner */}
       <div className="relative w-full h-32 md:h-40 rounded-xl overflow-hidden mb-6 md:mb-8">
         <Image
-          src={marketView === "stays" ? "/images/banner-stays.png" : "/images/banner-equipment.png"}
-          alt={marketView === "stays" ? "Farm stays across Namibia" : "Equipment rental across Namibia"}
+          src="/images/banner-stays.png"
+          alt="Farm stays across Namibia"
           fill
           className="object-cover"
         />

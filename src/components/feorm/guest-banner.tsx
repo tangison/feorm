@@ -15,7 +15,7 @@ export default function GuestBanner() {
       <div className="p-4 flex items-center gap-3">
         <div className="flex-1 min-w-0">
           <p className="text-sm text-sand font-medium leading-snug">
-            Join Feorm to book stays and equipment
+            Join Feorm to book farm stays
           </p>
         </div>
         <Link

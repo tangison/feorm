@@ -66,7 +66,7 @@ export default function ListingDetailPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           role: "voyager",
-          interests: listing?.type === "stay" ? ["Farm Stays", "Cultural Exchange"] : ["Equipment", "Machinery"],
+          interests: ["Farm Stays", "Cultural Exchange"],
           region: listing?.region || "Namibia",
         }),
       });
@@ -118,7 +118,7 @@ export default function ListingDetailPage() {
           {/* Left: Image */}
           <div className="w-full md:w-1/2 bg-fog relative h-[35vh] md:h-auto border-b md:border-b-0 md:border-r border-soil/10">
             <Image
-              src={listing.image || (listing.type === "stay" ? "/images/listing-stay-hero.png" : "/images/listing-equip-hero.png")}
+              src={listing.image || "/images/listing-stay-hero.png"}
               alt={listing.title}
               width={600}
               height={450}
@@ -140,9 +140,7 @@ export default function ListingDetailPage() {
             <div className="flex-grow max-w-md">
               <div className="flex items-center gap-3 mb-5">
                 <span
-                  className={`text-[10px] uppercase font-medium px-2.5 py-1 rounded-full ${
-                    listing.type === "stay" ? "tag-pastel" : "tag-machinery"
-                  }`}
+                  className="text-[10px] uppercase font-medium px-2.5 py-1 rounded-full tag-pastel"
                 >
                   {listing.category}
                 </span>
@@ -323,7 +321,7 @@ export default function ListingDetailPage() {
                 }}
                 className="w-full btn-harvest px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 min-h-[44px]"
               >
-                {listing.type === "stay" ? "Request Stay" : "Rent Machinery"}
+                {"Request Stay"}
                 <ArrowRight size={14} aria-hidden="true" />
               </button>
               <button

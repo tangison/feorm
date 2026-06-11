@@ -17,7 +17,6 @@ interface BookingData {
   serviceFee: number;
   status: string;
   reference: string;
-  withOperator: boolean;
   listing?: any;
 }
 
@@ -70,7 +69,6 @@ export function useBookings(userId: string) {
                 serviceFee: b.serviceFee,
                 status: b.status,
                 reference: b.referenceNumber,
-                withOperator: b.withOperator,
                 listing: b.listing,
               }))
             : [];
@@ -163,7 +161,6 @@ export function useCreateBooking() {
       totalPrice: number;
       escrowAmount: number;
       serviceFee: number;
-      withOperator: boolean;
     }) => {
       const res = await fetch("/api/bookings", {
         method: "POST",

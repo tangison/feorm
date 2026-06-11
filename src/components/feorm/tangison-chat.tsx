@@ -28,7 +28,7 @@ const PROVIDER_LABELS: Record<string, string> = {
 const QUICK_PROMPTS = [
   "How does escrow work?",
   "Find farm stays in Oshana",
-  "Equipment rental prices",
+  "Farm stay pricing",
   "What is Feorm?",
 ];
 

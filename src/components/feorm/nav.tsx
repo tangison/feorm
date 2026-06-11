@@ -16,7 +16,6 @@ import {
   LifeBuoy,
   LogOut,
   X,
-  Wrench,
 } from "lucide-react";
 import { resolveAvatarDisplay } from "@/lib/avatar";
 
@@ -29,7 +28,7 @@ export default function FeormNav() {
 
   // Determine role from user context (more reliable than onboarding state)
   const userRole = user?.role;
-  const isProvider = userRole === "provider_stay" || userRole === "provider_equipment";
+  const isProvider = userRole === "provider_stay";
   const isAdmin = userRole === "admin";
   const isVoyager = userRole === "voyager";
   const isGuest = !user;
@@ -67,7 +66,6 @@ export default function FeormNav() {
   const getRoleLabel = () => {
     if (isAdmin) return "Admin";
     if (userRole === "provider_stay") return "Stay Provider";
-    if (userRole === "provider_equipment") return "Equip Provider";
     if (isVoyager) return "Voyager";
     return "Guest";
   };
@@ -101,13 +99,11 @@ export default function FeormNav() {
   // ── More menu items ──
   const moreItems = isAdmin
     ? [
-        { label: "Equipment", href: "/marketplace?view=equipment", icon: Wrench, onClick: () => setMarketView("equipment") },
         { label: "Settings", href: "/settings", icon: Settings },
         { label: "Support", href: "/support", icon: LifeBuoy },
       ]
     : isProvider
     ? [
-        { label: "Equipment", href: "/marketplace?view=equipment", icon: Wrench, onClick: () => setMarketView("equipment") },
         { label: "Verification", href: "/verification", icon: Shield },
         { label: "Settings", href: "/settings", icon: Settings },
         { label: "Support", href: "/support", icon: LifeBuoy },
@@ -355,7 +351,6 @@ export default function FeormNav() {
             ? [
                 { label: "Explore", href: "/marketplace", icon: MapPin, active: pathname === "/marketplace" || pathname.startsWith("/listing"), onClick: () => setMarketView("stays") },
                 { label: "Farm Stays", href: "/marketplace?view=stays", icon: Tent, active: false, onClick: () => setMarketView("stays") },
-                { label: "Equipment", href: "/marketplace?view=equipment", icon: Wrench, active: false, onClick: () => setMarketView("equipment") },
                 { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, active: pathname === "/dashboard" },
                 { label: "Admin", href: "/admin", icon: Shield, active: pathname === "/admin" },
                 { label: "Profile", href: "/profile", icon: User, active: pathname === "/profile" },
@@ -365,7 +360,6 @@ export default function FeormNav() {
             : isProvider
             ? [
                 { label: "Farm Stays", href: "/marketplace?view=stays", icon: Tent, active: pathname === "/marketplace", onClick: () => setMarketView("stays") },
-                { label: "Equipment", href: "/marketplace?view=equipment", icon: Wrench, active: pathname === "/marketplace", onClick: () => setMarketView("equipment") },
                 { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, active: pathname === "/dashboard" },
                 { label: "Profile", href: "/profile", icon: User, active: pathname === "/profile" },
                 { label: "Verification", href: "/verification", icon: Shield, active: pathname === "/verification" },
