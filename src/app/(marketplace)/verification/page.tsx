@@ -275,7 +275,7 @@ export default function VerificationPage() {
                 Priority Booking Access
               </p>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Get early access to new listings and high-demand equipment
+                Get early access to new listings and high-demand farm stays
               </p>
             </div>
           </div>

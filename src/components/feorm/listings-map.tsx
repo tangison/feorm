@@ -30,7 +30,6 @@ const MAP_BOUNDS: [[number, number], [number, number]] = [
 
 // Custom marker colors
 const STAY_COLOR = "#5C8A5C";   // earth green
-const EQUIP_COLOR = "#8B6914";  // harvest brown
 
 export default function ListingsMap({ listings }: ListingsMapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
@@ -135,10 +134,7 @@ export default function ListingsMap({ listings }: ListingsMapProps) {
     const bounds = new maplibregl.LngLatBounds();
 
     geoListings.forEach((listing) => {
-      const isStay = listing.category === "stay";
-      const priceLabel = isStay
-        ? `${formatPrice(listing.price)}/night`
-        : `${formatPrice(listing.price)}/day`;
+      const priceLabel = `${formatPrice(listing.price)}/night`;
 
       // Create popup using DOM elements (prevents XSS via setHTML)
       const container = document.createElement("div");
@@ -155,7 +151,7 @@ export default function ListingsMap({ listings }: ListingsMapProps) {
       const region = document.createElement("p");
       region.style.cssText =
         "font-size: 12px; color: #6B5735; margin: 0 0 6px 0;";
-      region.textContent = `${isStay ? "Farm Stay" : "Equipment"} · ${listing.region}`;
+      region.textContent = `Farm Stay · ${listing.region}`;
 
       const price = document.createElement("p");
       price.style.cssText =
@@ -186,9 +182,9 @@ export default function ListingsMap({ listings }: ListingsMapProps) {
         font-size: 12px;
         color: white;
         box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-        background: ${isStay ? STAY_COLOR : EQUIP_COLOR};
+        background: ${STAY_COLOR};
       `;
-      el.textContent = isStay ? "S" : "E";
+      el.textContent = "S";
 
       const marker = new maplibregl.Marker({ element: el })
         .setLngLat([listing.lng, listing.lat])
@@ -228,10 +224,6 @@ export default function ListingsMap({ listings }: ListingsMapProps) {
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded-full border border-white" style={{ background: STAY_COLOR }} />
             <span className="text-[10px] text-earth">Farm Stay</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded-full border border-white" style={{ background: EQUIP_COLOR }} />
-            <span className="text-[10px] text-earth">Equipment</span>
           </div>
         </div>
       </div>

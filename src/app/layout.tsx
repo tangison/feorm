@@ -36,12 +36,11 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "Feorm | Namibian Farmland Marketplace",
   description:
-    "A marketplace connecting Namibian farmland with travellers and farmers who need stays and equipment.",
+    "A marketplace connecting Namibian farmland with travellers seeking farm stays.",
   keywords: [
     "Feorm",
     "Namibia",
     "Agrotourism",
-    "Equipment Rental",
     "Farm Stay",
     "Marketplace",
   ],

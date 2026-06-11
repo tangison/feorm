@@ -24,7 +24,7 @@ interface Listing {
   available: boolean;
 }
 
-type MarketView = "stays" | "equipment";
+type MarketView = "stays";
 
 interface FeormMarketContextType {
   marketView: MarketView;

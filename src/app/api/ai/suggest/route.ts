@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 import { chatCompletion, type ChatMessage } from "@/lib/ai-providers";
 
-const SUGGEST_SYSTEM_PROMPT = `You are a Namibian agrotourism advisor for Feorm. Generate 3 personalized recommendations. Format each as JSON: {title, description, category}. Categories: 'experience', 'equipment', 'optimization'. Keep descriptions under 40 words. Be specific to Namibian regions and agricultural context. Respond with ONLY a valid JSON array, no markdown or code blocks.`;
+const SUGGEST_SYSTEM_PROMPT = `You are a Namibian agrotourism advisor for Feorm. Generate 3 personalized recommendations. Format each as JSON: {title, description, category}. Categories: 'experience', 'optimization'. Keep descriptions under 40 words. Be specific to Namibian regions and agricultural context. Respond with ONLY a valid JSON array, no markdown or code blocks.`;
 
 interface SuggestBody {
   role: string;
@@ -26,13 +26,13 @@ function getFallbackVoyagerSuggestions(region: string, interests: string[]): Sug
       category: "experience",
     },
     {
-      title: "Communal Equipment Circuit",
-      description: `Rent shared machinery through Feorm's trust network. Tractors, pumps, and drills available across ${regionName}.`,
-      category: "equipment",
-    },
-    {
       title: "Heritage Cattle Post Visit",
       description: `Spend a day at a traditional cattle post. Understand Namibia's pastoral legacy and the communal grazing model.`,
+      category: "experience",
+    },
+    {
+      title: `Kalahari Farm Trail — ${regionName}`,
+      description: `Hike through working farmland with guided commentary on indigenous plants and soil conservation techniques.`,
       category: "experience",
     },
   ];
@@ -48,14 +48,14 @@ function getFallbackProviderSuggestions(region: string, interests: string[]): Su
       category: "optimization",
     },
     {
-      title: "Cross-Farm Equipment Sharing",
-      description: `List idle equipment during off-seasons. Neighbouring farms in ${regionName} often need short-term access.`,
-      category: "optimization",
+      title: "Agrotourism Experience Bundle",
+      description: `Pair your farm stay with a guided farm tour. Voyagers pay well for hands-on agricultural immersion in ${regionName}.`,
+      category: "experience",
     },
     {
-      title: "Agrotourism Experience Bundle",
-      description: `Pair your farm stay with an equipment demo. Voyagers pay well for hands-on agricultural immersion.`,
-      category: "experience",
+      title: "Listing Photo Upgrade",
+      description: `Professional photos increase booking rates by up to 40%. Showcase your sunrise views and communal spaces in ${regionName}.`,
+      category: "optimization",
     },
   ];
 }
@@ -69,7 +69,7 @@ function parseSuggestions(raw: string): Suggestion[] {
         return parsed.slice(0, 3).map((item: Record<string, string>) => ({
           title: String(item.title || "Untitled"),
           description: String(item.description || "").slice(0, 200),
-          category: ["experience", "equipment", "optimization"].includes(item.category)
+          category: ["experience", "optimization"].includes(item.category)
             ? item.category
             : "experience",
         }));
@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
       const isVoyager = role === "voyager";
       const roleContext = isVoyager
         ? `The user is a voyager (traveller/explorer) interested in: ${interests.join(", ") || "agriculture, nature, culture"}.`
-        : `The user is a provider (farm/equipment owner) with assets in: ${interests.join(", ") || "farm stays, equipment rental"}.`;
+        : `The user is a provider (farm owner) with assets in: ${interests.join(", ") || "farm stays"}.`;
 
       const userMessage = `${roleContext} Region: ${region || "Namibia"}. Generate 3 ${isVoyager ? "curated experience recommendations" : "asset optimization tips"} specific to this context.`;
 

@@ -38,26 +38,16 @@ export default function TermsPage() {
             </div>
             <div>
               <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
-                02 — Escrow Protocol
-              </h4>
-              <p>
-                All equipment rentals require a refundable escrow deposit of N$1,500.
-                This deposit is held in trust and released upon confirmed return
-                condition.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
-                03 — Damage Coverage
+                02 — Damage Coverage
               </h4>
               <p>
                 The Feorm communal insurance fund provides up to N$10,000 in damage
-                coverage for verified equipment rental transactions.
+                coverage for verified transactions.
               </p>
             </div>
             <div>
               <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
-                04 — Communication
+                03 — Communication
               </h4>
               <p>
                 All transactional communication occurs via WhatsApp. Feorm does not
@@ -67,7 +57,7 @@ export default function TermsPage() {
             </div>
             <div>
               <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
-                05 — Dispute Resolution
+                04 — Dispute Resolution
               </h4>
               <p>
                 Disputes are resolved through a community arbitration process. Both
@@ -85,7 +75,7 @@ export default function TermsPage() {
             className="mt-1 w-4 h-4 accent-earth"
           />
           <span className="text-sm text-soil">
-            I accept the terms of service and acknowledge the escrow and insurance policies as binding for all transactions on Feorm.
+            I accept the terms of service and acknowledge the insurance policies as binding for all transactions on Feorm.
           </span>
         </label>
 

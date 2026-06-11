@@ -1,5 +1,5 @@
 -- ============================================================
--- Feorm — Seed Data (Namibian Demo Listings)
+-- Feorm — Seed Data (Namibian Farm Stay Listings)
 -- Run this in the Supabase SQL Editor manually.
 -- DO NOT run automatically — paste and execute as needed.
 -- ============================================================
@@ -15,8 +15,6 @@ INSERT INTO profiles (id, name, surname, phone, region, role, verified)
 VALUES
   ('a0000000-0000-0000-0000-000000000001', 'Aisha', 'Mwangi', '+264 81 234 5678', 'Oshikoto', 'provider_stay', true),
   ('a0000000-0000-0000-0000-000000000002', 'Johan', 'Pretorius', '+264 81 345 6789', 'Khomas', 'provider_stay', true),
-  ('a0000000-0000-0000-0000-000000000003', 'Tangeni', 'Nambinga', '+264 81 901 2345', 'Oshana', 'provider_equipment', true),
-  ('a0000000-0000-0000-0000-000000000004', 'Maria', 'Goreses', '+264 81 456 7801', 'Erongo', 'provider_equipment', true),
   ('a0000000-0000-0000-0000-000000000005', 'Hafeni', 'Tshivhuli', '+264 81 567 8902', 'Kavango East', 'provider_stay', true)
 ON CONFLICT (id) DO NOTHING;
 
@@ -40,29 +38,13 @@ VALUES (
   true
 );
 
-INSERT INTO listings (host_id, title, description, category, region, price_cents, host_phone, images, amenities, lat, lng, active)
-VALUES (
-  'a0000000-0000-0000-0000-000000000003',
-  'Windhoek Tractor Hire',
-  'John Deere 5075E utility tractor available for hire with operator. Suitable for ploughing, planting, and transport on farms in the greater Windhoek area. Well-maintained machine with low hours, reliable for seasonal work.',
-  'equipment',
-  'Khomas',
-  280000,
-  '+264 81 345 6789',
-  '{}',
-  ARRAY['Operator included', 'Delivery available', 'Tractor access road', '85HP diesel engine', '4WD', 'Air conditioning'],
-  -22.5609,
-  17.0645,
-  true
-);
-
 -- ============================================================
 -- 2. Erongo (Swakopmund, Walvis Bay)
 -- ============================================================
 
 INSERT INTO listings (host_id, title, description, category, region, price_cents, host_phone, images, amenities, lat, lng, active)
 VALUES (
-  'a0000000-0000-0000-0000-000000000004',
+  'a0000000-0000-0000-0000-000000000002',
   'Swakopmund Agro Stay',
   'Coastal farm stay just outside Swakopmund where the desert meets the sea. Experience unique desert farming with fog-harvesting technology and visit the nearby Walvis Bay wetlands. Self-catering kitchen with local produce available.',
   'stay',
@@ -73,22 +55,6 @@ VALUES (
   ARRAY['WiFi (limited)', 'Self-catering kitchen', 'Hot water', 'Camping allowed', 'Stargazing deck', 'Guided farm walks', 'Solar power'],
   -22.6788,
   14.5256,
-  true
-);
-
-INSERT INTO listings (host_id, title, description, category, region, price_cents, host_phone, images, amenities, lat, lng, active)
-VALUES (
-  'a0000000-0000-0000-0000-000000000004',
-  'Walvis Bay Water Pump Set',
-  'Industrial borehole pump and filtration system available for rent. Ideal for new borehole installations or emergency water supply. Comes with technician for setup and testing.',
-  'equipment',
-  'Erongo',
-  350000,
-  '+264 81 567 8901',
-  '{}',
-  ARRAY['Operator included', 'Delivery available', 'Borehole water', 'Solar power', 'Filtration system included'],
-  -22.9574,
-  14.5057,
   true
 );
 
@@ -132,29 +98,13 @@ VALUES (
   true
 );
 
-INSERT INTO listings (host_id, title, description, category, region, price_cents, host_phone, images, amenities, lat, lng, active)
-VALUES (
-  'a0000000-0000-0000-0000-000000000003',
-  'Grootfontein Combine Harvester',
-  'New Holland CR7.90 combine harvester available for seasonal grain harvesting. High-capacity machine with GPS guidance. Book early for the harvest season — demand is high in the Maize Triangle.',
-  'equipment',
-  'Otjozondjupa',
-  450000,
-  '+264 81 890 1234',
-  '{}',
-  ARRAY['Operator included', 'Delivery available', 'GPS guidance', 'High capacity', 'Tractor access road'],
-  -19.5666,
-  18.1178,
-  true
-);
-
 -- ============================================================
 -- 5. Oshana (Oshakati)
 -- ============================================================
 
 INSERT INTO listings (host_id, title, description, category, region, price_cents, host_phone, images, amenities, lat, lng, active)
 VALUES (
-  'a0000000-0000-0000-0000-000000000003',
+  'a0000000-0000-0000-0000-000000000001',
   'Oshakati Mahangu Farm',
   'Traditional mahangu (pearl millet) farm stay in the heart of Owambo country. Learn about subsistence farming methods passed down through generations. Experience the real northern Namibian way of life with home-cooked oshifima and omboga.',
   'stay',
@@ -169,27 +119,7 @@ VALUES (
 );
 
 -- ============================================================
--- 6. Omusati (Outapi)
--- ============================================================
-
-INSERT INTO listings (host_id, title, description, category, region, price_cents, host_phone, images, amenities, lat, lng, active)
-VALUES (
-  'a0000000-0000-0000-0000-000000000003',
-  'Outapi Irrigation Pump',
-  'Portable diesel irrigation pump suitable for smallholder plots. Can draw from the canal system or boreholes. Essential for dry-season vegetable production in the Cuvelai floodplain.',
-  'equipment',
-  'Omusati',
-  80000,
-  '+264 81 012 3456',
-  '{}',
-  ARRAY['Delivery available', 'Diesel powered', 'Tractor access road', 'Borehole water', 'Canal compatible'],
-  -17.5167,
-  15.0167,
-  true
-);
-
--- ============================================================
--- 7. Ohangwena (Eenhana)
+-- 6. Ohangwena (Eenhana)
 -- ============================================================
 
 INSERT INTO listings (host_id, title, description, category, region, price_cents, host_phone, images, amenities, lat, lng, active)
@@ -209,7 +139,7 @@ VALUES (
 );
 
 -- ============================================================
--- 8. Oshikoto (Tsumeb)
+-- 7. Oshikoto (Tsumeb)
 -- ============================================================
 
 INSERT INTO listings (host_id, title, description, category, region, price_cents, host_phone, images, amenities, lat, lng, active)
@@ -229,7 +159,7 @@ VALUES (
 );
 
 -- ============================================================
--- 9. Kavango East (Rundu)
+-- 8. Kavango East (Rundu)
 -- ============================================================
 
 INSERT INTO listings (host_id, title, description, category, region, price_cents, host_phone, images, amenities, lat, lng, active)
@@ -248,24 +178,8 @@ VALUES (
   true
 );
 
-INSERT INTO listings (host_id, title, description, category, region, price_cents, host_phone, images, amenities, lat, lng, active)
-VALUES (
-  'a0000000-0000-0000-0000-000000000004',
-  'Rundu Irrigation System',
-  'Complete drip irrigation kit with pump and 500m of drip line. Perfect for vegetable plots along the Okavango riverbank. Includes setup and training session for first-time users.',
-  'equipment',
-  'Kavango East',
-  180000,
-  '+264 81 456 7801',
-  '{}',
-  ARRAY['Delivery available', 'Operator included', 'Solar power', 'Borehole water', 'Tractor access road'],
-  -17.9200,
-  19.7500,
-  true
-);
-
 -- ============================================================
--- 10. Kavango West (Nkurenkuru)
+-- 9. Kavango West (Nkurenkuru)
 -- ============================================================
 
 INSERT INTO listings (host_id, title, description, category, region, price_cents, host_phone, images, amenities, lat, lng, active)
@@ -285,7 +199,7 @@ VALUES (
 );
 
 -- ============================================================
--- 11. Zambezi (Katima Mulilo)
+-- 10. Zambezi (Katima Mulilo)
 -- ============================================================
 
 INSERT INTO listings (host_id, title, description, category, region, price_cents, host_phone, images, amenities, lat, lng, active)
@@ -304,24 +218,8 @@ VALUES (
   true
 );
 
-INSERT INTO listings (host_id, title, description, category, region, price_cents, host_phone, images, amenities, lat, lng, active)
-VALUES (
-  'a0000000-0000-0000-0000-000000000003',
-  'Katima Mulilo Ploughing Unit',
-  'Massey Ferguson 4708 tractor with 4-furrow plough and disc harrow. Available with experienced operator for land preparation in the fertile Zambezi floodplains. Minimum 2-day hire.',
-  'equipment',
-  'Zambezi',
-  320000,
-  '+264 81 789 0124',
-  '{}',
-  ARRAY['Operator included', 'Delivery available', 'Tractor access road', '85HP diesel', '4WD', 'Air conditioning'],
-  -17.5000,
-  24.2500,
-  true
-);
-
 -- ============================================================
--- 12. Omaheke (Gobabis)
+-- 11. Omaheke (Gobabis)
 -- ============================================================
 
 INSERT INTO listings (host_id, title, description, category, region, price_cents, host_phone, images, amenities, lat, lng, active)
@@ -340,24 +238,8 @@ VALUES (
   true
 );
 
-INSERT INTO listings (host_id, title, description, category, region, price_cents, host_phone, images, amenities, lat, lng, active)
-VALUES (
-  'a0000000-0000-0000-0000-000000000003',
-  'Gobabis Livestock Trailer',
-  'Heavy-duty 16-ton livestock trailer for cattle and small stock transport. Roadworthy with all permits up to date. Can be paired with our truck and driver for complete transport solution.',
-  'equipment',
-  'Omaheke',
-  150000,
-  '+264 81 901 2346',
-  '{}',
-  ARRAY['Operator included', 'Delivery available', 'Tractor access road', '16-ton capacity', 'Roadworthy certified'],
-  -22.4500,
-  18.9700,
-  true
-);
-
 -- ============================================================
--- 13. Hardap (Mariental)
+-- 12. Hardap (Mariental)
 -- ============================================================
 
 INSERT INTO listings (host_id, title, description, category, region, price_cents, host_phone, images, amenities, lat, lng, active)
@@ -376,24 +258,8 @@ VALUES (
   true
 );
 
-INSERT INTO listings (host_id, title, description, category, region, price_cents, host_phone, images, amenities, lat, lng, active)
-VALUES (
-  'a0000000-0000-0000-0000-000000000004',
-  'Mariental Borehole Drilling Rig',
-  'Portable borehole drilling rig capable of drilling to 200m depth. Includes compressor, drill rods, and casing. Experienced drilling crew available. Essential for new farm water supply in the Hardap region.',
-  'equipment',
-  'Hardap',
-  450000,
-  '+264 81 123 4568',
-  '{}',
-  ARRAY['Operator included', 'Delivery available', 'Tractor access road', '200m depth capacity', 'Borehole water'],
-  -24.6400,
-  17.9600,
-  true
-);
-
 -- ============================================================
--- 14. //Karas (Keetmanshoop, Lüderitz)
+-- 13. //Karas (Keetmanshoop, Lüderitz)
 -- ============================================================
 
 INSERT INTO listings (host_id, title, description, category, region, price_cents, host_phone, images, amenities, lat, lng, active)
@@ -412,24 +278,8 @@ VALUES (
   true
 );
 
-INSERT INTO listings (host_id, title, description, category, region, price_cents, host_phone, images, amenities, lat, lng, active)
-VALUES (
-  'a0000000-0000-0000-0000-000000000004',
-  'Lüderitz Solar Generator',
-  'Mobile solar generator unit (10kVA) suitable for off-grid farm operations. Silent operation with battery storage for nighttime use. Perfect for remote Karas farms needing reliable power without diesel costs.',
-  'equipment',
-  '//Karas',
-  220000,
-  '+264 81 345 6782',
-  '{}',
-  ARRAY['Delivery available', 'Solar power', '10kVA output', 'Battery storage', 'Silent operation'],
-  -26.6453,
-  15.1550,
-  true
-);
-
 -- ============================================================
--- Additional listings to round out the dataset
+-- Additional farm stay listings
 -- ============================================================
 
 -- Extra Khomas: luxury stay
@@ -446,40 +296,6 @@ VALUES (
   ARRAY['Swimming pool', 'Hot water', 'WiFi (limited)', 'Stargazing deck', 'Braai area', 'Guided farm walks', 'Bush view'],
   -22.7500,
   16.8500,
-  true
-);
-
--- Extra Erongo: equipment
-INSERT INTO listings (host_id, title, description, category, region, price_cents, host_phone, images, amenities, lat, lng, active)
-VALUES (
-  'a0000000-0000-0000-0000-000000000004',
-  'Usakos Front-End Loader',
-  'CAT 950GC front-end loader for earthmoving, loading, and material handling. Ideal for farm road construction, dam building, and general earthworks. Available with certified operator.',
-  'equipment',
-  'Erongo',
-  380000,
-  '+264 81 567 8904',
-  '{}',
-  ARRAY['Operator included', 'Delivery available', 'Tractor access road', '2.5m bucket', 'Air conditioning'],
-  -22.0167,
-  15.6000,
-  true
-);
-
--- Extra Kunene: equipment
-INSERT INTO listings (host_id, title, description, category, region, price_cents, host_phone, images, amenities, lat, lng, active)
-VALUES (
-  'a0000000-0000-0000-0000-000000000003',
-  'Opuwo Water Tanker',
-  '10,000-litre water tanker truck for livestock and domestic water delivery. Serves farms in the arid Kunene region where boreholes run dry. Reliable weekly or on-demand delivery schedules available.',
-  'equipment',
-  'Kunene',
-  120000,
-  '+264 81 678 9015',
-  '{}',
-  ARRAY['Delivery available', 'Operator included', '10,000L capacity', 'Tractor access road'],
-  -18.0667,
-  13.8167,
   true
 );
 
@@ -531,22 +347,5 @@ VALUES (
   ARRAY['Solar power', 'Borehole water', 'Hot water', 'Camping allowed', 'Guided farm walks', 'Self-catering kitchen'],
   -28.0500,
   19.1500,
-  true
-);
-
--- Extra Omaheke: equipment
-INSERT INTO listings (host_id, title, description, category, region, price_cents, host_phone, images, amenities, lat, lng, active)
-VALUES (
-  'a0000000-0000-0000-0000-000000000003',
-  'Gobabis Balers and Hay Equipment',
-  'Complete hay baling setup: round baler, bale wrapper, and bale transporter. Available for seasonal contract work. Turn your veld grass into valuable winter feed. Experienced operator included.',
-  'equipment',
-  'Omaheke',
-  250000,
-  '+264 81 012 3459',
-  '{}',
-  ARRAY['Operator included', 'Delivery available', 'Tractor access road', 'Round baler + wrapper', 'Bale transport included'],
-  -22.3000,
-  19.1000,
   true
 );

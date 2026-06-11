@@ -2,7 +2,7 @@
 
 import { useFeormAuth, useFeormOnboarding } from "@/context/feorm-context";
 import { useRouter } from "next/navigation";
-import { Compass, Tent, Tractor, Building2 } from "lucide-react";
+import { Compass, Tent } from "lucide-react";
 import Image from "next/image";
 
 const ROLE_CARDS = [
@@ -12,7 +12,7 @@ const ROLE_CARDS = [
     title: "I want to explore & book",
     subtitle: "Voyager",
     description:
-      "Find farm stays, rent equipment, and experience real Namibian agrotourism.",
+      "Find farm stays and experience real Namibian agrotourism.",
     route: "/auth/voyager/profile",
     hoverBorder: "hover:border-harvest",
     hoverShadow: "hover:shadow-[0_8px_32px_rgba(232,201,106,0.08)]",
@@ -34,34 +34,7 @@ const ROLE_CARDS = [
     iconColor: "text-verified group-hover:text-white-feorm",
     subtitleColor: "text-verified",
   },
-  {
-    id: "provider_equipment" as const,
-    icon: Tractor,
-    title: "I have equipment to rent out",
-    subtitle: "Equipment Provider",
-    description:
-      "List tractors, irrigation systems, power equipment, and more for rent by the day.",
-    route: "/auth/provider/equipment/profile",
-    hoverBorder: "hover:border-machinery",
-    hoverShadow: "hover:shadow-[0_8px_32px_rgba(139,92,42,0.08)]",
-    iconBg: "bg-machinery-bg group-hover:bg-machinery",
-    iconColor: "text-machinery group-hover:text-white-feorm",
-    subtitleColor: "text-machinery",
-  },
-  {
-    id: "provider_equipment_company" as const,
-    icon: Building2,
-    title: "I represent a company",
-    subtitle: "Equipment Provider",
-    description:
-      "Register your agribusiness and lease equipment to farmers across Namibia.",
-    route: "/auth/provider/equipment/profile",
-    hoverBorder: "hover:border-machinery",
-    hoverShadow: "hover:shadow-[0_8px_32px_rgba(139,92,42,0.08)]",
-    iconBg: "bg-machinery-bg group-hover:bg-machinery",
-    iconColor: "text-machinery group-hover:text-white-feorm",
-    subtitleColor: "text-machinery",
-  },
+
 ] as const;
 
 export default function RolePage() {
@@ -69,7 +42,7 @@ export default function RolePage() {
   const { setSelectedRole } = useFeormOnboarding();
   const router = useRouter();
 
-  const handleRoleSelect = (role: "voyager" | "provider_stay" | "provider_equipment", route: string) => {
+  const handleRoleSelect = (role: "voyager" | "provider_stay", route: string) => {
     setSelectedRole(role);
     setUser((prev: any) => (prev ? { ...prev, role } : null));
     router.push(route);
@@ -125,9 +98,7 @@ export default function RolePage() {
                 key={card.id + card.title}
                 onClick={() =>
                   handleRoleSelect(
-                    card.id === "provider_equipment_company"
-                      ? "provider_equipment"
-                      : card.id,
+                    card.id,
                     card.route
                   )
                 }

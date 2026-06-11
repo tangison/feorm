@@ -133,7 +133,6 @@ export interface BookingData {
   serviceFee: number;
   status: string;
   referenceNumber: string;
-  withOperator: boolean;
   listing?: {
     id: string;
     title: string;
@@ -194,7 +193,6 @@ export async function createBooking(data: {
   endDate: string;
   totalPrice: number;
   serviceFee: number;
-  withOperator?: boolean;
 }): Promise<BookingData> {
   const supabase = await createClient();
 
@@ -447,7 +445,6 @@ function mapBookingRow(row: Record<string, unknown>): BookingData {
     serviceFee: (row.service_fee ?? row.serviceFee ?? 0) as number,
     status: row.status as string,
     referenceNumber: (row.reference ?? row.reference_number ?? row.referenceNumber) as string,
-    withOperator: (row.with_operator ?? row.withOperator ?? false) as boolean,
     listing: listing
       ? {
           id: listing.id as string,

@@ -9,7 +9,6 @@ import Image from "next/image";
 
 const INTEREST_OPTIONS = [
   "Farm Stays",
-  "Equipment Rental",
 ] as const;
 
 export default function VoyagerInterestsPage() {

@@ -128,18 +128,17 @@ export default function SupportPage() {
                 How does escrow work?
               </h4>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                A N$1,500 refundable deposit is held for each equipment rental.
-                It&apos;s released once the owner confirms the asset&apos;s
-                return condition.
+                A N$1,500 refundable deposit is held for each farm stay booking.
+                It&apos;s released after your stay is completed successfully.
               </p>
             </div>
             <div className="py-4">
               <h4 className="font-serif-display text-base text-earth mb-1.5">
-                What if equipment is damaged?
+                What if I need to change my booking?
               </h4>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                The communal insurance fund covers up to N$10,000 in damage. Both
-                parties must submit before/after photos within 48 hours.
+                Contact the host directly via WhatsApp to discuss changes. Modifications
+                made 48+ hours before check-in are usually accommodated at no extra cost.
               </p>
             </div>
             <div className="py-4">

@@ -6,8 +6,8 @@ Implemented comprehensive user role system and onboarding flows for the Feorm pl
 ## Changes Made
 
 ### Context Updates
-- `src/context/feorm-auth.tsx`: Changed FeormUser role type from `"explorer" | "lister" | "voyager" | "provider"` to `"guest" | "voyager" | "provider_stay" | "provider_equipment" | "admin"`. Default role changed from `"explorer"` to `"guest"`.
-- `src/context/feorm-onboarding.tsx`: Changed selectedRole type from `"voyager" | "provider" | null` to `"voyager" | "provider_stay" | "provider_equipment" | null`.
+- `src/context/feorm-auth.tsx`: Changed FeormUser role type from `"explorer" | "lister" | "voyager" | "provider"` to `"guest" | "voyager" | "provider_stay" | "admin"`. Default role changed from `"explorer"` to `"guest"`.
+- `src/context/feorm-onboarding.tsx`: Changed selectedRole type from `"voyager" | "provider" | null` to `"voyager" | "provider_stay" | null`.
 
 ### Task 7A — Guest Mode
 - `src/components/feorm/guest-banner.tsx` (NEW): Guest banner component shown at bottom when user is not logged in, with "Sign In" button.
@@ -25,12 +25,7 @@ Implemented comprehensive user role system and onboarding flows for the Feorm pl
 - `src/app/(auth)/auth/provider/stay/property/page.tsx` (NEW): Property details with stay type selection, capacity, description, GPS coordinates.
 - `src/app/(auth)/auth/provider/stay/verify/page.tsx` (NEW): Verification notice with pending status, requirements checklist.
 
-### Task 7D — Provider Equipment Onboarding
-- `src/app/(auth)/auth/provider/equipment/profile/page.tsx` (NEW): About You form with name, phone (required), company name, region, business reg number.
-- `src/app/(auth)/auth/provider/equipment/assets/page.tsx` (NEW): Equipment details with type selection, units, operator/delivery toggles, service radius slider.
-- `src/app/(auth)/auth/provider/equipment/verify/page.tsx` (NEW): Verification notice with pending status, requirements checklist.
-
-### Task 7E — Admin Role
+### Task 7D — Admin Role
 - `src/app/api/admin/route.ts` (NEW): Admin API with GET (pending verifications, stats, all listings) and POST (approve/reject provider).
 - `src/app/(marketplace)/admin/page.tsx` (NEW): Admin dashboard with pending verifications list, approve/reject buttons, stats cards.
 
@@ -43,7 +38,7 @@ Implemented comprehensive user role system and onboarding flows for the Feorm pl
 - Feorm logo at top center.
 
 ### Updated Pages
-- `src/app/(auth)/auth/role/page.tsx` (MODIFIED): 4 role cards instead of 2, proper routing to new onboarding flows.
+- `src/app/(auth)/auth/role/page.tsx` (MODIFIED): 3 role cards instead of 2, proper routing to new onboarding flows.
 - `src/app/auth/callback/route.ts` (MODIFIED): Redirects new users to `/auth/role` instead of `/auth/identity`.
 - `src/components/feorm/nav.tsx` (MODIFIED): Updated role checks for new role types, added Admin tab when role is admin.
 - `src/lib/db.ts` (MODIFIED): Changed default role from "explorer" to "guest".

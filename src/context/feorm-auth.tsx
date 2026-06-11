@@ -18,7 +18,7 @@ interface FeormUser {
   name?: string;
   surname?: string;
   region?: string;
-  role: "guest" | "voyager" | "provider_stay" | "provider_equipment" | "admin";
+  role: "guest" | "voyager" | "provider_stay" | "admin";
   verified: boolean;
   avatarUrl?: string;
   interests?: string[];

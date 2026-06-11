@@ -62,8 +62,6 @@
   --color-destructive-dark: #8a2826;
   --color-whatsapp: #25D366;
   --color-whatsapp-bg: rgba(37, 211, 102, 0.05);
-  --color-machinery: #1F6C9F;
-  --color-machinery-bg: #E1F3FE;
 }
 
 :root {
@@ -105,8 +103,7 @@
   --verified-bg: #EDF3EC;
   --destructive-bg: #FDEBEC;
   --whatsapp: #25D366;
-  --machinery: #1F6C9F;
-  --machinery-bg: #E1F3FE;
+
 }
 
 @layer base {
@@ -239,13 +236,6 @@
   .tag-verified {
     background-color: var(--color-verified-bg);
     color: var(--color-verified);
-    border-radius: 9999px;
-    letter-spacing: 0.05em;
-  }
-
-  .tag-machinery {
-    background-color: var(--color-machinery-bg);
-    color: var(--color-machinery);
     border-radius: 9999px;
     letter-spacing: 0.05em;
   }

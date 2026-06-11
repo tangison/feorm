@@ -89,11 +89,11 @@ function AuthContent() {
           </div>
           <div className="reveal delay-1">
             <h1 className="font-serif-display text-3xl md:text-5xl mb-4 text-white-feorm leading-tight max-w-md">
-              Stay on a Farm. Rent a Tractor.
+              Stay on a Farm.
             </h1>
             <p className="text-sm text-sand max-w-sm leading-relaxed">
-              Book farm stays and rent farming equipment from Namibian landowners.
-              Escrow-protected. N$10,000 damage cover. Verified hosts only.
+              Book farm stays from Namibian landowners.
+              Verified hosts only.
             </p>
           </div>
         </div>

@@ -2,14 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Shield, CheckCircle, Star, ArrowRight } from "lucide-react";
+import { CheckCircle, Star, ArrowRight } from "lucide-react";
 
 const onboardingSlides = [
-  {
-    icon: <Shield size={32} className="text-accent-foreground" />,
-    title: "Your N$1,500 Deposit, Held in Trust",
-    desc: "Every equipment rental includes a refundable N$1,500 escrow deposit. The money is held until both you and the owner confirm the asset came back in good condition.",
-  },
   {
     icon: <CheckCircle size={32} className="text-verified" />,
     title: "N$10,000 Damage Cover",
@@ -18,7 +13,7 @@ const onboardingSlides = [
   {
     icon: <Star size={32} className="text-harvest" />,
     title: "Your Farm, Your Terms",
-    desc: "Idle tractors, empty guest rooms, unused pasture — they can all earn income. Feorm connects your assets with people who need them.",
+    desc: "Empty guest rooms, unused pasture — they can all earn income. Feorm connects your assets with people who need them.",
   },
 ];
 
@@ -63,7 +58,7 @@ export default function OnboardingPage() {
           )}
           <button
             onClick={() => {
-              if (step < 2) {
+              if (step < 1) {
                 setStep((s) => s + 1);
               } else {
                 router.push("/auth/terms");
@@ -71,7 +66,7 @@ export default function OnboardingPage() {
             }}
             className="flex-1 btn-primary-feorm px-5 py-3 text-xs uppercase tracking-widest flex justify-center items-center gap-2"
           >
-            {step < 2 ? "Next" : "Continue"}
+            {step < 1 ? "Next" : "Continue"}
             <ArrowRight size={14} />
           </button>
         </div>

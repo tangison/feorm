@@ -13,7 +13,7 @@ export default function NewListingPage() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState<"stay" | "equipment">("stay");
+  const [category, setCategory] = useState<"stay">("stay");
   const [region, setRegion] = useState("Khomas");
   const [priceCents, setPriceCents] = useState("");
   const [hostPhone, setHostPhone] = useState(user?.phone || "");
@@ -76,33 +76,18 @@ export default function NewListingPage() {
             Add a listing
           </h1>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Create a new farm stay or equipment listing on Feorm.
+            Create a new farm stay listing on Feorm.
           </p>
         </div>
 
         <div className="space-y-5">
-          {/* Category Toggle */}
+          {/* Category: Farm Stay */}
           <div className="flex gap-3">
-            <button
-              onClick={() => setCategory("stay")}
-              className={`flex-1 p-4 text-center border-2 rounded-[8px] transition-all duration-200 ${
-                category === "stay"
-                  ? "border-harvest bg-accent/30"
-                  : "border-soil/10 bg-white-feorm hover:border-soil/20"
-              }`}
+            <div
+              className="flex-1 p-4 text-center border-2 border-harvest bg-accent/30 rounded-[8px]"
             >
               <span className="text-sm font-medium text-earth">Farm Stay</span>
-            </button>
-            <button
-              onClick={() => setCategory("equipment")}
-              className={`flex-1 p-4 text-center border-2 rounded-[8px] transition-all duration-200 ${
-                category === "equipment"
-                  ? "border-machinery bg-machinery-bg/30"
-                  : "border-soil/10 bg-white-feorm hover:border-soil/20"
-              }`}
-            >
-              <span className="text-sm font-medium text-earth">Equipment</span>
-            </button>
+            </div>
           </div>
 
           {/* Title */}
@@ -115,7 +100,7 @@ export default function NewListingPage() {
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder={category === "stay" ? "Erongo Granite Lodge" : "John Deere 5075E Tractor"}
+              placeholder="Erongo Granite Lodge"
               className="w-full bg-transparent outline-none text-lg text-earth placeholder-sand min-h-[44px]"
             />
           </div>
@@ -192,14 +177,14 @@ export default function NewListingPage() {
           {/* Amenities / Features */}
           <div className="border border-soil/20 bg-white-feorm p-4 rounded-[4px] focus-within:border-earth transition-colors">
             <label htmlFor="amenities" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-muted-foreground">
-              {category === "stay" ? "Amenities" : "Specifications"}
+              Amenities
             </label>
             <input
               id="amenities"
               type="text"
               value={amenities}
               onChange={(e) => setAmenities(e.target.value)}
-              placeholder={category === "stay" ? "WiFi, Hot Water, Braai Area" : "85HP, 4WD, Air Conditioning"}
+              placeholder="WiFi, Hot Water, Braai Area"
               className="w-full bg-transparent outline-none text-lg text-earth placeholder-sand min-h-[44px]"
             />
             <p className="text-[10px] text-muted-foreground mt-2">Separate with commas</p>

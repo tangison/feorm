@@ -8,7 +8,7 @@ const CACHE_TTL = 30_000; // 30 seconds
 
 // ─── Hooks ─────────────────────────────────────────────────────
 
-export function useListings(type: "stay" | "equipment") {
+export function useListings(type: "stay") {
   const [data, setData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

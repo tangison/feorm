@@ -77,8 +77,7 @@ These encode domain meanings beyond the generic shadcn layer.
 | `--color-destructive-dark` | `#8a2826` | Deep error | Strong error emphasis |
 | `--color-whatsapp` | `#25D366` | WhatsApp brand | WhatsApp contact buttons |
 | `--color-whatsapp-bg` | `rgba(37, 211, 102, 0.05)` | WhatsApp background | WhatsApp button background |
-| `--color-machinery` | `#1F6C9F` | Equipment category | Equipment tags, machinery indicators |
-| `--color-machinery-bg` | `#E1F3FE` | Equipment background | Equipment card accents |
+
 
 ### 2.4 Color Application Rules
 
@@ -106,7 +105,7 @@ All fonts loaded via `next/font/google` with `display: swap` for zero layout shi
 
 | Level | Class | Size | Weight | Family | Tracking | Usage |
 |-------|-------|------|--------|--------|----------|-------|
-| Hero | `font-serif-display` | 3xl-5xl | 400 | Serif | -0.02em | Page titles ("Farm Stays", "Equipment Exchange") |
+| Hero | `font-serif-display` | 3xl-5xl | 400 | Serif | -0.02em | Page titles ("Farm Stays") |
 | H2 | `font-serif-display` | xl-2xl | 400 | Serif | -0.02em | Section headings, listing titles |
 | Body | default | sm-base | 400 | Sans | normal | Paragraph text, descriptions |
 | Label | `font-mono-feorm` | 8-10px | 500-600 | Mono | 0.06-0.1em | Nav items, tags, region codes, metadata |
@@ -181,7 +180,7 @@ There is no intermediate tablet breakpoint. The app is either mobile (stacked) o
 
 ### 4.6 Grid System
 
-Marketplace listing grid:
+Farm stay listing grid:
 ```
 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6
 ```
@@ -237,7 +236,6 @@ All buttons:
 |-------|-----------|------|-------|
 | `.tag-pastel` | `--accent` (#FBF3DB) | `--accent-foreground` | Farm stay category, voyager badge |
 | `.tag-verified` | `--color-verified-bg` | `--color-verified` | Trust indicators, provider badge |
-| `.tag-machinery` | `--color-machinery-bg` | `--color-machinery` | Equipment category |
 | `.tag-alert` | `--color-destructive-bg` | `--destructive` | Errors, warnings |
 
 All tags: `border-radius: 9999px`, `letter-spacing: 0.05em`, `text-transform: uppercase`
@@ -309,7 +307,7 @@ The project uses 16 shadcn/ui primitives, all styled through CSS variables:
 | Buttons | 16-18px | 1.5 |
 
 **Key icons by domain:**
-- Marketplace: `Tent`, `Wrench`, `ArrowUpRight`, `SlidersHorizontal`
+- Farm stays: `Tent`, `ArrowUpRight`, `SlidersHorizontal`
 - Trust: `Shield`, `ShieldCheck`, `Award`, `CheckCircle2`
 - Navigation: `MapPin`, `Clock`, `LayoutDashboard`, `Compass`
 - AI: `Sparkles`, `Zap`, `Send` (Tangison chat)
@@ -434,7 +432,7 @@ All images use Next.js `<Image>` component — zero raw `<img>` tags in the code
 See the imagery audit for the full prescription. Priority locations:
 
 1. **Auth hero background** — Replace `hero-gateway.png` with a real Namibian panorama (Sossusvlei, Etosha, Fish River Canyon)
-2. **Marketplace category banners** — Wide landscape banners above the listing grid
+2. **Farm stay category banners** — Wide landscape banners above the listing grid
 3. **Listing detail gallery** — Support 3-5 images per listing with a hero + thumbnails layout
 4. **Empty state illustrations** — SVG illustrations with Namibian motifs (acacia, welwitschia, desert fox)
 5. **Onboarding backgrounds** — Region-specific imagery for each Namibian region
@@ -550,7 +548,7 @@ WCAG 2.1 Level AA. This means:
 | Group | Path | Layout | Auth Required |
 |-------|------|--------|---------------|
 | Auth | `/(auth)/auth/*` | Centered card, hero background | No |
-| Marketplace | `/(marketplace)/*` | Nav + content + footer | Yes |
+| Farm Stays | `/(marketplace)/*` | Nav + content + footer | Yes |
 | Root | `/` | Loading → redirect | No |
 
 ### 12.2 All Routes
@@ -567,7 +565,7 @@ WCAG 2.1 Level AA. This means:
 | `/auth/verify-id` | ID upload | Upload zone with Camera icon |
 | `/auth/voyager/interests` | Interest selection | Region tags |
 | `/auth/voyager/verify` | Voyager verification | Download/Upload buttons |
-| `/auth/provider/assets` | Asset listing | Upload, Tent/Wrench icons |
+| `/auth/provider/assets` | Asset listing | Upload, Tent icons |
 | `/auth/provider/region` | Region selection | MapPin, region list |
 | `/marketplace` | Listing grid | Toggle tabs, filter chips, listing cards |
 | `/listing/[id]` | Listing detail | Hero image, WhatsApp button, booking CTA |

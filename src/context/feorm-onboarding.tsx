@@ -12,14 +12,14 @@ import React, {
 interface FeormOnboardingContextType {
   onboardingStep: number;
   setOnboardingStep: (step: number) => void;
-  selectedRole: "voyager" | "provider_stay" | "provider_equipment" | null;
-  setSelectedRole: (role: "voyager" | "provider_stay" | "provider_equipment" | null) => void;
+  selectedRole: "voyager" | "provider_stay" | null;
+  setSelectedRole: (role: "voyager" | "provider_stay" | null) => void;
   interests: string[];
   setInterests: (interests: string[]) => void;
   hasCompletedOnboarding: boolean;
   setHasCompletedOnboarding: (completed: boolean) => void;
-  providerAssets: ("stay" | "equipment")[];
-  setProviderAssets: (assets: ("stay" | "equipment")[]) => void;
+  providerAssets: ("stay")[];
+  setProviderAssets: (assets: ("stay")[]) => void;
 }
 
 const FeormOnboardingContext = createContext<FeormOnboardingContextType | null>(
@@ -34,10 +34,10 @@ export function FeormOnboardingProvider({
   // TODO: Replace with Supabase-backed state
   // Uses: supabase.from('profiles').select('role, interests, onboarding_completed, provider_assets')
   const [onboardingStep, setOnboardingStep] = useState(0);
-  const [selectedRole, setSelectedRole] = useState<"voyager" | "provider_stay" | "provider_equipment" | null>(null);
+  const [selectedRole, setSelectedRole] = useState<"voyager" | "provider_stay" | null>(null);
   const [interests, setInterests] = useState<string[]>([]);
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
-  const [providerAssets, setProviderAssets] = useState<("stay" | "equipment")[]>([]);
+  const [providerAssets, setProviderAssets] = useState<("stay")[]>([]);
 
   return (
     <FeormOnboardingContext.Provider
@@ -51,7 +51,7 @@ export function FeormOnboardingProvider({
         hasCompletedOnboarding,
         setHasCompletedOnboarding: useCallback((completed: boolean) => setHasCompletedOnboarding(completed), []),
         providerAssets,
-        setProviderAssets: useCallback((assets: ("stay" | "equipment")[]) => setProviderAssets(assets), []),
+        setProviderAssets: useCallback((assets: ("stay")[]) => setProviderAssets(assets), []),
       }}
     >
       {children}
