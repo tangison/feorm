@@ -21,7 +21,7 @@ export default function TermsPage() {
             Your Rights & Responsibilities
           </h1>
           <p className="text-sm text-muted-foreground">
-            A plain-English summary of the rules for using Feorm.
+            A plain-language summary of the rules for using Feorm.
           </p>
         </div>
 
@@ -29,39 +29,34 @@ export default function TermsPage() {
           <div className="space-y-6 text-sm text-soil leading-relaxed">
             <div>
               <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
-                01 — Trust & Identity
+                01 — Identity & Trust
               </h4>
               <p>
-                All participants must verify their identity via a valid Namibian ID or
-                passport. Anonymity is incompatible with the communal trust model.
+                Everyone on Feorm must verify their identity with a valid Namibian ID or passport. This protects both travelers and hosts.
               </p>
             </div>
             <div>
               <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
-                02 — Damage Coverage
+                02 — Damage Protection
               </h4>
               <p>
-                The Feorm communal insurance fund provides up to N$10,000 in damage
-                coverage for verified transactions.
+                The Feorm communal insurance fund covers up to N$10,000 in damage for verified bookings. This applies to both travelers and hosts.
               </p>
             </div>
             <div>
               <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
-                03 — Communication
+                03 — Staying in Touch
               </h4>
               <p>
-                All transactional communication occurs via WhatsApp. Feorm does not
-                store message content. Record-keeping is the responsibility of both
-                parties.
+                Booking communication happens through WhatsApp. Feorm does not store message content. Both parties should keep their own records.
               </p>
             </div>
             <div>
               <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
-                04 — Dispute Resolution
+                04 — Resolving Disputes
               </h4>
               <p>
-                Disputes are resolved through a community arbitration process. Both
-                parties must submit photographic evidence within 48 hours.
+                Disputes are resolved through a community arbitration process. Both parties must submit photographic evidence within 48 hours.
               </p>
             </div>
           </div>
@@ -75,7 +70,7 @@ export default function TermsPage() {
             className="mt-1 w-4 h-4 accent-earth"
           />
           <span className="text-sm text-soil">
-            I accept the terms of service and acknowledge the insurance policies as binding for all transactions on Feorm.
+            I accept the terms of service and understand the damage protection policy applies to all bookings on Feorm.
           </span>
         </label>
 
@@ -87,7 +82,7 @@ export default function TermsPage() {
           disabled={!accepted}
           className="w-full btn-primary-feorm px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
         >
-          I Accept — Continue to Marketplace
+          I Accept — Continue
           <ArrowRight size={14} />
         </button>
       </div>

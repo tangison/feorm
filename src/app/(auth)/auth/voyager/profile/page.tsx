@@ -130,10 +130,10 @@ export default function VoyagerProfilePage() {
         </div>
 
         <h1 className="font-serif-display text-3xl md:text-4xl mb-3 text-white tracking-tight">
-          Tell us about yourself
+          Tell hosts who you are
         </h1>
         <p className="text-sm text-white/60 leading-relaxed mb-8">
-          Hosts want to know who is coming to stay. Add your details to get started.
+          Hosts want to know who is staying on their farm. Add your details so they can welcome you properly.
         </p>
 
         <div className="space-y-4">

@@ -41,13 +41,12 @@ export default function GlobalError({
 
         {/* Title */}
         <h1 className="font-serif-display text-4xl tracking-tight text-earth">
-          System Interrupt
+          Something Went Wrong
         </h1>
 
         {/* Body Copy */}
         <p className="text-base leading-relaxed text-muted-foreground">
-          An unexpected condition has interrupted the Feorm network. Your session
-          data has been preserved.
+          Something unexpected happened. Your booking and account details are safe.
         </p>
 
         {/* Error Digest — visible for debugging */}
@@ -62,19 +61,19 @@ export default function GlobalError({
           <button
             onClick={reset}
             className="btn-primary-feorm px-6 py-3 text-xs uppercase tracking-widest font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-harvest"
-            aria-label="Attempt Recovery — retry the failed operation"
+            aria-label="Try again — retry the failed operation"
             type="button"
           >
-            Attempt Recovery
+            Try Again
           </button>
 
           <button
             onClick={handleSystemReset}
             className="rounded-full px-6 py-3 text-xs uppercase tracking-widest font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-destructive border border-destructive text-destructive hover:bg-destructive hover:text-white-feorm"
-            aria-label="System Reset — clear session and return to home"
+            aria-label="Start over — return to home page"
             type="button"
           >
-            System Reset
+            Start Over
           </button>
         </div>
       </div>

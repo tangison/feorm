@@ -20,7 +20,7 @@ function AuthContent() {
 
   const messageParam = searchParams.get("message");
   const signInMessage = messageParam === "sign-in-to-book"
-    ? "Sign in to book or contact hosts"
+    ? "Sign in to book your farm stay"
     : null;
 
   const handleRequestMagicLink = async () => {
@@ -84,16 +84,15 @@ function AuthContent() {
               feorm<span className="text-harvest">.</span>
             </h1>
             <p className="text-[10px] uppercase tracking-[0.2em] text-sand font-mono-feorm">
-              Namibian Farmland Marketplace
+              Book Farm Stays Across Namibia
             </p>
           </div>
           <div className="reveal delay-1">
             <h1 className="font-serif-display text-3xl md:text-5xl mb-4 text-white-feorm leading-tight max-w-md">
-              Stay on a Farm.
+              Wake up on a real Namibian farm.
             </h1>
             <p className="text-sm text-sand max-w-sm leading-relaxed">
-              Book farm stays from Namibian landowners.
-              Verified hosts only.
+              Skip the hotels. Stay on working farms, cattle posts, and bush lodges — from the Kunene River to the Kalahari dunes. Every host verified, every booking escrow-protected.
             </p>
           </div>
         </div>
@@ -116,10 +115,10 @@ function AuthContent() {
                   </div>
                 )}
                 <h1 className="font-serif-display text-3xl mb-3 text-earth tracking-tight">
-                  Enter your email
+                  Get access to farm stays
                 </h1>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  We will send you a magic link to sign in. No password needed.
+                  Enter your email and we will send a one-time login link. No password to remember, no account to create.
                 </p>
               </div>
 
@@ -157,14 +156,14 @@ function AuthContent() {
                   disabled={!email || !email.includes("@") || loading}
                   className="w-full btn-primary-feorm px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
                 >
-                  {loading ? "Sending..." : "Send Magic Link"}
+                  {loading ? "Sending..." : "Send Me a Login Link"}
                   <ArrowRight size={14} aria-hidden="true" />
                 </button>
               </div>
 
               <div className="mt-6 p-4 bg-accent/30 border border-harvest/20 rounded-[4px]" role="note">
                 <p className="text-[10px] text-accent-foreground font-mono-feorm uppercase tracking-wide">
-                  We will send a one-time login link to your email
+                  One-tap login — no password, no hassle
                 </p>
               </div>
             </>
@@ -175,11 +174,11 @@ function AuthContent() {
                   CHECK YOUR EMAIL
                 </kbd>
                 <h1 className="font-serif-display text-3xl mb-3 text-earth tracking-tight">
-                  Login link sent
+                  Check your inbox
                 </h1>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   We sent a login link to <span className="font-medium text-earth">{email}</span>.
-                  Click the link in your email to sign in.
+                  Click it and you are in.
                 </p>
               </div>
 
@@ -187,10 +186,10 @@ function AuthContent() {
                 <div className="p-6 border border-soil/10 bg-white-feorm rounded-[8px] text-center">
                   <Mail size={32} className="mx-auto mb-4 text-harvest" />
                   <p className="text-sm text-earth font-medium mb-2">
-                    Waiting for email verification
+                    Waiting for you to click the link
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    The page will redirect automatically once you click the link.
+                    This page will take you straight to the marketplace once you do.
                   </p>
                 </div>
 
@@ -201,7 +200,7 @@ function AuthContent() {
                   }}
                   className="w-full btn-secondary-feorm px-5 py-3 text-xs uppercase tracking-widest min-h-[44px]"
                 >
-                  Use a Different Email
+                  Try a Different Email
                 </button>
 
                 <button
@@ -222,8 +221,7 @@ function AuthContent() {
               className="border-b border-muted-foreground pb-0.5 hover:text-earth transition-colors"
             >
               Terms of Service
-            </Link>{" "}
-            to continue.
+            </Link>.
           </p>
         </div>
       </div>

@@ -83,12 +83,12 @@ export default function AdminPage() {
       });
       if (res.ok) {
         setPendingProviders((prev) => prev.filter((p) => p.id !== userId));
-        toast({ title: "Provider approved" });
+        toast({ title: "Host approved" });
       } else {
-        toast({ title: "Could not approve this provider", description: "Something went wrong on our end. Please try again." });
+        toast({ title: "Could not approve this host", description: "Something went wrong on our end. Please try again." });
       }
     } catch {
-      toast({ title: "Could not approve this provider", description: "Something went wrong on our end. Please try again." });
+      toast({ title: "Could not approve this host", description: "Something went wrong on our end. Please try again." });
     }
     setProcessingIds((prev) => {
       const next = new Set(prev);
@@ -107,12 +107,12 @@ export default function AdminPage() {
       });
       if (res.ok) {
         setPendingProviders((prev) => prev.filter((p) => p.id !== userId));
-        toast({ title: "Provider rejected" });
+        toast({ title: "Host rejected" });
       } else {
-        toast({ title: "Could not reject this provider", description: "Something went wrong on our end. Please try again." });
+        toast({ title: "Could not reject this host", description: "Something went wrong on our end. Please try again." });
       }
     } catch {
-      toast({ title: "Could not reject this provider", description: "Something went wrong on our end. Please try again." });
+      toast({ title: "Could not reject this host", description: "Something went wrong on our end. Please try again." });
     }
     setProcessingIds((prev) => {
       const next = new Set(prev);
@@ -138,7 +138,7 @@ export default function AdminPage() {
       <div className="flex-grow flex items-center justify-center min-h-[60vh]">
         <div className="text-center">
           <Shield size={32} className="mx-auto mb-4 text-muted-foreground" />
-          <p className="text-sm text-muted-foreground">Admin access required</p>
+          <p className="text-sm text-muted-foreground">You need admin access to view this page</p>
         </div>
       </div>
     );
@@ -151,14 +151,14 @@ export default function AdminPage() {
         <div className="flex items-center gap-3 mb-2">
           <Shield size={20} className="text-harvest" />
           <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground">
-            Admin Dashboard
+            Platform Admin
           </p>
         </div>
         <h1 className="font-serif-display text-4xl md:text-5xl text-earth mb-3 tracking-tight">
           Feorm Administration
         </h1>
         <p className="text-sm text-muted-foreground">
-          Review provider verifications and monitor platform activity.
+          Approve or reject host verifications and track how the platform is growing.
         </p>
       </div>
 
@@ -168,7 +168,7 @@ export default function AdminPage() {
           <div className="flex items-center gap-2 mb-2">
             <Users size={14} className="text-muted-foreground" />
             <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-muted-foreground">
-              Total Users
+              Registered Travelers & Hosts
             </p>
           </div>
           <p className="font-mono-feorm text-2xl md:text-3xl text-earth">
@@ -179,7 +179,7 @@ export default function AdminPage() {
           <div className="flex items-center gap-2 mb-2">
             <Tent size={14} className="text-muted-foreground" />
             <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-muted-foreground">
-              Total Listings
+              Farm Stays Listed
             </p>
           </div>
           <p className="font-mono-feorm text-2xl md:text-3xl text-earth">
@@ -190,7 +190,7 @@ export default function AdminPage() {
           <div className="flex items-center gap-2 mb-2">
             <Calendar size={14} className="text-muted-foreground" />
             <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-muted-foreground">
-              Total Bookings
+              Bookings Made
             </p>
           </div>
           <p className="font-mono-feorm text-2xl md:text-3xl text-earth">
@@ -206,7 +206,7 @@ export default function AdminPage() {
             id="pending-heading"
             className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground"
           >
-            Pending Verifications
+            Hosts Waiting for Verification
           </h3>
           <button
             onClick={fetchData}
@@ -228,9 +228,9 @@ export default function AdminPage() {
         ) : pendingProviders.length === 0 ? (
           <div className="bento-card p-8 text-center">
             <CheckCircle size={32} className="mx-auto mb-3 text-verified" />
-            <p className="text-sm text-earth font-medium mb-1">All caught up</p>
+            <p className="text-sm text-earth font-medium mb-1">No pending reviews</p>
             <p className="text-xs text-muted-foreground">
-              No pending verifications to review
+              Every host verification has been handled
             </p>
           </div>
         ) : (
@@ -240,7 +240,7 @@ export default function AdminPage() {
               const displayName =
                 [provider.name, provider.surname].filter(Boolean).join(" ") ||
                 "Unknown";
-              const roleLabel = "Stay Provider";
+              const roleLabel = "Farm Stay Host";
 
               return (
                 <div

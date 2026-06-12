@@ -88,17 +88,17 @@ export default function VoyagerInterestsPage() {
         </div>
 
         <h1 className="font-serif-display text-3xl md:text-4xl mb-3 text-white tracking-tight">
-          What are you looking for?
+          Where do you want to stay?
         </h1>
         <p className="text-sm text-white/60 leading-relaxed mb-8">
-          Tell us what interests you and which regions you want to explore. We will tailor your feed accordingly.
+          Choose the type of stay and regions you want to visit. We will show you farm stays that match.
         </p>
 
         <div className="space-y-6">
           {/* Interest Selection */}
           <div>
             <p className="text-[10px] font-medium uppercase tracking-widest mb-3 text-white/60">
-              What are you looking for?
+              Type of stay
             </p>
             <div className="flex flex-wrap gap-2">
               {INTEREST_OPTIONS.map((interest) => {
@@ -129,7 +129,7 @@ export default function VoyagerInterestsPage() {
           {/* Region Multi-Select */}
           <div>
             <p className="text-[10px] font-medium uppercase tracking-widest mb-3 text-white/60">
-              Which regions interest you?
+              Which regions do you want to visit?
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {NAMIBIAN_REGIONS.map((region) => {
@@ -174,7 +174,7 @@ export default function VoyagerInterestsPage() {
             className="w-full px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] rounded-full font-semibold"
             style={{ backgroundColor: "#C4933A", color: "#1E1A14" }}
           >
-            Start Exploring
+            Find Farm Stays
             <ArrowRight size={14} />
           </button>
         </div>

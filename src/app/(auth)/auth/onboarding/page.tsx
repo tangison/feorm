@@ -7,13 +7,13 @@ import { CheckCircle, Star, ArrowRight } from "lucide-react";
 const onboardingSlides = [
   {
     icon: <CheckCircle size={32} className="text-verified" />,
-    title: "N$10,000 Damage Cover",
-    desc: "If something goes wrong, the Feorm communal insurance covers up to N$10,000 in damage. Only available for verified members.",
+    title: "N$10,000 Damage Protection",
+    desc: "If something goes wrong during your farm stay, the Feorm communal insurance covers up to N$10,000 in damage. Available for verified members only.",
   },
   {
     icon: <Star size={32} className="text-harvest" />,
-    title: "Your Farm, Your Terms",
-    desc: "Empty guest rooms, unused pasture — they can all earn income. Feorm connects your assets with people who need them.",
+    title: "Your Farm, Your Income",
+    desc: "Empty guest rooms, unused campsites, and quiet farmhouses can all earn money. Feorm connects your farm stay with travelers looking for an authentic Namibian experience.",
   },
 ];
 

@@ -22,7 +22,7 @@ function SuccessContent() {
 
   const triggerWhatsApp = () => {
     const msg = encodeURIComponent(
-      `Hi, I just booked [${listingTitle}] on Feorm. My ref: ${ref}. When can we arrange the details?`
+      `Hi, I just booked ${listingTitle} through Feorm. My reference is ${ref}. When is a good time to talk about my stay?`
     );
     window.open(`${SUPPORT_WHATSAPP_URL}?text=${msg}`, "_blank");
   };
@@ -45,16 +45,16 @@ function SuccessContent() {
         </div>
 
         <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-earth">
-          Booking Confirmed
+          You're Booked In
         </h1>
         <p className="text-sm text-muted-foreground mb-8">
-          Your booking is confirmed. Contact the host on WhatsApp to arrange the details.
+          Your farm stay is reserved. Message your host on WhatsApp to confirm arrival details and any special requests.
         </p>
 
         {ref && (
           <div className="border border-soil/10 bg-white-feorm rounded-[8px] p-6 mb-8">
             <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
-              Booking Reference
+              Your Booking Reference
             </p>
             <p className="font-mono-feorm text-2xl font-medium text-earth">
               {ref}
@@ -72,13 +72,13 @@ function SuccessContent() {
             onClick={triggerWhatsApp}
             className="w-full border border-whatsapp text-whatsapp px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 rounded-full hover:bg-whatsapp/5 transition-colors min-h-[44px]"
           >
-            <MessageCircle size={14} /> Connect via WhatsApp
+            <MessageCircle size={14} /> Message Your Host on WhatsApp
           </button>
           <button
             onClick={() => router.push("/marketplace")}
             className="w-full btn-secondary-feorm px-5 py-3 text-xs uppercase tracking-widest min-h-[44px]"
           >
-            Return to Marketplace
+            Browse More Farm Stays
           </button>
         </div>
       </div>

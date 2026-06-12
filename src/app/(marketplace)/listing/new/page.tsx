@@ -24,7 +24,7 @@ export default function NewListingPage() {
 
   const handleSubmit = async () => {
     if (!title || !priceCents) {
-      toast({ title: "Title and price are required" });
+      toast({ title: "Add a title and price to continue" });
       return;
     }
 
@@ -50,10 +50,10 @@ export default function NewListingPage() {
 
       if (!res.ok) throw new Error("Could not create listing");
 
-      toast({ title: "Listing created successfully" });
+      toast({ title: "Your farm stay is now live" });
       router.push("/marketplace");
     } catch {
-      toast({ title: "Could not create listing", description: "Something went wrong. Please try again." });
+      toast({ title: "Could not publish your listing", description: "Check your details and try again." });
     }
     setLoading(false);
   };
@@ -70,13 +70,13 @@ export default function NewListingPage() {
 
         <div className="mb-10">
           <kbd className="font-mono-feorm text-[10px] border border-soil/20 bg-white-feorm px-2 py-1 rounded text-muted-foreground mb-6 inline-block">
-            NEW LISTING
+            LIST YOUR FARM
           </kbd>
           <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-earth tracking-tight">
-            Add a listing
+            List Your Farm Stay
           </h1>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Create a new farm stay listing on Feorm.
+            Earn income from your farm by welcoming travelers. List your stay and start receiving bookings.
           </p>
         </div>
 
@@ -93,14 +93,14 @@ export default function NewListingPage() {
           {/* Title */}
           <div className="border border-soil/20 bg-white-feorm p-4 rounded-[4px] focus-within:border-earth transition-colors">
             <label htmlFor="title" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-muted-foreground">
-              Title
+              Listing Title
             </label>
             <input
               id="title"
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Erongo Granite Lodge"
+              placeholder="e.g. Erongo Granite Lodge"
               className="w-full bg-transparent outline-none text-lg text-earth placeholder-sand min-h-[44px]"
             />
           </div>
@@ -108,13 +108,13 @@ export default function NewListingPage() {
           {/* Description */}
           <div className="border border-soil/20 bg-white-feorm p-4 rounded-[4px] focus-within:border-earth transition-colors">
             <label htmlFor="description" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-muted-foreground">
-              Description
+              About Your Farm Stay
             </label>
             <textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe your listing..."
+              placeholder="What makes your farm stay special? Describe the land, the accommodation, and what guests can expect."
               rows={3}
               className="w-full bg-transparent outline-none text-base text-earth placeholder-sand resize-none min-h-[80px]"
             />
@@ -123,7 +123,7 @@ export default function NewListingPage() {
           {/* Price */}
           <div className="border border-soil/20 bg-white-feorm p-4 rounded-[4px] focus-within:border-earth transition-colors">
             <label htmlFor="price" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-muted-foreground">
-              Price per Day (N$)
+              Price per Night (N$)
             </label>
             <div className="flex items-center">
               <span className="font-mono-feorm text-lg mr-3 text-soil" aria-hidden="true">N$</span>
@@ -159,7 +159,7 @@ export default function NewListingPage() {
           {/* Phone */}
           <div className="border border-soil/20 bg-white-feorm p-4 rounded-[4px] focus-within:border-earth transition-colors">
             <label htmlFor="host-phone" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-muted-foreground">
-              Contact Phone
+              Your Phone Number
             </label>
             <div className="flex items-center">
               <span className="font-mono-feorm text-lg mr-3 text-soil" aria-hidden="true">+264</span>
@@ -177,7 +177,7 @@ export default function NewListingPage() {
           {/* Amenities / Features */}
           <div className="border border-soil/20 bg-white-feorm p-4 rounded-[4px] focus-within:border-earth transition-colors">
             <label htmlFor="amenities" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-muted-foreground">
-              Amenities
+              What Guests Have Access To
             </label>
             <input
               id="amenities"
@@ -187,7 +187,7 @@ export default function NewListingPage() {
               placeholder="WiFi, Hot Water, Braai Area"
               className="w-full bg-transparent outline-none text-lg text-earth placeholder-sand min-h-[44px]"
             />
-            <p className="text-[10px] text-muted-foreground mt-2">Separate with commas</p>
+            <p className="text-[10px] text-muted-foreground mt-2">Separate each item with a comma</p>
           </div>
 
           {/* GPS Coordinates */}
@@ -195,7 +195,7 @@ export default function NewListingPage() {
             <div className="flex items-center gap-2 mb-3">
               <MapPin size={14} className="text-earth" />
               <label className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
-                Farm Location (GPS Coordinates)
+                Pin Your Farm on the Map
               </label>
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -229,7 +229,7 @@ export default function NewListingPage() {
               </div>
             </div>
             <p className="text-[10px] text-muted-foreground mt-2">
-              Find your coordinates at maps.google.com — right click your farm → copy coordinates
+              Get your GPS coordinates: open Google Maps, right-click your farm, and copy the numbers
             </p>
           </div>
 
@@ -239,7 +239,7 @@ export default function NewListingPage() {
             disabled={!title || !priceCents || loading}
             className="w-full btn-harvest px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
           >
-            {loading ? "Creating..." : "Create Listing"}
+            {loading ? "Publishing..." : "Publish My Farm Stay"}
             <ArrowRight size={14} />
           </button>
         </div>

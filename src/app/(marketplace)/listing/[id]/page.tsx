@@ -25,7 +25,7 @@ export default function ListingDetailPage() {
 
   const triggerWhatsApp = (title: string, hostPhone: string) => {
     const msg = encodeURIComponent(
-      `Hi, I'm interested in [${title}] on Feorm. Can you tell me more?`
+      `Hi, I'd like to know more about staying at ${title} on Feorm. Is it available for my dates?`
     );
     // Use host's actual phone number, stripped of non-digits and leading +
     const phone = hostPhone.replace(/[^\d]/g, "");
@@ -86,7 +86,7 @@ export default function ListingDetailPage() {
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-harvest animate-pulse" />
           <p className="text-sm text-muted-foreground font-mono-feorm">
-            Loading listing...
+            Loading farm stay...
           </p>
         </div>
       </div>
@@ -97,12 +97,12 @@ export default function ListingDetailPage() {
     return (
       <div className="flex-grow flex items-center justify-center min-h-[60vh]">
         <div className="text-center">
-          <p className="text-sm text-muted-foreground mb-4">Listing not found.</p>
+          <p className="text-sm text-muted-foreground mb-4">We couldn't find that farm stay.</p>
           <button
             onClick={() => router.push("/marketplace")}
             className="btn-primary-feorm px-6 py-3 text-xs uppercase tracking-widest"
           >
-            Back to Marketplace
+            Browse Farm Stays
           </button>
         </div>
       </div>
@@ -158,13 +158,13 @@ export default function ListingDetailPage() {
                   {formatPrice(listing.price)}
                 </span>
                 <span className="text-sm text-muted-foreground ml-1 uppercase tracking-wide">
-                  / day
+                  /night
                 </span>
               </div>
 
               {/* Description with AI Enhance */}
               <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-3">
-                Description
+                About This Stay
               </h4>
               {rewrittenDesc !== null ? (
                 <div className="mb-8">
@@ -180,13 +180,13 @@ export default function ListingDetailPage() {
                   )}
                   <div className="flex items-center gap-3 mt-2">
                     <span className="font-mono-feorm text-[9px] uppercase tracking-widest text-muted-foreground">
-                      Enhanced
+                      Improved
                     </span>
                     <button
                       onClick={() => setRewrittenDesc(null)}
                       className="font-mono-feorm text-[9px] uppercase tracking-widest text-harvest hover:text-earth transition-colors underline underline-offset-2 px-2 py-1 rounded-full min-h-[36px]"
                     >
-                      Show Original
+                      See Original
                     </button>
                   </div>
                 </div>
@@ -199,17 +199,17 @@ export default function ListingDetailPage() {
                     onClick={handleRewriteDescription}
                     disabled={rewriting}
                     className="text-[10px] uppercase tracking-widest text-muted-foreground hover:text-earth font-mono-feorm flex items-center gap-1 mt-2 transition-colors disabled:opacity-50 rounded-full px-3 py-1.5 border border-soil/10 bg-fog hover:border-soil/30 min-h-[36px]"
-                    aria-label="AI Enhance description"
+                    aria-label="Improve this description"
                   >
                     {rewriting ? (
                       <>
                         <span className="inline-block w-3 h-3 border border-muted-foreground/40 border-t-muted-foreground rounded-full animate-spin" />
-                        Enhancing...
+                        Improving...
                       </>
                     ) : (
                       <>
                         <Sparkles size={12} />
-                        Enhance Description
+                        Improve This Description
                       </>
                     )}
                   </button>
@@ -217,7 +217,7 @@ export default function ListingDetailPage() {
               )}
 
               <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-3">
-                Specifications
+                What's Included
               </h4>
               <div className="flex flex-wrap gap-2 mb-8">
                 {features.map((f: string) => (
@@ -232,7 +232,7 @@ export default function ListingDetailPage() {
 
               {/* Host Bio */}
               <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-3">
-                Host
+                Your Host
               </h4>
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-full bg-earth text-white-feorm flex items-center justify-center text-xs font-medium font-serif-display">
@@ -250,14 +250,14 @@ export default function ListingDetailPage() {
                   </p>
                 </div>
                 <span className="tag-verified text-[10px] uppercase font-medium px-2.5 py-1">
-                  Verified
+                  Verified Host
                 </span>
               </div>
 
               {/* AI Recommendations */}
               <div className="mt-8 pt-8 border-t border-soil/10">
                 <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-3">
-                  Smart Suggestions
+                  You Might Also Like
                 </h4>
                 {suggestions === null && !loadingSuggestions && (
                   <button
@@ -266,7 +266,7 @@ export default function ListingDetailPage() {
                     aria-label="Get smart suggestions"
                   >
                     <Sparkles size={12} />
-                    Get Smart Suggestions
+                    Get Recommendations
                   </button>
                 )}
                 {loadingSuggestions && (
@@ -306,7 +306,7 @@ export default function ListingDetailPage() {
 
             <div className="mt-auto pt-6 bg-white-feorm">
               <div className="flex justify-between text-sm mb-4">
-                <span className="text-muted-foreground">Security Escrow</span>
+                <span className="text-muted-foreground">Escrow Deposit</span>
                 <span className="font-medium font-mono-feorm text-earth">
                   10% (min N$ 500)
                 </span>
@@ -321,7 +321,7 @@ export default function ListingDetailPage() {
                 }}
                 className="w-full btn-harvest px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 min-h-[44px]"
               >
-                {"Request Stay"}
+                {"Book This Farm Stay"}
                 <ArrowRight size={14} aria-hidden="true" />
               </button>
               <button
@@ -334,7 +334,7 @@ export default function ListingDetailPage() {
                 }}
                 className="w-full mt-3 border border-whatsapp text-whatsapp px-5 py-3 text-xs uppercase tracking-widest flex justify-center items-center gap-2 rounded-full hover:bg-whatsapp/5 transition-colors min-h-[44px]"
               >
-                <MessageCircle size={14} /> WhatsApp Inquiry
+                <MessageCircle size={14} /> Ask the Host a Question
               </button>
             </div>
           </div>

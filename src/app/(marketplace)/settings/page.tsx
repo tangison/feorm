@@ -66,9 +66,9 @@ export default function SettingsPage() {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
 
-      toast({ title: "Brand identity downloaded" });
+      toast({ title: "Your brand page is ready" });
     } catch {
-      toast({ title: "Could not download brand identity", description: "Something went wrong. Please try again." });
+      toast({ title: "Could not create your brand page", description: "Something went wrong. Please try again." });
     } finally {
       setBrandLoading(false);
     }
@@ -99,7 +99,7 @@ export default function SettingsPage() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 
-    toast({ title: "Data exported successfully" });
+    toast({ title: "Your data has been exported" });
   };
 
   // ─── Reset Onboarding ──────────────────────────────────────
@@ -140,9 +140,9 @@ export default function SettingsPage() {
       setAiSuggestions(data.suggestions || []);
     } catch {
       setAiSuggestions([
-        { title: "Optimize Listing Titles", description: "Use specific location names in your listing titles for better search visibility.", category: "optimization" },
-        { title: "Golden Hour Photos", description: "Add high-quality photos during golden hour to showcase your property authentically.", category: "optimization" },
-        { title: "Fast Response Rate", description: "Respond to booking requests within 2 hours to improve your response rate ranking.", category: "optimization" },
+        { title: "Name Your Farm Stay After Its Best Feature", description: "Instead of 'Farm Stay near Grootfontein', try 'Otjozondjupa Cattle Ranch with Sunset Views'. Specific names help travelers find you in search.", category: "listing" },
+        { title: "Take Photos During Golden Hour", description: "Photos taken at sunrise or sunset make your farm look warm and inviting. Listings with 5+ photos get 3x more views on Feorm.", category: "listing" },
+        { title: "Respond to Requests Within 2 Hours", description: "Hosts who reply within 2 hours appear higher in search results. Travelers often book the first host who responds.", category: "response" },
       ]);
     } finally {
       setAiLoading(false);
@@ -160,7 +160,7 @@ export default function SettingsPage() {
           Settings
         </h1>
         <p className="text-sm text-muted-foreground">
-          Manage your session, exports, and system preferences.
+          Control your account, download your data, and manage your preferences.
         </p>
       </div>
 
@@ -170,13 +170,13 @@ export default function SettingsPage() {
           id="session-heading"
           className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-4"
         >
-          Session Management
+          Your Session
         </h2>
         <div className="bento-card p-6">
           <div className="flex items-center gap-3 mb-5">
             <div className="w-2.5 h-2.5 rounded-full bg-verified animate-pulse" />
             <span className="text-sm font-medium text-earth">
-              Session Active
+              Signed In
             </span>
           </div>
 
@@ -242,7 +242,7 @@ export default function SettingsPage() {
             type="button"
           >
             <LogOut size={14} />
-            Clear Session
+            Sign Out
           </button>
         </div>
       </section>
@@ -253,7 +253,7 @@ export default function SettingsPage() {
           id="download-heading"
           className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-4"
         >
-          Downloads
+          Download Your Data
         </h2>
         <div className="bento-card p-6">
           <div className="flex flex-col sm:flex-row gap-3">
@@ -264,7 +264,7 @@ export default function SettingsPage() {
               type="button"
             >
               <Download size={14} />
-              {brandLoading ? "Generating..." : "Download Brand Identity"}
+              {brandLoading ? "Generating..." : "Download Your Brand Page"}
             </button>
             <button
               onClick={handleExportData}
@@ -272,7 +272,7 @@ export default function SettingsPage() {
               type="button"
             >
               <FileJson size={14} />
-              Export Data
+              Export Your Account Data
             </button>
           </div>
         </div>
@@ -284,14 +284,14 @@ export default function SettingsPage() {
           id="reset-heading"
           className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-4"
         >
-          System Reset
+          Reset Your Account
         </h2>
         <div className="bento-card p-6 border-destructive/20">
           <div className="flex items-start gap-3 mb-5 p-4 rounded-[8px] bg-destructive-bg/50">
             <AlertTriangle size={16} className="text-destructive shrink-0 mt-0.5" />
             <p className="text-xs text-destructive leading-relaxed">
-              These actions are irreversible. Resetting will clear your
-              preferences and may require you to complete onboarding again.
+              These actions cannot be undone. Resetting clears your
+              preferences and you will need to complete onboarding again.
             </p>
           </div>
 
@@ -302,7 +302,7 @@ export default function SettingsPage() {
               type="button"
             >
               <RotateCcw size={14} />
-              Reset Onboarding
+              Start Onboarding Over
             </button>
             <button
               onClick={handleFullReset}
@@ -310,7 +310,7 @@ export default function SettingsPage() {
               type="button"
             >
               <AlertTriangle size={14} />
-              Full System Reset
+              Sign Out and Reset Everything
             </button>
           </div>
         </div>
@@ -322,7 +322,7 @@ export default function SettingsPage() {
           id="ai-heading"
           className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-4"
         >
-          Smart Tools
+          Farm Stay Tips
         </h2>
         <div className="bento-card p-6">
           <div className="flex items-center gap-3 mb-5">
@@ -331,10 +331,10 @@ export default function SettingsPage() {
             </div>
             <div>
               <p className="text-sm font-medium text-earth">
-                Profile Tips
+                Get More Bookings
               </p>
               <p className="text-xs text-muted-foreground">
-                Get suggestions to improve your profile and attract more bookings
+                Practical ways to make your farm stay listing more appealing to travelers
               </p>
             </div>
           </div>
@@ -346,7 +346,7 @@ export default function SettingsPage() {
             type="button"
           >
             <Sparkles size={14} />
-            {aiLoading ? "Analyzing..." : "Get Profile Tips"}
+            {aiLoading ? "Analyzing..." : "Get Booking Tips"}
           </button>
 
           {/* AI Suggestions */}
@@ -403,7 +403,7 @@ export default function SettingsPage() {
           id="appinfo-heading"
           className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-4"
         >
-          Application Info
+          About Feorm
         </h2>
         <div className="bento-card p-6">
           <div className="space-y-4">

@@ -74,10 +74,10 @@ export default function ProviderStayPropertyPage() {
         </div>
 
         <h1 className="font-serif-display text-3xl md:text-4xl mb-3 text-white tracking-tight">
-          Your property
+          Your Farm Stay
         </h1>
         <p className="text-sm text-white/60 leading-relaxed mb-8">
-          Describe your farm stay so voyagers know what to expect.
+          Describe your farm stay so travelers know what to expect when they arrive.
         </p>
 
         <div className="space-y-4">
@@ -157,7 +157,7 @@ export default function ProviderStayPropertyPage() {
               id="stay-desc"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe your farm stay, surroundings, and what makes it special..."
+              placeholder="Tell travelers what makes your farm stay special — the landscape, activities, wildlife, or way of life..."
               rows={3}
               className="w-full bg-transparent outline-none text-sm text-white placeholder-white/30 leading-relaxed resize-none"
             />
@@ -176,7 +176,7 @@ export default function ProviderStayPropertyPage() {
               GPS Coordinates (Optional)
             </p>
             <p className="text-[9px] text-white/40 mb-3">
-              Helps voyagers find you on the map. You can find these in Google Maps by right-clicking your location.
+              Helps travelers find you on the map. You can find these in Google Maps by right-clicking your location.
             </p>
             <div className="flex gap-3">
               <div className="flex-1">

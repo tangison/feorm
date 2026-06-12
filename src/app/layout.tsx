@@ -34,17 +34,19 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Feorm | Namibian Farmland Marketplace",
+  title: "Feorm | Book Farm Stays Across Namibia",
   description:
-    "A marketplace connecting Namibian farmland with travellers seeking farm stays.",
+    "Stay on real Namibian farms. Browse verified farm stays from the Kunene to the Kalahari — book direct with escrow protection.",
   keywords: [
     "Feorm",
-    "Namibia",
-    "Agrotourism",
-    "Farm Stay",
-    "Marketplace",
+    "Namibia farm stay",
+    "Namibian agrotourism",
+    "farm stay booking",
+    "Namibia accommodation",
+    "escrow booking",
+    "rural Namibia",
   ],
-  authors: [{ name: "Feorm Network" }],
+  authors: [{ name: "Feorm" }],
   icons: {
     icon: "/feorm-logo.png",
   },

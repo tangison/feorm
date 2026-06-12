@@ -26,10 +26,10 @@ const PROVIDER_LABELS: Record<string, string> = {
 };
 
 const QUICK_PROMPTS = [
-  "How does escrow work?",
-  "Find farm stays in Oshana",
-  "Farm stay pricing",
-  "What is Feorm?",
+  "Find farm stays near Windhoek",
+  "How does escrow protect my booking?",
+  "What does a verified host mean?",
+  "Farm stays in Kunene Region",
 ];
 
 export default function TangisonChat() {
@@ -39,7 +39,7 @@ export default function TangisonChat() {
     {
       role: "assistant",
       content:
-        "Hey there. I'm Tangison — your Feorm assistant. I can help you find listings, understand our escrow protocol, or learn about Namibian agriculture. What do you need?",
+        "Welcome to Feorm. I can help you find the right farm stay, explain how booking works, or answer questions about Namibian regions. What are you looking for?",
       provider: "system",
     },
   ]);
@@ -150,7 +150,7 @@ export default function TangisonChat() {
         {
           role: "assistant",
           content:
-            "Connection issue. Please try again or reach out on WhatsApp for immediate help.",
+            "We could not connect. Please try again, or reach out on WhatsApp for help.",
           provider: "fallback",
         },
       ]);
@@ -173,7 +173,7 @@ export default function TangisonChat() {
       {
         role: "assistant",
         content:
-          "Hey there. I'm Tangison — your Feorm assistant. What can I help you with?",
+          "Welcome back. What can I help you with?",
         provider: "system",
       },
     ]);
@@ -228,7 +228,7 @@ export default function TangisonChat() {
             <p className="font-mono-feorm text-[8px] uppercase tracking-widest text-sand">
               {isLoading && activeProvider
                 ? `${PROVIDER_LABELS[activeProvider] || activeProvider} · Thinking...`
-                : "Feorm AI Assistant"}
+                : "Feorm Farm Stay Assistant"}
             </p>
           </div>
         </div>
@@ -362,7 +362,7 @@ export default function TangisonChat() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Ask Tangison anything..."
+            placeholder="Ask about farm stays, regions, or bookings..."
             className="flex-grow bg-fog border border-soil/10 rounded-full px-4 py-2.5 text-sm outline-none focus:border-earth transition-colors placeholder:text-sand min-h-[44px]"
             disabled={isLoading}
             aria-label="Type a message to Tangison"

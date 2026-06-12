@@ -114,7 +114,7 @@ function MarketplaceContent() {
       {/* View Header */}
       <div className="flex items-center gap-2 mb-5 md:mb-8">
         <span className="hidden md:inline-block font-mono-feorm text-[9px] text-muted-foreground uppercase tracking-widest ml-3">
-          {transformedListings?.length || 0} listings
+          {transformedListings?.length || 0} farm stays
         </span>
 
         {/* Grid/Map Toggle */}
@@ -152,10 +152,10 @@ function MarketplaceContent() {
       <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4 md:gap-6 mb-6 md:mb-10">
         <div>
           <h1 className="font-serif-display text-3xl md:text-4xl lg:text-5xl text-earth mb-1.5 tracking-tight">
-            Farm Stays
+            Find Your Farm Stay
           </h1>
           <p className="text-xs md:text-sm text-muted-foreground max-w-md leading-relaxed">
-            Find farm stays across Namibia.
+            Book a stay on a real Namibian farm — cattle ranches, bush camps, riverfront lodges, and homesteads.
           </p>
         </div>
 
@@ -294,14 +294,14 @@ function MarketplaceContent() {
             className="mx-auto mb-4 rounded-lg opacity-80"
           />
           <p className="text-xs text-muted-foreground mb-4">
-            No listings yet{selectedRegion !== "All Regions" ? ` in ${selectedRegion}. Be the first to list here.` : ". Be the first to list on Feorm."}
+            No farm stays found{selectedRegion !== "All Regions" ? ` in ${selectedRegion}. Check back soon — new stays appear every week.` : " yet. We're adding new farms regularly."}
           </p>
           {hasActiveFilters && (
             <button
               onClick={clearFilters}
               className="btn-secondary-feorm px-4 py-2 text-[10px] uppercase tracking-widest"
             >
-              Clear Filters
+              Clear All Filters
             </button>
           )}
         </div>
@@ -318,7 +318,7 @@ export default function MarketplacePage() {
           <div className="flex items-center gap-2">
             <div className="w-1.5 h-1.5 rounded-full bg-harvest animate-pulse" />
             <span className="font-mono-feorm text-[9px] text-muted-foreground uppercase tracking-widest">
-              Loading
+              Finding farm stays
             </span>
           </div>
         </div>

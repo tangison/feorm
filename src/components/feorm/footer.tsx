@@ -24,21 +24,21 @@ export default function FeormFooter() {
               </span>
             </Link>
             <p className="text-[11px] text-muted-foreground leading-relaxed max-w-[240px]">
-              Farm stays from Namibian landowners. Escrow-protected. Verified hosts.
+              Book authentic farm stays across Namibia. Your money is held in escrow until you check in. Every host is verified.
             </p>
           </div>
 
           {/* Links */}
           <div>
             <h4 className="font-mono-feorm text-[8px] uppercase tracking-widest text-muted-foreground mb-3">
-              Explore
+              Farm Stays
             </h4>
             <div className="space-y-2">
               <Link href="/marketplace?view=stays" className="block text-[11px] text-soil hover:text-earth transition-colors">
                 Farm Stays
               </Link>
               <Link href="/journeys" className="block text-[11px] text-soil hover:text-earth transition-colors">
-                My Journeys
+                My Stays
               </Link>
               <Link href="/support" className="block text-[11px] text-soil hover:text-earth transition-colors">
                 Support

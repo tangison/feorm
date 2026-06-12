@@ -65,8 +65,8 @@ export default function FeormNav() {
   // ── Helper: role display label ──
   const getRoleLabel = () => {
     if (isAdmin) return "Admin";
-    if (userRole === "provider_stay") return "Stay Provider";
-    if (isVoyager) return "Voyager";
+    if (userRole === "provider_stay") return "Farm Host";
+    if (isVoyager) return "Traveler";
     return "Guest";
   };
 
@@ -86,13 +86,13 @@ export default function FeormNav() {
       ]
     : isProvider
     ? [
-        { label: "Listings", href: "/marketplace", icon: Tent, active: pathname === "/marketplace" || pathname.startsWith("/listing"), onClick: () => setMarketView("stays") },
+        { label: "My Farm Stays", href: "/marketplace", icon: Tent, active: pathname === "/marketplace" || pathname.startsWith("/listing"), onClick: () => setMarketView("stays") },
         { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, active: pathname === "/dashboard" },
         { label: "Profile", href: "/profile", icon: User, active: pathname === "/profile" },
       ]
     : [
-        { label: "Explore", href: "/marketplace", icon: MapPin, active: pathname === "/marketplace" || pathname.startsWith("/listing") },
-        { label: "Journeys", href: "/journeys", icon: Clock, active: pathname === "/journeys" },
+        { label: "Farm Stays", href: "/marketplace", icon: MapPin, active: pathname === "/marketplace" || pathname.startsWith("/listing") },
+        { label: "My Stays", href: "/journeys", icon: Clock, active: pathname === "/journeys" },
         { label: "Profile", href: "/profile", icon: User, active: pathname === "/profile" },
       ];
 
@@ -349,7 +349,7 @@ export default function FeormNav() {
         <nav className="flex-1 flex flex-col gap-0.5" role="navigation">
           {(isAdmin
             ? [
-                { label: "Explore", href: "/marketplace", icon: MapPin, active: pathname === "/marketplace" || pathname.startsWith("/listing"), onClick: () => setMarketView("stays") },
+                { label: "Farm Stays", href: "/marketplace", icon: MapPin, active: pathname === "/marketplace" || pathname.startsWith("/listing"), onClick: () => setMarketView("stays") },
                 { label: "Farm Stays", href: "/marketplace?view=stays", icon: Tent, active: false, onClick: () => setMarketView("stays") },
                 { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, active: pathname === "/dashboard" },
                 { label: "Admin", href: "/admin", icon: Shield, active: pathname === "/admin" },
@@ -367,8 +367,8 @@ export default function FeormNav() {
                 { label: "Support", href: "/support", icon: LifeBuoy, active: pathname === "/support" },
               ]
             : [
-                { label: "Explore", href: "/marketplace", icon: MapPin, active: pathname === "/marketplace" || pathname.startsWith("/listing") },
-                { label: "Journeys", href: "/journeys", icon: Clock, active: pathname === "/journeys" },
+                { label: "Farm Stays", href: "/marketplace", icon: MapPin, active: pathname === "/marketplace" || pathname.startsWith("/listing") },
+                { label: "My Stays", href: "/journeys", icon: Clock, active: pathname === "/journeys" },
                 { label: "Verification", href: "/verification", icon: Shield, active: pathname === "/verification" },
                 { label: "Profile", href: "/profile", icon: User, active: pathname === "/profile" },
                 { label: "Settings", href: "/settings", icon: Settings, active: pathname === "/settings" },

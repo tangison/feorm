@@ -63,7 +63,7 @@ export default function SupportPage() {
           Support Center
         </h1>
         <p className="text-sm text-muted-foreground">
-          Get help with your Feorm experience.
+          Find answers about bookings, payments, and farm stays, or reach our team directly.
         </p>
       </div>
 
@@ -120,7 +120,7 @@ export default function SupportPage() {
         {/* ── FAQ Section ───────────────────────────────────────── */}
         <div className="bento-card p-6">
           <h3 className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-5">
-            Frequently Asked
+            Common Questions
           </h3>
           <div className="space-y-0 divide-y divide-soil/5">
             <div className="py-4 first:pt-0 last:pb-0">
@@ -128,8 +128,9 @@ export default function SupportPage() {
                 How does escrow work?
               </h4>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                A N$1,500 refundable deposit is held for each farm stay booking.
-                It&apos;s released after your stay is completed successfully.
+                When you book a farm stay, Feorm holds a N$1,500 deposit in escrow.
+                The host receives payment only after your stay ends. If something goes wrong,
+                you can dispute the charge.
               </p>
             </div>
             <div className="py-4">
@@ -137,8 +138,8 @@ export default function SupportPage() {
                 What if I need to change my booking?
               </h4>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Contact the host directly via WhatsApp to discuss changes. Modifications
-                made 48+ hours before check-in are usually accommodated at no extra cost.
+                Message the host on WhatsApp to discuss changes. Most hosts will adjust
+                your dates at no extra cost if you ask at least 48 hours before check-in.
               </p>
             </div>
             <div className="py-4">
@@ -146,8 +147,8 @@ export default function SupportPage() {
                 How do I get paid as a host?
               </h4>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Payouts are processed weekly via bank transfer or MTC Money.
-                Minimum payout threshold is N$500.
+                Feorm sends your earnings every week by bank transfer or MTC Money.
+                You need at least N$500 in available earnings to trigger a payout.
               </p>
             </div>
             <div className="py-4 first:pt-0 last:pb-0">
@@ -155,9 +156,9 @@ export default function SupportPage() {
                 Can I cancel a booking?
               </h4>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Cancellations made 48+ hours before start date receive a full
-                refund minus the service fee. Within 48 hours, the escrow
-                deposit is forfeited to the host.
+                Cancel 48+ hours before your stay and you will get a full refund
+                minus the service fee. Cancel within 48 hours and the N$1,500 escrow
+                deposit goes to the host.
               </p>
             </div>
           </div>
@@ -169,10 +170,10 @@ export default function SupportPage() {
             className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-5"
             id="ai-support-heading"
           >
-            Smart Help
+            Ask a Question
           </h3>
           <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
-            Get instant answers to common questions about Feorm.
+            Describe your question and get an answer right away.
           </p>
           <button
             onClick={handleAiHelp}
@@ -185,7 +186,7 @@ export default function SupportPage() {
             ) : (
               <Sparkles size={16} />
             )}
-            {aiLoading ? "Thinking..." : "Get Smart Help"}
+            {aiLoading ? "Thinking..." : "Ask a Question"}
           </button>
 
           {/* Loading skeleton */}
@@ -253,7 +254,7 @@ export default function SupportPage() {
                   Account Settings
                 </h4>
                 <p className="text-xs text-muted-foreground">
-                  Manage session, downloads, and system reset.
+                  Sign out, download your data, or reset your account.
                 </p>
               </div>
               <ChevronRight
@@ -273,7 +274,7 @@ export default function SupportPage() {
                   Verification Center
                 </h4>
                 <p className="text-xs text-muted-foreground">
-                  Verify your identity and build trust.
+                  Get a verified badge so travelers book you with confidence.
                 </p>
               </div>
               <ChevronRight

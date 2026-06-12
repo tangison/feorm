@@ -63,14 +63,14 @@ function VerifyContent() {
             VERIFY EMAIL
           </kbd>
           <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-earth">
-            {verifying ? "Verifying..." : verified ? "Email Verified" : "Check Your Email"}
+            {verifying ? "Verifying..." : verified ? "Email verified" : "Check your email"}
           </h1>
           <p className="text-sm text-muted-foreground leading-relaxed">
             {verifying
-              ? "Exchanging your login credentials..."
+              ? "Confirming your email address..."
               : verified
-              ? "Your email has been verified. Redirecting..."
-              : "Click the magic link we sent to your email to sign in."}
+              ? "Your email is verified. Redirecting..."
+              : "Tap the link we sent to your email to sign in."}
           </p>
         </div>
 
@@ -79,21 +79,21 @@ function VerifyContent() {
             {verifying ? (
               <>
                 <div className="w-3 h-3 rounded-full bg-harvest animate-pulse mx-auto mb-4" />
-                <p className="text-sm text-earth font-medium">Verifying your email...</p>
+                <p className="text-sm text-earth font-medium">Confirming your email...</p>
               </>
             ) : verified ? (
               <>
                 <CheckCircle size={32} className="mx-auto mb-4 text-verified" />
-                <p className="text-sm text-earth font-medium">Email verified successfully</p>
+                <p className="text-sm text-earth font-medium">Email confirmed successfully</p>
               </>
             ) : (
               <>
                 <Mail size={32} className="mx-auto mb-4 text-harvest" />
                 <p className="text-sm text-earth font-medium mb-2">
-                  Waiting for email verification
+                  Waiting for email confirmation
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  Click the link in your email. This page will update automatically.
+                  Tap the link in your email. This page will update automatically.
                 </p>
               </>
             )}
@@ -108,7 +108,7 @@ function VerifyContent() {
               onClick={() => router.push("/auth")}
               className="w-full btn-secondary-feorm px-5 py-3 text-xs uppercase tracking-widest min-h-[44px]"
             >
-              Use a Different Email
+              Try a different email
             </button>
           )}
         </div>

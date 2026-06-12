@@ -93,10 +93,10 @@ export default function ProviderStayProfilePage() {
         </div>
 
         <h1 className="font-serif-display text-3xl md:text-4xl mb-3 text-white tracking-tight">
-          About you
+          Welcome to your farm
         </h1>
         <p className="text-sm text-white/60 leading-relaxed mb-8">
-          Tell us about yourself and your farm. Voyagers want to know who is hosting them.
+          Travelers want to know who is hosting them. Share your name and farm details so guests feel confident booking.
         </p>
 
         <div className="space-y-4">
@@ -217,7 +217,7 @@ export default function ProviderStayProfilePage() {
             className="w-full px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] rounded-full font-semibold"
             style={{ backgroundColor: "#C4933A", color: "#1E1A14" }}
           >
-            {loading ? "Saving..." : "List My Stay"}
+            {loading ? "Saving..." : "Set Up My Stay"}
             <ArrowRight size={14} />
           </button>
         </div>

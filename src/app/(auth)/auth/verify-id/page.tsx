@@ -25,11 +25,10 @@ export default function VerifyIdPage() {
       <div className="max-w-lg w-full">
         <div className="mb-10">
           <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-earth">
-            Trust Layer Protocol
+            Verify Your Identity
           </h1>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Verified farmers. Protected assets. Escrow security requires formal
-            identification prior to marketplace entry.
+            We ask everyone to verify their identity before booking or hosting on Feorm. This keeps the community safe and your money protected through escrow.
           </p>
         </div>
 
@@ -50,13 +49,13 @@ export default function VerifyIdPage() {
             onClick={() => router.push("/marketplace")}
             className="flex-1 btn-secondary-feorm px-5 py-3 text-xs uppercase tracking-widest"
           >
-            Skip (Browse Only)
+            Skip (browse only)
           </button>
           <button
             onClick={handleVerify}
             className="flex-1 btn-primary-feorm px-5 py-3 text-xs uppercase tracking-widest"
           >
-            Verify & Enter
+            Verify & Start Booking
           </button>
         </div>
       </div>

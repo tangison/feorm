@@ -23,10 +23,10 @@ export default function JourneysPage() {
           My Journeys
         </p>
         <h1 className="font-serif-display text-4xl md:text-5xl text-earth mb-3 tracking-tight">
-          Your Bookings
+          Your Farm Stays
         </h1>
         <p className="text-sm text-muted-foreground">
-          Active, upcoming, and past bookings.{" "}
+          Every farm stay you have booked, all in one place.{" "}
           <span className="inline-flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-verified animate-pulse" />
             <span className="font-mono-feorm text-[9px] uppercase tracking-widest">Live</span>
@@ -59,13 +59,13 @@ export default function JourneysPage() {
             className="mx-auto mb-4 rounded-lg opacity-80"
           />
           <p className="text-sm text-muted-foreground mb-6">
-            No bookings yet. Browse the marketplace to make your first one.
+            You have not booked a farm stay yet. Browse Namibian farms and reserve your first one.
           </p>
           <Link
             href="/marketplace"
             className="btn-primary-feorm px-6 py-3 text-xs uppercase tracking-widest inline-flex items-center gap-2"
           >
-            Browse Marketplace <ArrowRight size={14} />
+            Find a Farm Stay <ArrowRight size={14} />
           </Link>
         </div>
       )}
@@ -100,7 +100,7 @@ export default function JourneysPage() {
                   )}
                 </div>
                 <h3 className="font-serif-display text-lg text-earth">
-                  {b.listing?.title || "Listing"}
+                  {b.listing?.title || "Farm Stay"}
                 </h3>
                 <p className="text-xs text-muted-foreground mt-1 font-mono-feorm flex items-center gap-1">
                   <MapPin size={10} aria-hidden="true" />
@@ -112,7 +112,7 @@ export default function JourneysPage() {
                   {formatPrice(b.totalPrice)}
                 </p>
                 <p className="text-[9px] text-muted-foreground font-mono-feorm uppercase tracking-wider">
-                  incl. N$ {(b.escrowAmount / 100).toLocaleString()} escrow
+                  includes N$ {(b.escrowAmount / 100).toLocaleString()} escrow deposit
                 </p>
               </div>
             </Link>

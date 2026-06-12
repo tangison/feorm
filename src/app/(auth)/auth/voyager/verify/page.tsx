@@ -57,10 +57,10 @@ export default function VoyagerVerifyPage() {
             VERIFICATION LEVEL
           </kbd>
           <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-earth tracking-tight">
-            Trust Credentials
+            Build Trust on Feorm
           </h1>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Higher verification unlocks better listings and priority booking. You can always verify later.
+            Verified travelers get access to more farm stays and can book before others. You can always verify later from your profile.
           </p>
         </div>
 
@@ -75,14 +75,14 @@ export default function VoyagerVerifyPage() {
                 <CheckCircle size={18} className="text-verified group-hover:text-white-feorm transition-colors" />
               </div>
               <div>
-                <h3 className="font-serif-display text-lg text-earth">Verified voyager</h3>
+                <h3 className="font-serif-display text-lg text-earth">Verified traveler</h3>
                 <span className="tag-verified text-[9px] uppercase font-semibold px-2 py-0.5 tracking-wider">
                   Green Badge
                 </span>
               </div>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Upload a passport photo or link a social ID. Get the green verification badge and priority access to verified listings.
+              Upload a passport photo or link a social ID. Get the green verification badge and book verified farm stays before anyone else.
             </p>
           </button>
 
@@ -105,7 +105,7 @@ export default function VoyagerVerifyPage() {
           onClick={() => handleComplete(false)}
           className="w-full btn-primary-feorm px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 min-h-[44px]"
         >
-          Start Exploring
+          Browse Farm Stays
           <ArrowRight size={14} />
         </button>
 

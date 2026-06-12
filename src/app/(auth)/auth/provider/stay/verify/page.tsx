@@ -62,10 +62,10 @@ export default function ProviderStayVerifyPage() {
         </div>
 
         <h1 className="font-serif-display text-3xl md:text-4xl mb-3 text-white tracking-tight">
-          Verification notice
+          Before your stay goes live
         </h1>
         <p className="text-sm text-white/60 leading-relaxed mb-8">
-          Your listing will be reviewed before going live. This usually takes 24–48 hours. You will receive an email once approved.
+          Your listing will be reviewed before it appears on Feorm. This usually takes 24 to 48 hours. You will get an email once it is approved.
         </p>
 
         <div className="space-y-4 mb-8">
@@ -81,7 +81,7 @@ export default function ProviderStayVerifyPage() {
             <Clock size={20} className="text-harvest shrink-0" />
             <div>
               <p className="text-sm font-medium text-white">Pending Verification</p>
-              <p className="text-xs text-white/50">We are reviewing your farm stay listing</p>
+              <p className="text-xs text-white/50">Your farm stay listing is being reviewed</p>
             </div>
           </div>
 
@@ -95,7 +95,7 @@ export default function ProviderStayVerifyPage() {
             }}
           >
             <p className="text-[10px] font-medium uppercase tracking-widest mb-4 text-white/60">
-              What verification requires
+              What you will need to verify
             </p>
             <div className="space-y-3">
               <div className="flex items-start gap-3">
@@ -108,7 +108,7 @@ export default function ProviderStayVerifyPage() {
               </div>
               <div className="flex items-start gap-3">
                 <CheckCircle size={16} className="text-verified shrink-0 mt-0.5" />
-                <p className="text-sm text-white/80">At least 3 photos of your stay</p>
+                <p className="text-sm text-white/80">At least 3 photos of your farm stay</p>
               </div>
             </div>
           </div>
@@ -124,7 +124,7 @@ export default function ProviderStayVerifyPage() {
           >
             <Shield size={16} className="text-verified shrink-0 mt-0.5" />
             <p className="text-xs text-white/70 leading-relaxed">
-              Verified providers earn more trust from voyagers. You can submit your verification documents from your dashboard at any time.
+              Verified hosts earn more trust from travelers, which leads to more bookings. You can submit your verification documents from your dashboard at any time.
             </p>
           </div>
         </div>
@@ -135,7 +135,7 @@ export default function ProviderStayVerifyPage() {
           className="w-full px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 min-h-[44px] rounded-full font-semibold"
           style={{ backgroundColor: "#C4933A", color: "#1E1A14" }}
         >
-          Continue to Dashboard
+          Go to Dashboard
           <ArrowRight size={14} />
         </button>
       </div>

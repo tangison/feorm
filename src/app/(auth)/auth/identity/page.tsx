@@ -157,7 +157,7 @@ export default function IdentityPage() {
             Tell us about yourself
           </h1>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Pick an avatar and add your name. Hosts want to know who they are welcoming.
+            Add your name and choose an avatar. Hosts want to know who they are welcoming to their farm.
           </p>
         </div>
 
@@ -165,7 +165,7 @@ export default function IdentityPage() {
           {/* ── Avatar Section ── */}
           <div className="border border-soil/10 bg-white-feorm rounded-[8px] p-6">
             <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-5">
-              Choose Your Avatar
+              Choose an Avatar
             </p>
 
             {/* Preview Circle */}
@@ -205,7 +205,7 @@ export default function IdentityPage() {
             {/* Humanoid Avatar Selection */}
             <div className="mb-6">
               <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-sand mb-4 text-center">
-                Choose Your Character
+                Pick a Character
               </p>
               <div className="flex items-center justify-center gap-2.5">
                 {HUMANOID_AVATARS.map((ha) => (
@@ -243,7 +243,7 @@ export default function IdentityPage() {
             {/* Upload Option */}
             <div className="mb-4">
               <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-sand mb-3 text-center">
-                Or Upload Your Own
+                Or Upload Your Own Photo
               </p>
               <input
                 ref={fileInputRef}

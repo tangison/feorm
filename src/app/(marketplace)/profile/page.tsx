@@ -116,7 +116,7 @@ export default function ProfilePage() {
           Profile
         </h1>
         <p className="text-sm text-muted-foreground">
-          Manage your identity, verification, and account settings.
+          Set up your profile so travelers and hosts know who you are.
         </p>
       </div>
 
@@ -210,7 +210,7 @@ export default function ProfilePage() {
               {/* Humanoid Avatars */}
               <div>
                 <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-sand mb-4 text-center">
-                  Choose Your Character
+                  Pick a Profile Character
                 </p>
                 <div className="flex items-center justify-center gap-2.5">
                   {HUMANOID_AVATARS.map((ha) => (
@@ -252,7 +252,7 @@ export default function ProfilePage() {
               {/* Upload */}
               <div>
                 <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-sand mb-3 text-center">
-                  Or Upload Your Own
+                  Or Upload Your Own Photo
                 </p>
                 <input
                   ref={fileInputRef}
@@ -299,7 +299,7 @@ export default function ProfilePage() {
                     </>
                   ) : (
                     <>
-                      <Sparkles size={12} /> Generate Portrait
+                      <Sparkles size={12} /> Generate a Portrait
                     </>
                   )}
                 </button>
@@ -349,8 +349,8 @@ export default function ProfilePage() {
             <div className="flex items-center gap-3">
               <Shield size={18} className="text-accent-foreground" />
               <div>
-                <p className="text-sm font-medium text-earth">Complete Verification</p>
-                <p className="text-xs text-muted-foreground">Upload ID to unlock full marketplace access</p>
+                <p className="text-sm font-medium text-earth">Get Verified to Build Trust</p>
+                <p className="text-xs text-muted-foreground">Verified hosts get a trust badge and appear higher in search results</p>
               </div>
             </div>
             <ChevronRight size={16} className="text-muted-foreground group-hover:translate-x-0.5 transition-transform" />

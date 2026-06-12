@@ -9,10 +9,10 @@ const ROLE_CARDS = [
   {
     id: "voyager" as const,
     icon: Compass,
-    title: "I want to explore & book",
-    subtitle: "Voyager",
+    title: "I want to find and book farm stays",
+    subtitle: "Traveler",
     description:
-      "Find farm stays and experience real Namibian agrotourism.",
+      "Browse verified farm stays across Namibia. Book with escrow protection so your money is safe until you arrive.",
     route: "/auth/voyager/profile",
     hoverBorder: "hover:border-harvest",
     hoverShadow: "hover:shadow-[0_8px_32px_rgba(232,201,106,0.08)]",
@@ -23,10 +23,10 @@ const ROLE_CARDS = [
   {
     id: "provider_stay" as const,
     icon: Tent,
-    title: "I have a farm stay to list",
-    subtitle: "Stay Provider",
+    title: "I have a farm stay to offer",
+    subtitle: "Farm Host",
     description:
-      "List your farm accommodation — bush camps, farmhouses, tent camps, lodges, or homestays.",
+      "List your farm accommodation — bush camps, farmhouses, tent camps, lodges, or homestays. Earn income with escrow-protected payouts.",
     route: "/auth/provider/stay/profile",
     hoverBorder: "hover:border-verified",
     hoverShadow: "hover:shadow-[0_8px_32px_rgba(52,101,56,0.08)]",
@@ -78,10 +78,10 @@ export default function RolePage() {
             className="mx-auto mb-4 rounded-[4px]"
           />
           <h1 className="font-serif-display text-3xl md:text-5xl mb-4 text-white tracking-tight">
-            How will you use the land?
+            What brings you to Feorm?
           </h1>
           <p className="text-sm text-white/70 max-w-md mx-auto leading-relaxed">
-            Pick the role that fits. You can change it later in Settings.
+            Choose how you want to use Feorm. You can change this later in Settings.
           </p>
         </div>
 

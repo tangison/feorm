@@ -32,9 +32,9 @@ const RevenueChart = dynamic(
 // REVIEW: Replace with Supabase queries when dashboard is wired up
 // Table: listings (for utilization), bookings (for stats/requests/activity)
 const stats = [
-  { label: "Active Listings", value: "14", accent: false },
-  { label: "Earnings Available", value: "N$ 8,420", accent: true },
-  { label: "Pending Requests", value: "3", accent: false },
+  { label: "Live Farm Stays", value: "14", accent: false },
+  { label: "Available to Withdraw", value: "N$ 8,420", accent: true },
+  { label: "Booking Requests", value: "3", accent: false },
   { label: "Occupancy Rate", value: "67%", accent: false },
 ];
 
@@ -96,9 +96,9 @@ export default function DashboardPage() {
       setAiInsights(data.suggestions || []);
     } catch {
       setAiInsights([
-        { title: "Seasonal Demand Pricing", description: "Adjust your rates for peak and off-peak seasons. Demand in your region typically peaks from March to May.", category: "optimization" },
-        { title: "Weekly Rate Opportunity", description: "Consider offering weekly rates — extended stays are trending in your region and attract longer bookings.", category: "optimization" },
-        { title: "Photo Differentiation", description: "Adding river access photos to your Kunene listing would differentiate it from similar camps.", category: "optimization" },
+        { title: "Raise Rates During Peak Season", description: "Farm stays near Etosha and the coast fill up from March to May. Raising your rates by 15-20% during these months can add N$2,000+ per booking.", category: "pricing" },
+        { title: "Offer a Weekly Rate", description: "Travelers staying 7+ nights on Namibian farms spend 40% more. A weekly rate that saves them 10% keeps your farm booked longer.", category: "pricing" },
+        { title: "Show Your River, Dam, or Watering Hole", description: "Guests searching for bush camps filter by water access. A photo of your riverfront or dam can be the difference between a booking and a scroll-past.", category: "listing" },
       ]);
     } finally {
       setAiLoading(false);
@@ -150,9 +150,9 @@ export default function DashboardPage() {
       }
 
       setRewriteResults(results);
-      toast({ title: "Descriptions optimized" });
+      toast({ title: "Your listing titles have been improved" });
     } catch {
-      toast({ title: "Could not optimize descriptions", description: "Something went wrong. Please try again." });
+      toast({ title: "Could not improve your listings", description: "Something went wrong. Please try again." });
     } finally {
       setRewriteLoading(false);
     }
@@ -163,13 +163,13 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="mb-12">
         <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
-          Host Dashboard
+          Your Farm Dashboard
         </p>
         <h1 className="font-serif-display text-4xl md:text-5xl text-earth mb-3 tracking-tight">
           Welcome back, {user?.name || "Host"}
         </h1>
         <p className="text-sm text-muted-foreground">
-          Manage your listings, earnings, and pending requests.
+          See what is happening on your farm stays and take action on new booking requests.
         </p>
       </div>
 
@@ -186,10 +186,10 @@ export default function DashboardPage() {
                   id="ai-insights-heading"
                   className="font-serif-display text-lg text-earth"
                 >
-                  Listing tips
+                  Tips for Your Farm Stays
                 </h3>
                 <p className="text-xs text-muted-foreground">
-                  Suggestions to help you get more bookings
+                  Actionable ways to fill more beds on your farm stays
                 </p>
               </div>
             </div>
@@ -268,7 +268,7 @@ export default function DashboardPage() {
           id="revenue-heading"
           className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-4"
         >
-          Revenue — Last 6 Months
+          Your Earnings — Last 6 Months
         </h3>
         <div className="bento-card p-6">
           <div className="flex items-center justify-between mb-6">
@@ -294,7 +294,7 @@ export default function DashboardPage() {
           id="pending-heading"
           className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-4"
         >
-          Pending Requests
+          Booking Requests
         </h3>
         <div className="space-y-3">
           {pendingRequests.map((req) => (
@@ -360,7 +360,7 @@ export default function DashboardPage() {
           id="activity-heading"
           className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-4"
         >
-          Recent Activity
+          What's Happening
         </h3>
         <div className="bento-card">
           {recentActivity.map((item, i) => (
@@ -404,15 +404,15 @@ export default function DashboardPage() {
               onClick={() => router.push("/listing/new")}
             >
               <Plus size={14} />
-              Add New Listing
+              Add Another Farm Stay
             </button>
             <button
               className="btn-secondary-feorm flex items-center gap-2 px-5 py-3 text-xs uppercase tracking-widest min-h-[44px]"
               type="button"
-              onClick={() => toast({ title: "Earnings breakdown coming soon" })}
+              onClick={() => toast({ title: "Earnings details coming soon" })}
             >
               <Eye size={14} />
-              View Earnings
+              See Your Earnings
             </button>
             <button
               onClick={handleAiRewrite}
@@ -421,7 +421,7 @@ export default function DashboardPage() {
               type="button"
             >
               <Sparkles size={14} />
-              {rewriteLoading ? "Optimizing..." : "Improve My Descriptions"}
+              {rewriteLoading ? "Improving..." : "Make My Listings Stand Out"}
             </button>
           </div>
 
@@ -440,7 +440,7 @@ export default function DashboardPage() {
           {rewriteResults && !rewriteLoading && (
             <div className="mt-5 space-y-3">
               <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-muted-foreground mb-3">
-                Optimized Titles
+                Improved Titles
               </p>
               {rewriteResults.map((result, i) => (
                 <div

@@ -151,7 +151,7 @@ export default function ListingsMap({ listings }: ListingsMapProps) {
       const region = document.createElement("p");
       region.style.cssText =
         "font-size: 12px; color: #6B5735; margin: 0 0 6px 0;";
-      region.textContent = `Farm Stay · ${listing.region}`;
+      region.textContent = `Farm stay in ${listing.region}`;
 
       const price = document.createElement("p");
       price.style.cssText =
@@ -160,7 +160,7 @@ export default function ListingsMap({ listings }: ListingsMapProps) {
 
       const link = document.createElement("a");
       link.href = `/listing/${listing.id}`;
-      link.textContent = "View Details →";
+      link.textContent = "See This Stay →";
       link.style.cssText =
         "display: inline-block; margin-top: 8px; padding: 4px 12px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; background: #C4933A; color: white; border-radius: 9999px; text-decoration: none;";
 
@@ -218,7 +218,7 @@ export default function ListingsMap({ listings }: ListingsMapProps) {
       {/* Map legend */}
       <div className="absolute bottom-4 left-4 bg-white-feorm/90 backdrop-blur-sm border border-earth/10 rounded-lg p-3 z-10">
         <p className="font-mono-feorm text-[8px] uppercase tracking-widest text-muted-foreground mb-2">
-          Legend
+          Map Key
         </p>
         <div className="flex gap-3">
           <div className="flex items-center gap-1.5">

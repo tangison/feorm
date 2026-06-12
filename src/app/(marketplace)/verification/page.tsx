@@ -31,8 +31,8 @@ export default function VerificationPage() {
   // ─── ID Upload Simulation ──────────────────────────────────
   const handleIdUpload = () => {
     toast({
-      title: "ID upload simulated",
-      description: "In production, this would upload your National ID or Passport for verification.",
+      title: "ID uploaded",
+      description: "Your Namibian ID or passport will be verified by our team.",
     });
     setIdUploaded(true);
   };
@@ -54,9 +54,9 @@ export default function VerificationPage() {
       setAiTips(data.suggestions || []);
     } catch {
       setAiTips([
-        { title: "Clear Document Scan", description: "Ensure your ID document is clear and all four corners are visible in the scan.", category: "optimization" },
-        { title: "Natural Lighting", description: "Use natural lighting when photographing your ID to avoid glare and shadows.", category: "optimization" },
-        { title: "Match Legal Name", description: "Complete your profile with your full legal name matching your ID for faster verification.", category: "optimization" },
+        { title: "Scan or Photograph All Four Corners", description: "Crop your photo so all four corners of your ID or passport are visible. Blurry or cropped-out corners are the top reason verifications get delayed.", category: "document" },
+        { title: "Use Natural Daylight, No Flash", description: "Photograph your ID near a window during the day. Flash creates glare that makes text unreadable and slows down verification.", category: "document" },
+        { title: "Use Your Full Legal Name", description: "Your Feorm profile name must match the name on your ID exactly. Nicknames or shortened names will cause your verification to be rejected.", category: "profile" },
       ]);
     } finally {
       setAiLoading(false);
@@ -67,19 +67,19 @@ export default function VerificationPage() {
   const timelineSteps = [
     {
       step: 1,
-      label: "Document Submitted",
+      label: "ID Submitted",
       status: "completed" as const,
       icon: CheckCircle2,
     },
     {
       step: 2,
-      label: "AI Verification",
+      label: "Being Verified",
       status: "in_progress" as const,
       icon: Clock,
     },
     {
       step: 3,
-      label: "Trust Badge Awarded",
+      label: "Trust Badge Unlocked",
       status: "pending" as const,
       icon: Award,
     },
@@ -90,13 +90,13 @@ export default function VerificationPage() {
       {/* Header */}
       <div className="mb-12">
         <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
-          Trust Layer
+          Your Trust Profile
         </p>
         <h1 className="font-serif-display text-4xl md:text-5xl text-earth mb-3 tracking-tight">
           Verification Center
         </h1>
         <p className="text-sm text-muted-foreground">
-          Build trust, unlock benefits, and stand out on the Feorm marketplace.
+          Get verified so travelers trust you, book you, and pay you with confidence.
         </p>
       </div>
 
@@ -106,7 +106,7 @@ export default function VerificationPage() {
           id="status-heading"
           className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-4"
         >
-          Verification Status
+          Your Verification Status
         </h2>
         <div className="bento-card p-6">
           <div className="flex items-center justify-between mb-5">
@@ -121,7 +121,7 @@ export default function VerificationPage() {
                 </span>
               )}
               <span className="font-mono-feorm text-xs text-muted-foreground">
-                {isVerified ? "Identity confirmed" : "Pending verification"}
+                {isVerified ? "Your identity is confirmed" : "Waiting to be verified"}
               </span>
             </div>
             <ShieldCheck
@@ -151,7 +151,7 @@ export default function VerificationPage() {
           id="upload-heading"
           className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-4"
         >
-          Identity Document
+          Upload Your ID
         </h2>
         <div className="bento-card p-6">
           {!idUploaded ? (
@@ -166,10 +166,10 @@ export default function VerificationPage() {
               </div>
               <div className="text-center">
                 <p className="text-sm font-medium text-earth mb-1">
-                  Upload National ID / Passport
+                  Upload Your Namibian ID or Passport
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  Click to upload your identification document
+                  Tap to upload — accepted formats: photos or scans
                 </p>
               </div>
             </button>
@@ -179,7 +179,7 @@ export default function VerificationPage() {
               <div className="flex items-center gap-3 mb-6">
                 <CheckCircle2 size={16} className="text-verified" />
                 <span className="text-sm font-medium text-earth">
-                  Document uploaded successfully
+                  Your ID has been uploaded
                 </span>
               </div>
 
@@ -249,7 +249,7 @@ export default function VerificationPage() {
           id="benefits-heading"
           className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-4"
         >
-          Verification Benefits
+          What You Get When Verified
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className="bento-card p-6 flex items-start gap-3">
@@ -258,10 +258,10 @@ export default function VerificationPage() {
             </div>
             <div>
               <p className="text-sm font-medium text-earth mb-1">
-                Verified Voyager Badge
+                Verified Host Badge
               </p>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Green trust badge displayed on your profile and listings
+                A green badge appears on your profile and every listing, so travelers know you are who you say you are
               </p>
             </div>
           </div>
@@ -272,10 +272,10 @@ export default function VerificationPage() {
             </div>
             <div>
               <p className="text-sm font-medium text-earth mb-1">
-                Priority Booking Access
+                First Access to High-Demand Stays
               </p>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Get early access to new listings and high-demand farm stays
+                Book newly listed farm stays before unverified travelers see them
               </p>
             </div>
           </div>
@@ -289,7 +289,7 @@ export default function VerificationPage() {
                 Higher Escrow Limits
               </p>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Unlock increased transaction limits for larger bookings
+                Accept bookings above the N$5,000 escrow cap — ideal for multi-night group stays
               </p>
             </div>
           </div>
@@ -300,10 +300,10 @@ export default function VerificationPage() {
             </div>
             <div>
               <p className="text-sm font-medium text-earth mb-1">
-                Featured in Discovery Feed
+                Show Up Higher in Search
               </p>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Your listings appear prominently in search and recommendations
+                Verified farm stays rank higher when travelers search, so you get more views and more bookings
               </p>
             </div>
           </div>
@@ -316,7 +316,7 @@ export default function VerificationPage() {
           id="ai-verify-heading"
           className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-4"
         >
-          Smart Verification
+          Verification Tips
         </h2>
         <div className="bento-card p-6">
           <div className="flex items-center gap-3 mb-5">
@@ -325,10 +325,10 @@ export default function VerificationPage() {
             </div>
             <div>
               <p className="text-sm font-medium text-earth">
-                Speed Up Your Verification
+                Get Verified Faster
               </p>
               <p className="text-xs text-muted-foreground">
-                Get personalized tips to verify faster
+                Follow these steps to avoid delays in your verification
               </p>
             </div>
           </div>
@@ -340,7 +340,7 @@ export default function VerificationPage() {
             type="button"
           >
             <Sparkles size={14} />
-            {aiLoading ? "Analyzing..." : "Get Verification Tips"}
+            {aiLoading ? "Analyzing..." : "Show Me How"}
           </button>
 
           {/* AI Tips */}

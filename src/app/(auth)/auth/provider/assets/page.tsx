@@ -36,10 +36,10 @@ export default function ProviderAssetsPage() {
             PROVIDER SETUP
           </kbd>
           <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-earth tracking-tight">
-            Asset Inventory
+            What will you offer?
           </h1>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            What will you be providing to the Feorm network? Select all that apply.
+            What type of farm stay will you offer travelers? Select all that apply.
           </p>
         </div>
 
@@ -75,7 +75,7 @@ export default function ProviderAssetsPage() {
                   Farm Stays
                 </h3>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Accommodation, guest houses, tent camps, eco lodges
+                  Accommodation on a working farm — guest houses, tent camps, eco lodges, homestays
                 </p>
               </div>
               {assets.includes("stay") && (

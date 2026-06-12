@@ -68,14 +68,14 @@ export async function POST(request: NextRequest) {
     const listings = [
       {
         id: "b0000000-0000-0000-0000-000000000001",
-        title: "Oshikoto Heritage Farm Stay",
+        title: "Tsumeb Etosha Edge Lodge",
         region: "Oshikoto",
-        price_cents: 22000, // N$220 per night in cents
+        price_cents: 150000, // N$1,500 per night in cents
         category: "stay",
         description:
-          "A working cattle farm rooted in Ovambo tradition. Guests participate in milking routines, mahangu planting, and communal fireside storytelling under the Milky Way. No resort pretence — only what the land and community provide.",
+          "Watch wildlife from your private deck — a waterhole attracts zebra, giraffe, and antelope from the Etosha pan just beyond the fence. After dark, the sky fills with stars undimmed by city lights. The Hoba Meteorite, the largest on Earth, is a short drive away.",
         images: "{}",
-        amenities: ["Farm-to-table meals", "Guided bush walk", "Stargazing deck", "Communal fire pit", "Off-grid solar power"],
+        amenities: ["Swimming pool", "Game farm", "Hot water", "WiFi (limited)", "Bush view", "Stargazing deck", "Guided farm walks"],
         host_id: "a0000000-0000-0000-0000-000000000001",
         host_phone: "+264 81 234 5678",
         active: true,

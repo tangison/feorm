@@ -37,10 +37,10 @@ export default function ProviderRegionPage() {
             REGIONAL SPEC
           </kbd>
           <h1 className="font-serif-display text-3xl md:text-4xl mb-4 text-earth tracking-tight">
-            Pin Your Location
+            Where is your farm?
           </h1>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Select the region where your assets are located. This helps voyagers find you.
+            Select the region where your farm stay is located. This helps travelers find you when they search by area.
           </p>
         </div>
 
@@ -80,7 +80,7 @@ export default function ProviderRegionPage() {
           disabled={!selectedRegion}
           className="w-full btn-harvest px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
         >
-          Launch Host Dashboard
+          Open Host Dashboard
           <ArrowRight size={14} />
         </button>
 

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Asset Not Found | Feorm",
+  title: "Page Not Found | Feorm",
 };
 
 export default function NotFound() {
@@ -31,12 +31,12 @@ export default function NotFound() {
 
         {/* Title */}
         <h1 className="font-serif-display text-4xl tracking-tight text-earth">
-          Asset Not Found
+          Page Not Found
         </h1>
 
         {/* Body Copy */}
         <p className="text-base leading-relaxed text-muted-foreground">
-          The requested coordinate in the Feorm network is currently unavailable.
+          We could not find the farm stay you were looking for. It may have been removed or the link may be incorrect.
         </p>
 
         {/* Return Link */}
@@ -45,7 +45,7 @@ export default function NotFound() {
             href="/marketplace"
             className="btn-primary-feorm inline-block px-6 py-3 text-xs uppercase tracking-widest font-medium no-underline"
           >
-            Return to Marketplace
+            Browse Farm Stays
           </Link>
         </div>
       </div>

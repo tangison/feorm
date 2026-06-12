@@ -49,7 +49,7 @@ function ListingCard({ item }: { item: Listing }) {
           <span className="text-sm font-medium font-mono-feorm text-earth">
             {formatPrice(item.price)}{" "}
             <span className="text-[9px] text-muted-foreground font-normal uppercase tracking-wide">
-              / day
+              /night
             </span>
           </span>
           <div className="w-8 h-8 min-w-[36px] min-h-[36px] rounded-full border border-earth/8 flex items-center justify-center text-muted-foreground group-hover:bg-earth group-hover:text-white-feorm group-hover:border-earth transition-all duration-200">
