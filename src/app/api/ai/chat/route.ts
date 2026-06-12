@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
 import {
   streamChatCompletion,
   chatCompletion,
@@ -19,15 +18,8 @@ interface ChatBody {
 
 export async function POST(request: NextRequest) {
   try {
-    // Auth guard — must be signed in to use AI chat
-    const supabase = await createClient();
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
+    // Demo mode — no auth guard, all requests are allowed
+
     const body: ChatBody = await request.json();
     const { messages = [], context, stream = true } = body;
 
@@ -48,8 +40,6 @@ export async function POST(request: NextRequest) {
     // ─── Streaming response (default) ───
     if (stream) {
       const encoder = new TextEncoder();
-      let providerUsed = "unknown";
-      let modelUsed = "unknown";
 
       const readable = new ReadableStream({
         async start(controller) {
@@ -57,14 +47,10 @@ export async function POST(request: NextRequest) {
             await streamChatCompletion(
               allMessages,
               (text, provider) => {
-                // Send each chunk as SSE
                 const chunk = JSON.stringify({ type: "delta", text, provider });
                 controller.enqueue(encoder.encode(`data: ${chunk}\n\n`));
               },
               (provider, model) => {
-                providerUsed = provider;
-                modelUsed = model;
-                // Send done signal
                 const done = JSON.stringify({
                   type: "done",
                   provider,
@@ -80,7 +66,6 @@ export async function POST(request: NextRequest) {
               streamErr
             );
 
-            // Fallback to non-streaming
             try {
               const result = await chatCompletion(allMessages);
               const chunk = JSON.stringify({
@@ -98,7 +83,6 @@ export async function POST(request: NextRequest) {
               controller.close();
             } catch (nonStreamErr) {
               console.error("[chat] All providers failed:", nonStreamErr);
-              // Final fallback to static response
               const lastMsg =
                 messages[messages.length - 1]?.content ?? "";
               const fallback = getTangisonFallback(lastMsg);

@@ -1,15 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
-import { Blob } from "buffer";
 
 export async function POST(request: NextRequest) {
   try {
-    // Auth guard — must be signed in to generate brand identity
-    const supabase = await createClient();
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    // Demo mode — no auth guard, all requests are allowed
 
     const { name, surname, role, region, interests, avatarUrl } = await request.json();
 
@@ -42,25 +35,25 @@ export async function POST(request: NextRequest) {
 <div class="page">
   <div class="brand">feorm<span>.</span></div>
   <div class="sub">Brand Identity Document</div>
-  
+
   <div class="label">Identity</div>
   <div class="value">${name || "Guest"} ${surname || "User"}</div>
-  
+
   <div class="label">Persona</div>
   <div class="role-badge">${role === "provider" ? "Provider / Host" : "Voyager / Guest"}</div>
-  
+
   <hr class="divider">
-  
+
   <div class="label">Region</div>
   <div class="value">${region || "Namibia"}</div>
-  
+
   ${interests && interests.length > 0 ? `
   <div class="label">Interests</div>
   <div class="interests">
     ${interests.map((i: string) => `<span class="interest">${i}</span>`).join("\n    ")}
   </div>
   ` : ""}
-  
+
   <div class="label">The Namibian Palette</div>
   <div class="palette">
     <div class="swatch" style="background:#1E1A14"></div>
@@ -72,7 +65,7 @@ export async function POST(request: NextRequest) {
     <div class="swatch" style="background:#FAF7F2"></div>
     <div class="swatch" style="background:#FEFDFB"></div>
   </div>
-  
+
   <div class="footer">Feorm Network 0.1 — ${new Date().getFullYear()}</div>
 </div>
 </body>

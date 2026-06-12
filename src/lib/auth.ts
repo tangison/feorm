@@ -1,87 +1,55 @@
 /**
- * Feorm Auth — Supabase Auth Integration (Email Magic Link)
+ * Feorm Auth — Demo Mode
  *
- * Uses: supabase.auth.signInWithOtp({ email })
- * Uses: supabase.auth.getSession()
- * Uses: supabase.auth.signOut()
- * Uses: supabase.auth.getUser()
- * Uses: supabase.auth.exchangeCodeForSession() — for PKCE callback
+ * All Supabase Auth calls replaced with demo implementations.
+ * The demo user is always authenticated.
  */
 
-import { createClient } from "@/utils/supabase/server";
-import { findOrCreateUserById, updateUserById } from "./db";
+import { DEMO_USER, getProfileById, type DemoProfile } from "@/lib/demo-data";
 
-// ─── Server-side Auth ──────────────────────────────────────────
+// ─── Server-side Auth (demo) ────────────────────────────────────
 
-/** Request a magic link via Supabase Auth (email) */
+/** Demo: always succeeds */
 export async function requestMagicLink(
-  email: string
+  _email: string
 ): Promise<{ success: boolean; error?: string }> {
-  const supabase = await createClient();
-
-  const { error } = await supabase.auth.signInWithOtp({
-    email,
-    options: {
-      shouldCreateUser: true,
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || "https://feorm-git-main-tangison-s-projects.vercel.app"}/auth/callback`,
-    },
-  });
-
-  if (error) {
-    console.error("requestMagicLink error:", error);
-    return { success: false, error: error.message };
-  }
-
   return { success: true };
 }
 
-/** Exchange PKCE code for session (called from /auth/callback route) */
-export async function exchangeCodeForSession(code: string) {
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-
-  if (error) {
-    console.error("exchangeCodeForSession error:", error);
-    throw new Error(`Code exchange failed: ${error.message}`);
-  }
-
-  return data;
+/** Demo: no-op */
+export async function exchangeCodeForSession(_code: string) {
+  return { user: DEMO_USER };
 }
 
-/** Get the current authenticated user's session */
+/** Demo: always returns a fake session */
 export async function getSession() {
-  const supabase = await createClient();
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  return session;
+  return {
+    access_token: "demo-token",
+    user: { id: DEMO_USER.id, email: DEMO_USER.email },
+  };
 }
 
-/** Get the current authenticated user's profile */
+/** Demo: returns the demo user profile */
 export async function getCurrentUser() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-
-  if (error || !user) return null;
-
-  // Get the profile from the profiles table using auth.uid()
-  return findOrCreateUserById(user.id, user.email);
+  return {
+    id: DEMO_USER.id,
+    email: DEMO_USER.email,
+    phone: DEMO_USER.phone,
+    name: DEMO_USER.name,
+    surname: DEMO_USER.surname,
+    region: DEMO_USER.region,
+    role: DEMO_USER.role,
+    verified: DEMO_USER.verified,
+    avatarUrl: DEMO_USER.avatarUrl,
+  };
 }
 
-/** Sign out the current user */
+/** Demo: no-op (returns success) */
 export async function signOut() {
-  const supabase = await createClient();
-  const { error } = await supabase.auth.signOut();
-  if (error) {
-    console.error("signOut error:", error);
-    throw new Error(`Sign out failed: ${error.message}`);
-  }
+  return;
 }
 
-/** Setup user identity (name, region, role) after magic link verification */
+/** Demo: updates user identity (returns the updated user) */
 export async function setupIdentity(data: {
   userId: string;
   name: string;
@@ -90,11 +58,13 @@ export async function setupIdentity(data: {
   region: string;
   role: string;
 }) {
-  return updateUserById(data.userId, {
+  return {
+    id: data.userId,
     name: data.name,
     surname: data.surname,
     phone: data.phone,
     region: data.region,
     role: data.role,
-  });
+    verified: true,
+  };
 }

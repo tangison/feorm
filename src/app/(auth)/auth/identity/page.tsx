@@ -92,7 +92,7 @@ export default function IdentityPage() {
   }, [name, surname, region, setAvatarUrl]);
 
   // ── Identity Setup ──
-  const handleIdentitySetup = useCallback(async () => {
+  const handleIdentitySetup = async () => {
     if (!name) return;
     setLoading(true);
     try {
@@ -129,7 +129,7 @@ export default function IdentityPage() {
       router.push("/auth/role");
     }
     setLoading(false);
-  }, [name, surname, phone, region, user?.id, avatarUrl, setupIdentity, setUser, router]);
+  };
 
   // Resolve selected avatar info
   const selectedInfo = useMemo(() => {

@@ -2,17 +2,16 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useFeormAuth } from "@/context/feorm-context";
+import { useFeormAuth, demoSignIn } from "@/context/feorm-auth";
 import { ArrowRight, Mail } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { createClient } from "@/utils/supabase/client";
 import { Suspense } from "react";
 
 function AuthContent() {
-  const { setPhone } = useFeormAuth();
+  const { setUser, setEmail, setPhone, setAvatarUrl } = useFeormAuth();
   const searchParams = useSearchParams();
-  const [email, setEmail] = useState("");
+  const [email, setEmailInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
@@ -23,32 +22,20 @@ function AuthContent() {
     ? "Sign in to book your farm stay"
     : null;
 
-  const handleRequestMagicLink = async () => {
-    if (!email || !email.includes("@")) return;
+  const handleDemoSignIn = async () => {
     setLoading(true);
     setError("");
 
     try {
-      // Use Supabase client directly for magic link
-      const supabase = createClient();
-      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
-      const { error: authError } = await supabase.auth.signInWithOtp({
-        email,
-        options: {
-          shouldCreateUser: true,
-          emailRedirectTo: `${siteUrl}/auth/callback`,
-        },
-      });
-
-      if (authError) {
-        setError(authError.message);
-        setLoading(false);
-        return;
-      }
-
+      // Demo mode: auto-sign-in as demo user
+      const user = demoSignIn();
+      setUser(user);
+      setEmail(user.email ?? "");
+      setPhone(user.phone ?? "");
+      setAvatarUrl(user.avatarUrl ?? "");
       setSent(true);
     } catch {
-      setError("Could not send the login link. Check your email address and try again.");
+      setError("Could not sign in. Please try again.");
     }
     setLoading(false);
   };
@@ -118,7 +105,7 @@ function AuthContent() {
                   Get access to farm stays
                 </h1>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Enter your email and we will send a one-time login link. No password to remember, no account to create.
+                  Demo mode: enter any email to sign in instantly. No password needed.
                 </p>
               </div>
 
@@ -137,8 +124,13 @@ function AuthContent() {
                       type="email"
                       value={email}
                       onChange={(e) => {
-                        setEmail(e.target.value);
+                        setEmailInput(e.target.value);
                         setError("");
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && email.includes("@")) {
+                          handleDemoSignIn();
+                        }
                       }}
                       placeholder="you@example.com"
                       autoComplete="email"
@@ -152,18 +144,18 @@ function AuthContent() {
                 )}
 
                 <button
-                  onClick={handleRequestMagicLink}
+                  onClick={handleDemoSignIn}
                   disabled={!email || !email.includes("@") || loading}
                   className="w-full btn-primary-feorm px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
                 >
-                  {loading ? "Sending..." : "Send Me a Login Link"}
+                  {loading ? "Signing in..." : "Sign In (Demo)"}
                   <ArrowRight size={14} aria-hidden="true" />
                 </button>
               </div>
 
               <div className="mt-6 p-4 bg-accent/30 border border-harvest/20 rounded-[4px]" role="note">
                 <p className="text-[10px] text-accent-foreground font-mono-feorm uppercase tracking-wide">
-                  One-tap login — no password, no hassle
+                  Demo mode — instant sign-in, no email verification
                 </p>
               </div>
             </>
@@ -171,44 +163,35 @@ function AuthContent() {
             <>
               <div className="mb-12">
                 <kbd className="font-mono-feorm text-[10px] border border-harvest/30 bg-accent/30 px-2 py-1 rounded text-accent-foreground mb-6 inline-block">
-                  CHECK YOUR EMAIL
+                  WELCOME
                 </kbd>
                 <h1 className="font-serif-display text-3xl mb-3 text-earth tracking-tight">
-                  Check your inbox
+                  You are signed in
                 </h1>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  We sent a login link to <span className="font-medium text-earth">{email}</span>.
-                  Click it and you are in.
+                  Redirecting you to the marketplace...
                 </p>
               </div>
 
               <div className="space-y-4">
                 <div className="p-6 border border-soil/10 bg-white-feorm rounded-[8px] text-center">
-                  <Mail size={32} className="mx-auto mb-4 text-harvest" />
+                  <div className="w-3 h-3 rounded-full bg-harvest animate-pulse mx-auto mb-4" />
                   <p className="text-sm text-earth font-medium mb-2">
-                    Waiting for you to click the link
+                    Redirecting to farm stays
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    This page will take you straight to the marketplace once you do.
+                    You will be there in a moment.
                   </p>
                 </div>
 
                 <button
                   onClick={() => {
-                    setSent(false);
-                    setEmail("");
+                    router.push("/marketplace");
                   }}
-                  className="w-full btn-secondary-feorm px-5 py-3 text-xs uppercase tracking-widest min-h-[44px]"
+                  className="w-full btn-primary-feorm px-5 py-3 text-xs uppercase tracking-widest min-h-[44px]"
                 >
-                  Try a Different Email
-                </button>
-
-                <button
-                  onClick={handleRequestMagicLink}
-                  disabled={loading}
-                  className="w-full border border-soil/10 px-5 py-3 text-xs uppercase tracking-widest text-muted-foreground hover:text-earth hover:border-soil/30 transition-colors min-h-[44px] rounded-full"
-                >
-                  {loading ? "Resending..." : "Resend Magic Link"}
+                  Go to Marketplace
+                  <ArrowRight size={14} className="ml-2" aria-hidden="true" />
                 </button>
               </div>
             </>

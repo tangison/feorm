@@ -1,48 +1,40 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
-import { requestMagicLink, getCurrentUser, signOut, setupIdentity } from "@/lib/auth";
+import { DEMO_USER, DEMO_PROFILES, getProfileById } from "@/lib/demo-data";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { action, email, name, surname, phone, region, role, userId } = body;
 
-    // Step 1: Request magic link
+    // Request magic link — demo: auto-sign-in
     if (action === "request-magic-link") {
-      const result = await requestMagicLink(email);
-      if (!result.success) {
-        return NextResponse.json({ error: result.error }, { status: 400 });
-      }
       return NextResponse.json({
         success: true,
-        message: "Magic link sent to your email",
+        message: "Demo mode — auto sign-in enabled",
+        demoUser: DEMO_USER,
       });
     }
 
-    // Step 2: Setup Identity (after magic link verification)
+    // Setup Identity — demo: update the demo user
     if (action === "setup-identity") {
-      // Auth guard — must be signed in to set up identity
-      const supabase = await createClient();
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-      const user = await setupIdentity({ userId, name, surname, phone, region, role });
-      return NextResponse.json({ success: true, user });
+      const updatedUser = {
+        ...DEMO_USER,
+        name: name || DEMO_USER.name,
+        surname: surname || DEMO_USER.surname,
+        phone: phone || DEMO_USER.phone,
+        region: region || DEMO_USER.region,
+        role: role || DEMO_USER.role,
+      };
+      return NextResponse.json({ success: true, user: updatedUser });
     }
 
-    // Step 3: Get current user
+    // Get current user — demo: always returns the demo user
     if (action === "me") {
-      const user = await getCurrentUser();
-      if (!user) {
-        return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-      }
-      return NextResponse.json({ user });
+      return NextResponse.json({ user: DEMO_USER });
     }
 
-    // Step 4: Sign out
+    // Sign out — demo: returns success
     if (action === "sign-out") {
-      await signOut();
       return NextResponse.json({ success: true });
     }
 

@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
 import { chatCompletion, type ChatMessage } from "@/lib/ai-providers";
 
 const DESCRIBE_SYSTEM_PROMPT = `You are a listing enhancer for Feorm, a Namibian farm stay platform. Given a listing title and type, generate: 1) An editorial description (authoritative, minimal, earth-toned, max 100 words, no exclamation marks). 2) 4-6 feature/spec tags as short phrases. 3) A suggested price range in Namibian dollars (N$). Format your response as JSON: {"description": "...", "features": ["...", "..."], "suggestedPrice": {"min": <cents>, "max": <cents>}}. Prices are in N$ cents (e.g. 50000 = N$500). Be specific to Namibian agriculture and landscape. Respond with ONLY valid JSON, no markdown or code blocks.`;
@@ -85,15 +84,7 @@ function parseDescribeResult(raw: string, title: string, type: string): Describe
 
 export async function POST(request: NextRequest) {
   try {
-    // Auth guard — must be signed in to use AI describe
-    const supabase = await createClient();
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
+    // Demo mode — no auth guard, all requests are allowed
 
     const body: DescribeBody = await request.json();
     const { title, type } = body;

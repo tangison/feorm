@@ -115,8 +115,10 @@ export default function FeormNav() {
       ];
 
   const signOut = useCallback(async () => {
-    const supab = (await import("@/utils/supabase/client")).createClient();
-    await supab.auth.signOut();
+    // Demo mode: clear localStorage and redirect
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("feorm-demo-user");
+    }
     setHasCompletedOnboarding(false);
     router.push("/");
   }, [setHasCompletedOnboarding, router]);

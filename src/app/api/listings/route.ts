@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
-import { getListings, getListingById, createListing } from "@/lib/db";
+import { getListingsByType, getListingById, DEMO_LISTINGS } from "@/lib/demo-data";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -9,14 +8,14 @@ export async function GET(request: Request) {
 
   try {
     if (id) {
-      const listing = await getListingById(id);
+      const listing = getListingById(id);
       if (!listing) {
         return NextResponse.json({ error: "Listing not found" }, { status: 404 });
       }
       return NextResponse.json(listing);
     }
 
-    const listings = await getListings(type ?? undefined);
+    const listings = getListingsByType(type ?? undefined);
     return NextResponse.json(listings);
   } catch (error) {
     console.error("Listings GET error:", error);
@@ -26,34 +25,29 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    // Auth guard — must be signed in to create listings
-    const supabase = await createClient();
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
     const body = await request.json();
-    const listing = await createListing({
-      title: body.title,
-      region: body.region,
-      price: body.price,
-      type: body.type,
-      category: body.category,
-      description: body.description,
-      imageUrl: body.imageUrl,
-      features: body.features,
-      hostId: body.hostId,
-      hostName: body.hostName,
-      hostPhone: body.hostPhone,
+
+    // Create a fake listing from the posted data
+    const newListing = {
+      id: `b${Date.now().toString(36).padStart(8, "0")}-0000-0000-0000-000000000001`,
+      title: body.title || "New Listing",
+      region: body.region || "Khomas",
+      price: body.price || 100000,
+      type: body.type || "stay",
+      category: body.category || "stay",
+      description: body.description || "",
+      imageUrl: body.imageUrl || "",
+      features: body.features || "",
+      hostId: body.hostId || "d0000000-0000-0000-0000-000000000001",
+      hostName: body.hostName || "Demo",
+      hostPhone: body.hostPhone || "+264 81 100 2000",
       available: true,
-      lat: body.lat,
-      lng: body.lng,
-    });
-    return NextResponse.json(listing, { status: 201 });
+      lat: body.lat ?? null,
+      lng: body.lng ?? null,
+      createdAt: new Date().toISOString(),
+    };
+
+    return NextResponse.json(newListing, { status: 201 });
   } catch (error) {
     console.error("Listings POST error:", error);
     return NextResponse.json({ error: "Failed to create listing" }, { status: 500 });

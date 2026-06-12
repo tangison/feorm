@@ -15,7 +15,10 @@ export default function GlobalError({
   }, [error]);
 
   const handleSystemReset = () => {
-    // TODO: Replace with Supabase Auth — supabase.auth.signOut()
+    // Demo mode: clear localStorage and go home
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("feorm-demo-user");
+    }
     window.location.href = "/";
   };
 

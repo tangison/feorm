@@ -6,9 +6,10 @@ import React, {
   useState,
   useEffect,
   useCallback,
+  useMemo,
   type ReactNode,
 } from "react";
-import { createClient } from "@/utils/supabase/client";
+import { DEMO_USER, type DemoProfile } from "@/lib/demo-data";
 
 // ─── Types ────────────────────────────────────────────────────────
 interface FeormUser {
@@ -25,14 +26,11 @@ interface FeormUser {
   hasCompletedOnboarding?: boolean;
 }
 
-interface FeormAuthState {
+interface FeormAuthContextType {
   user: FeormUser | null;
   email: string;
   phone: string;
   avatarUrl: string;
-}
-
-interface FeormAuthContextType extends FeormAuthState {
   setUser: React.Dispatch<React.SetStateAction<FeormUser | null>>;
   setEmail: (email: string) => void;
   setPhone: (phone: string) => void;
@@ -42,136 +40,107 @@ interface FeormAuthContextType extends FeormAuthState {
 
 const FeormAuthContext = createContext<FeormAuthContextType | null>(null);
 
-// ─── Default state ────────────────────────────────────────────────
-const DEFAULTS: FeormAuthState = Object.freeze({
-  user: null,
-  email: "",
-  phone: "",
-  avatarUrl: "",
-});
+const STORAGE_KEY = "feorm-demo-user";
+
+// ─── Helper: convert DemoProfile to FeormUser ─────────────────────
+function demoToUser(profile: DemoProfile): FeormUser {
+  return {
+    id: profile.id,
+    email: profile.email,
+    phone: profile.phone,
+    name: profile.name,
+    surname: profile.surname,
+    region: profile.region,
+    role: profile.role,
+    verified: profile.verified,
+    avatarUrl: profile.avatarUrl,
+    hasCompletedOnboarding: !!profile.name && !!profile.role && profile.role !== "guest",
+  };
+}
+
+// ─── Helper: persist user to localStorage ─────────────────────────
+function persistUser(user: FeormUser | null) {
+  if (typeof window === "undefined") return;
+  if (user) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
+  } else {
+    localStorage.removeItem(STORAGE_KEY);
+  }
+}
+
+// ─── Helper: load user from localStorage (client only) ───────────
+function loadPersistedUser(): FeormUser | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      return JSON.parse(stored) as FeormUser;
+    }
+  } catch {
+    // Ignore parse errors
+  }
+  return null;
+}
+
+// ─── Client-safe initialization ───────────────────────────────────
+// This function is used as a lazy initializer for useState.
+// On the server it returns null. On the client it checks localStorage.
+function getInitialUser(): FeormUser | null {
+  if (typeof window === "undefined") return null;
+  const persisted = loadPersistedUser();
+  if (persisted) return persisted;
+  const demo = demoToUser(DEMO_USER);
+  persistUser(demo);
+  return demo;
+}
 
 export function FeormAuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<FeormUser | null>(DEFAULTS.user);
-  const [email, setEmail] = useState(DEFAULTS.email);
-  const [phone, setPhone] = useState(DEFAULTS.phone);
-  const [avatarUrl, setAvatarUrl] = useState(DEFAULTS.avatarUrl);
-  const [loading, setLoading] = useState(true);
+  // Demo mode: user is loaded synchronously from localStorage via lazy init.
+  // On SSR, user is null. On client, user is immediately available.
+  // No async loading needed — no Supabase session to wait for.
+  const [user, setUser] = useState<FeormUser | null>(getInitialUser);
 
-  // ─── Subscribe to Supabase Auth state changes ─────────────────
+  // ─── Persist user on change ────────────────────────────────────
   useEffect(() => {
-    const supabase = createClient();
+    if (user) {
+      persistUser(user);
+    }
+  }, [user]);
 
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        const meta = session.user.user_metadata ?? {};
-        setEmail(session.user.email ?? meta.email ?? "");
-        setPhone(session.user.phone ?? meta.phone ?? "");
-
-        // Fetch profile from our API
-        fetch("/api/auth?action=me")
-          .then((res) => (res.ok ? res.json() : null))
-          .then((data) => {
-            if (data?.user) {
-              const profile = data.user;
-              setUser({
-                id: profile.id,
-                email: session.user.email,
-                phone: profile.phone,
-                name: profile.name,
-                surname: profile.surname,
-                region: profile.region,
-                role: profile.role ?? "guest",
-                verified: profile.verified ?? false,
-                avatarUrl: profile.avatarUrl ?? profile.avatar_url,
-                hasCompletedOnboarding: !!profile.name && !!profile.role && profile.role !== "guest",
-              });
-              if (profile.phone) setPhone(profile.phone);
-              if (profile.avatarUrl ?? profile.avatar_url) {
-                setAvatarUrl(profile.avatarUrl ?? profile.avatar_url);
-              }
-            }
-          })
-          .catch(console.error)
-          .finally(() => setLoading(false));
-      } else {
-        setLoading(false);
-      }
-    });
-
-    // Listen for auth state changes (sign in, sign out, token refresh)
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) {
-        const meta = session.user.user_metadata ?? {};
-        setEmail(session.user.email ?? meta.email ?? "");
-        setPhone(session.user.phone ?? meta.phone ?? "");
-
-        // Fetch profile on auth change
-        fetch("/api/auth?action=me")
-          .then((res) => (res.ok ? res.json() : null))
-          .then((data) => {
-            if (data?.user) {
-              const profile = data.user;
-              setUser({
-                id: profile.id,
-                email: session.user.email,
-                phone: profile.phone,
-                name: profile.name,
-                surname: profile.surname,
-                region: profile.region,
-                role: profile.role ?? "guest",
-                verified: profile.verified ?? false,
-                avatarUrl: profile.avatarUrl ?? profile.avatar_url,
-                hasCompletedOnboarding: !!profile.name && !!profile.role && profile.role !== "guest",
-              });
-              if (profile.phone) setPhone(profile.phone);
-              if (profile.avatarUrl ?? profile.avatar_url) {
-                setAvatarUrl(profile.avatarUrl ?? profile.avatar_url);
-              }
-            }
-          })
-          .catch(console.error);
-      } else {
-        setUser(null);
-        setEmail("");
-        setPhone("");
-        setAvatarUrl("");
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
+  // Derive email/phone/avatarUrl from user to keep in sync
+  const email = user?.email ?? "";
+  const phone = user?.phone ?? "";
+  const avatarUrl = user?.avatarUrl ?? "";
 
   const setEmailCallback = useCallback((value: string) => {
-    setEmail(value);
+    setUser((prev) => prev ? { ...prev, email: value } : prev);
   }, []);
 
   const setPhoneCallback = useCallback((value: string) => {
-    setPhone(value);
+    setUser((prev) => prev ? { ...prev, phone: value } : prev);
   }, []);
 
   const setAvatarUrlCallback = useCallback((value: string) => {
-    setAvatarUrl(value);
+    setUser((prev) => prev ? { ...prev, avatarUrl: value } : prev);
   }, []);
 
+  // In demo mode, loading is always false since there's no async auth
+  const loading = false;
+
+  const value = useMemo(() => ({
+    user,
+    email,
+    phone,
+    avatarUrl,
+    setUser,
+    setEmail: setEmailCallback,
+    setPhone: setPhoneCallback,
+    setAvatarUrl: setAvatarUrlCallback,
+    loading,
+  }), [user, email, phone, avatarUrl, loading, setEmailCallback, setPhoneCallback, setAvatarUrlCallback]);
+
   return (
-    <FeormAuthContext.Provider
-      value={{
-        user,
-        email,
-        phone,
-        avatarUrl,
-        setUser,
-        setEmail: setEmailCallback,
-        setPhone: setPhoneCallback,
-        setAvatarUrl: setAvatarUrlCallback,
-        loading,
-      }}
-    >
+    <FeormAuthContext.Provider value={value}>
       {children}
     </FeormAuthContext.Provider>
   );
@@ -183,6 +152,19 @@ export function useFeormAuth() {
     throw new Error("useFeormAuth must be used within a FeormAuthProvider");
   }
   return ctx;
+}
+
+// ─── Demo sign-in helper ──────────────────────────────────────────
+export function demoSignIn(profile?: DemoProfile) {
+  const p = profile || DEMO_USER;
+  const user = demoToUser(p);
+  persistUser(user);
+  return user;
+}
+
+// ─── Demo sign-out helper ─────────────────────────────────────────
+export function demoSignOut() {
+  persistUser(null);
 }
 
 export type { FeormUser };

@@ -130,76 +130,80 @@ export default function ListingsMap({ listings }: ListingsMapProps) {
 
     if (geoListings.length === 0) return;
 
-    const maplibregl = require("maplibre-gl") as any;
-    const bounds = new maplibregl.LngLatBounds();
+    async function addMarkers() {
+      const maplibregl = (await import("maplibre-gl")).default;
+      const bounds = new maplibregl.LngLatBounds();
 
-    geoListings.forEach((listing) => {
-      const priceLabel = `${formatPrice(listing.price)}/night`;
+      geoListings.forEach((listing) => {
+        const priceLabel = `${formatPrice(listing.price)}/night`;
 
-      // Create popup using DOM elements (prevents XSS via setHTML)
-      const container = document.createElement("div");
-      container.className = "map-popup";
-      container.style.cssText =
-        "font-family: system-ui; padding: 4px;";
+        // Create popup using DOM elements (prevents XSS via setHTML)
+        const container = document.createElement("div");
+        container.className = "map-popup";
+        container.style.cssText =
+          "font-family: system-ui; padding: 4px;";
 
-      const title = document.createElement("p");
-      title.className = "popup-title";
-      title.style.cssText =
-        "font-size: 14px; font-weight: 600; margin: 0 0 4px 0; color: #3D2914;";
-      title.textContent = listing.title;
+        const title = document.createElement("p");
+        title.className = "popup-title";
+        title.style.cssText =
+          "font-size: 14px; font-weight: 600; margin: 0 0 4px 0; color: #3D2914;";
+        title.textContent = listing.title;
 
-      const region = document.createElement("p");
-      region.style.cssText =
-        "font-size: 12px; color: #6B5735; margin: 0 0 6px 0;";
-      region.textContent = `Farm stay in ${listing.region}`;
+        const region = document.createElement("p");
+        region.style.cssText =
+          "font-size: 12px; color: #6B5735; margin: 0 0 6px 0;";
+        region.textContent = `Farm stay in ${listing.region}`;
 
-      const price = document.createElement("p");
-      price.style.cssText =
-        "font-size: 14px; font-weight: 600; color: #3D2914; margin: 0;";
-      price.textContent = priceLabel;
+        const price = document.createElement("p");
+        price.style.cssText =
+          "font-size: 14px; font-weight: 600; color: #3D2914; margin: 0;";
+        price.textContent = priceLabel;
 
-      const link = document.createElement("a");
-      link.href = `/listing/${listing.id}`;
-      link.textContent = "See This Stay →";
-      link.style.cssText =
-        "display: inline-block; margin-top: 8px; padding: 4px 12px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; background: #C4933A; color: white; border-radius: 9999px; text-decoration: none;";
+        const link = document.createElement("a");
+        link.href = `/listing/${listing.id}`;
+        link.textContent = "See This Stay \u2192";
+        link.style.cssText =
+          "display: inline-block; margin-top: 8px; padding: 4px 12px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; background: #C4933A; color: white; border-radius: 9999px; text-decoration: none;";
 
-      container.append(title, region, price, link);
+        container.append(title, region, price, link);
 
-      const popup = new maplibregl.Popup({ offset: 25 }).setDOMContent(container);
+        const popup = new maplibregl.Popup({ offset: 25 }).setDOMContent(container);
 
-      // Create marker with category color
-      const el = document.createElement("div");
-      el.style.cssText = `
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        border: 2px solid white;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 12px;
-        color: white;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-        background: ${STAY_COLOR};
-      `;
-      el.textContent = "S";
+        // Create marker with category color
+        const el = document.createElement("div");
+        el.style.cssText = `
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          border: 2px solid white;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 12px;
+          color: white;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+          background: ${STAY_COLOR};
+        `;
+        el.textContent = "S";
 
-      const marker = new maplibregl.Marker({ element: el })
-        .setLngLat([listing.lng, listing.lat])
-        .setPopup(popup)
-        .addTo(map);
+        const marker = new maplibregl.Marker({ element: el })
+          .setLngLat([listing.lng as number, listing.lat as number])
+          .setPopup(popup)
+          .addTo(map);
 
-      markersRef.current.push(marker);
+        markersRef.current.push(marker);
 
-      bounds.extend([listing.lng, listing.lat]);
-    });
+        bounds.extend([listing.lng as number, listing.lat as number]);
+      });
 
-    // Fit bounds if we have markers (don't override default view too aggressively)
-    if (geoListings.length > 0) {
-      map.fitBounds(bounds, { padding: 50, maxZoom: 10 });
+      // Fit bounds if we have markers (don't override default view too aggressively)
+      if (geoListings.length > 0) {
+        map.fitBounds(bounds, { padding: 50, maxZoom: 10 });
+      }
     }
+
+    addMarkers();
   }, [listings, mapLoaded]);
 
   return (

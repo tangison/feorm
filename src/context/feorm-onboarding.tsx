@@ -31,8 +31,7 @@ export function FeormOnboardingProvider({
 }: {
   children: ReactNode;
 }) {
-  // TODO: Replace with Supabase-backed state
-  // Uses: supabase.from('profiles').select('role, interests, onboarding_completed, provider_assets')
+  // Demo mode: uses local state instead of database
   const [onboardingStep, setOnboardingStep] = useState(0);
   const [selectedRole, setSelectedRole] = useState<"voyager" | "provider_stay" | null>(null);
   const [interests, setInterests] = useState<string[]>([]);

@@ -370,7 +370,10 @@ export default function ProfilePage() {
 
         <button
           onClick={() => {
-            // TODO: Replace with Supabase Auth — supabase.auth.signOut()
+            // Demo mode: clear localStorage and redirect
+            if (typeof window !== "undefined") {
+              localStorage.removeItem("feorm-demo-user");
+            }
             router.push("/");
           }}
           className="w-full bento-card p-6 flex items-center justify-between hover:border-destructive/30 transition-colors text-left group"

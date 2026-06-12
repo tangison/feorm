@@ -1,27 +1,34 @@
 "use client";
 
 import { useCallback } from "react";
-import { createClient } from "@/utils/supabase/client";
+import { DEMO_USER, type DemoProfile } from "@/lib/demo-data";
 
-// Auth hook — Supabase Auth integration (Email Magic Link)
+/**
+ * Auth hook — Demo mode
+ *
+ * All Supabase calls replaced with demo implementations.
+ * "Sign in" auto-authenticates as the demo user.
+ * "Sign out" clears the demo session from localStorage.
+ */
+
+function demoProfileToUser(profile: DemoProfile) {
+  return {
+    id: profile.id,
+    email: profile.email,
+    phone: profile.phone,
+    name: profile.name,
+    surname: profile.surname,
+    region: profile.region,
+    role: profile.role,
+    verified: profile.verified,
+    avatarUrl: profile.avatarUrl,
+  };
+}
+
 export function useAuthMutations() {
-  const requestMagicLink = useCallback(async (email: string) => {
-    try {
-      const supabase = createClient();
-      const { error } = await supabase.auth.signInWithOtp({
-        email,
-        options: {
-          shouldCreateUser: true,
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
-        },
-      });
-      if (error) {
-        return { success: false, error: error.message };
-      }
-      return { success: true };
-    } catch (error: any) {
-      return { success: false, error: error.message || "Magic link request failed" };
-    }
+  const requestMagicLink = useCallback(async (_email: string) => {
+    // Demo mode: always succeeds, auto-signs in
+    return { success: true };
   }, []);
 
   const setupIdentity = useCallback(
@@ -49,25 +56,15 @@ export function useAuthMutations() {
   );
 
   const verifyUser = useCallback(async () => {
-    try {
-      const res = await fetch("/api/auth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "me" }),
-      });
-      const data = await res.json();
-      if (data.user) {
-        return { success: true, user: data.user };
-      }
-      return { success: false, error: "Not authenticated" };
-    } catch (error: any) {
-      return { success: false, error: error.message || "Verification failed" };
-    }
+    // Demo mode: always returns the demo user
+    return { success: true, user: demoProfileToUser(DEMO_USER) };
   }, []);
 
   const signOut = useCallback(async () => {
-    const supabase = createClient();
-    await supabase.auth.signOut();
+    // Clear demo session from localStorage
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("feorm-demo-user");
+    }
   }, []);
 
   return { requestMagicLink, setupIdentity, verifyUser, signOut };

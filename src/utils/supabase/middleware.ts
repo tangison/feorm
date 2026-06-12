@@ -1,40 +1,16 @@
-import { createServerClient } from "@supabase/ssr";
+/**
+ * Supabase Middleware — Demo Mode
+ *
+ * This file is kept as a stub so that any remaining imports
+ * do not cause build errors. It does NOT refresh Supabase sessions.
+ */
+
 import { type NextRequest, NextResponse } from "next/server";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey =
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-
 export async function updateSession(request: NextRequest) {
-  // Create an unmodified response
-  let supabaseResponse = NextResponse.next({
+  return NextResponse.next({
     request: {
       headers: request.headers,
     },
   });
-
-  const supabase = createServerClient(supabaseUrl!, supabaseKey!, {
-    cookies: {
-      getAll() {
-        return request.cookies.getAll();
-      },
-      setAll(cookiesToSet) {
-        cookiesToSet.forEach(({ name, value }) =>
-          request.cookies.set(name, value)
-        );
-        supabaseResponse = NextResponse.next({
-          request,
-        });
-        cookiesToSet.forEach(({ name, value, options }) =>
-          supabaseResponse.cookies.set(name, value, options)
-        );
-      },
-    },
-  });
-
-  // Refresh the session so it doesn't expire
-  await supabase.auth.getUser();
-
-  return supabaseResponse;
 }
