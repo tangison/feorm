@@ -370,7 +370,6 @@ export default function ProfilePage() {
 
         <button
           onClick={() => {
-            // TODO: Replace with Supabase Auth — supabase.auth.signOut()
             router.push("/");
           }}
           className="w-full bento-card p-6 flex items-center justify-between hover:border-destructive/30 transition-colors text-left group"

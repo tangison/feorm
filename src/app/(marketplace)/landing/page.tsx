@@ -14,7 +14,7 @@ export default function LandingPage() {
         {/* Background Image */}
         <div className="absolute inset-0">
           <Image
-            src="/images/hero-landing.jpg"
+            src="/images/hero-gateway.png"
             alt="Namibian farmland at golden hour"
             fill
             className="object-cover listing-image-filter"

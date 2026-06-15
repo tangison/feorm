@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useFeormAuth, useFeormOnboarding } from "@/context/feorm-context";
 import { getDemoListings, getDemoBookings } from "@/lib/demo-data";
 import { formatPrice } from "@/lib/format";
+import Image from "next/image";
 import {
   Sparkles,
   RefreshCw,
@@ -213,9 +214,11 @@ export default function DashboardPage() {
           {demoListings.slice(0, 4).map((listing) => (
             <div key={listing.id} className="bento-card p-5 flex items-center gap-4">
               <div className="w-12 h-12 rounded-xl overflow-hidden bg-fog shrink-0">
-                <img
+                <Image
                   src={listing.images[0]}
                   alt={listing.title}
+                  width={48}
+                  height={48}
                   className="w-full h-full object-cover listing-image-filter"
                 />
               </div>

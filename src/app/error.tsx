@@ -15,7 +15,6 @@ export default function GlobalError({
   }, [error]);
 
   const handleSystemReset = () => {
-    // TODO: Replace with Supabase Auth — supabase.auth.signOut()
     window.location.href = "/";
   };
 
