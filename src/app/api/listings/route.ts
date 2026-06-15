@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
-import { getListings, getListingById, createListing } from "@/lib/db";
+import { getDemoListings, getDemoListingById } from "@/lib/demo-data";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -9,53 +8,63 @@ export async function GET(request: Request) {
 
   try {
     if (id) {
-      const listing = await getListingById(id);
+      const listing = getDemoListingById(id);
       if (!listing) {
         return NextResponse.json({ error: "Listing not found" }, { status: 404 });
       }
-      return NextResponse.json(listing);
+      // Map to the format expected by the frontend
+      return NextResponse.json({
+        id: listing.id,
+        title: listing.title,
+        region: listing.region,
+        price: listing.price,
+        type: listing.type,
+        category: listing.category,
+        description: listing.description,
+        imageUrl: listing.images[0] || "/images/listing-stay-hero.png",
+        images: listing.images,
+        features: listing.features.join(","),
+        hostId: listing.hostId,
+        hostName: listing.hostName,
+        hostPhone: listing.hostPhone,
+        available: listing.available,
+        lat: listing.lat,
+        lng: listing.lng,
+        rating: listing.rating,
+        reviewCount: listing.reviewCount,
+      });
     }
 
-    const listings = await getListings(type ?? undefined);
-    return NextResponse.json(listings);
+    const listings = getDemoListings();
+    const mapped = listings.map((listing) => ({
+      id: listing.id,
+      title: listing.title,
+      region: listing.region,
+      price: listing.price,
+      type: listing.type,
+      category: listing.category,
+      description: listing.description,
+      imageUrl: listing.images[0] || "/images/listing-stay-hero.png",
+      images: listing.images,
+      features: listing.features.join(","),
+      hostId: listing.hostId,
+      hostName: listing.hostName,
+      hostPhone: listing.hostPhone,
+      available: listing.available,
+      lat: listing.lat,
+      lng: listing.lng,
+      rating: listing.rating,
+      reviewCount: listing.reviewCount,
+    }));
+
+    return NextResponse.json(mapped);
   } catch (error) {
     console.error("Listings GET error:", error);
     return NextResponse.json({ error: "Failed to fetch listings" }, { status: 500 });
   }
 }
 
-export async function POST(request: Request) {
-  try {
-    // Auth guard — must be signed in to create listings
-    const supabase = await createClient();
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    const body = await request.json();
-    const listing = await createListing({
-      title: body.title,
-      region: body.region,
-      price: body.price,
-      type: body.type,
-      category: body.category,
-      description: body.description,
-      imageUrl: body.imageUrl,
-      features: body.features,
-      hostId: body.hostId,
-      hostName: body.hostName,
-      hostPhone: body.hostPhone,
-      available: true,
-      lat: body.lat,
-      lng: body.lng,
-    });
-    return NextResponse.json(listing, { status: 201 });
-  } catch (error) {
-    console.error("Listings POST error:", error);
-    return NextResponse.json({ error: "Failed to create listing" }, { status: 500 });
-  }
+export async function POST() {
+  // Demo mode — no-op
+  return NextResponse.json({ message: "Demo mode — listing creation disabled" }, { status: 200 });
 }

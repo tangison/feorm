@@ -9,11 +9,11 @@ import Image from "next/image";
 import { formatPrice } from "@/lib/format";
 
 export default function JourneysPage() {
-  const { user, phone } = useFeormAuth();
+  const { user } = useFeormAuth();
   const router = useRouter();
 
   const { data: bookings, isLoading: bookingsLoading } = useBookings(
-    user?.phone || `+264${phone.replace(/\s/g, "")}` || "unknown"
+    user?.phone || "demo"
   );
 
   return (
@@ -22,15 +22,11 @@ export default function JourneysPage() {
         <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
           My Journeys
         </p>
-        <h1 className="font-serif-display text-4xl md:text-5xl text-earth mb-3 tracking-tight">
+        <h1 className="section-headline font-serif-display text-earth mb-3">
           Your Bookings
         </h1>
         <p className="text-sm text-muted-foreground">
-          Active, upcoming, and past bookings.{" "}
-          <span className="inline-flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-verified animate-pulse" />
-            <span className="font-mono-feorm text-[9px] uppercase tracking-widest">Live</span>
-          </span>
+          Active, upcoming, and past bookings.
         </p>
       </div>
 
@@ -50,13 +46,13 @@ export default function JourneysPage() {
       )}
 
       {!bookingsLoading && bookings?.length === 0 && (
-        <div className="border border-dashed border-sand/50 bg-white-feorm rounded-[8px] p-12 text-center">
+        <div className="border border-dashed border-sand/50 bg-white-feorm rounded-2xl p-12 text-center">
           <Image
             src="/images/empty-journeys.png"
             alt=""
             width={200}
             height={200}
-            className="mx-auto mb-4 rounded-lg opacity-80"
+            className="mx-auto mb-4 rounded-xl opacity-80"
           />
           <p className="text-sm text-muted-foreground mb-6">
             No bookings yet. Browse the marketplace to make your first one.
@@ -95,9 +91,6 @@ export default function JourneysPage() {
                   <span className="font-mono-feorm text-[9px] text-muted-foreground uppercase tracking-widest">
                     {b.reference}
                   </span>
-                  {b.status === "confirmed" && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-verified animate-pulse" />
-                  )}
                 </div>
                 <h3 className="font-serif-display text-lg text-earth">
                   {b.listing?.title || "Listing"}

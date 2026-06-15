@@ -10,7 +10,6 @@ import { ChevronDown, X, SlidersHorizontal, Map, LayoutGrid } from "lucide-react
 import { NAMIBIAN_REGIONS } from "@/lib/regions";
 import dynamic from "next/dynamic";
 
-// Dynamic import for map (SSR: false — MapLibre needs browser APIs)
 const ListingsMap = dynamic(
   () => import("@/components/feorm/listings-map"),
   { ssr: false }
@@ -28,6 +27,7 @@ function transformItem(item: any) {
     category: item.category,
     description: item.description,
     imageUrl: item.image,
+    images: item.images || [item.image],
     features: Array.isArray(item.features) ? item.features.join(",") : item.features,
     hostId: "",
     hostName: item.hostName,
@@ -35,6 +35,8 @@ function transformItem(item: any) {
     available: item.available,
     lat: item.lat,
     lng: item.lng,
+    rating: item.rating,
+    reviewCount: item.reviewCount,
   };
 }
 
@@ -110,10 +112,10 @@ function MarketplaceContent() {
     selectedRegion !== "All Regions" || showAvailableOnly;
 
   return (
-    <div className="flex-grow w-full max-w-6xl mx-auto px-4 md:px-6 py-6 md:py-12 lg:py-16">
+    <div className="flex-grow w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12 lg:py-16">
       {/* View Header */}
-      <div className="flex items-center gap-2 mb-5 md:mb-8">
-        <span className="hidden md:inline-block font-mono-feorm text-[9px] text-muted-foreground uppercase tracking-widest ml-3">
+      <div className="flex items-center gap-3 mb-6 md:mb-8">
+        <span className="hidden md:inline-block font-mono-feorm text-[9px] text-muted-foreground uppercase tracking-widest">
           {transformedListings?.length || 0} listings
         </span>
 
@@ -121,7 +123,7 @@ function MarketplaceContent() {
         <div className="ml-auto flex items-center border border-earth/8 rounded-full overflow-hidden">
           <button
             onClick={() => setViewMode("grid")}
-            className={`px-3 py-2 text-[10px] uppercase tracking-wider transition-colors flex items-center gap-1 min-h-[36px] ${
+            className={`px-4 py-2.5 text-[10px] uppercase tracking-wider font-medium transition-all duration-200 flex items-center gap-1.5 min-h-[44px] ${
               viewMode === "grid"
                 ? "bg-earth text-white-feorm"
                 : "bg-white-feorm text-muted-foreground hover:bg-fog"
@@ -129,12 +131,12 @@ function MarketplaceContent() {
             aria-label="Grid view"
             aria-pressed={viewMode === "grid"}
           >
-            <LayoutGrid size={12} />
+            <LayoutGrid size={14} />
             <span className="hidden sm:inline">Grid</span>
           </button>
           <button
             onClick={() => setViewMode("map")}
-            className={`px-3 py-2 text-[10px] uppercase tracking-wider transition-colors flex items-center gap-1 min-h-[36px] ${
+            className={`px-4 py-2.5 text-[10px] uppercase tracking-wider font-medium transition-all duration-200 flex items-center gap-1.5 min-h-[44px] ${
               viewMode === "map"
                 ? "bg-earth text-white-feorm"
                 : "bg-white-feorm text-muted-foreground hover:bg-fog"
@@ -142,29 +144,29 @@ function MarketplaceContent() {
             aria-label="Map view"
             aria-pressed={viewMode === "map"}
           >
-            <Map size={12} />
+            <Map size={14} />
             <span className="hidden sm:inline">Map</span>
           </button>
         </div>
       </div>
 
       {/* Title + Filters */}
-      <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4 md:gap-6 mb-6 md:mb-10">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4 md:gap-6 mb-8 md:mb-10">
         <div>
-          <h1 className="font-serif-display text-3xl md:text-4xl lg:text-5xl text-earth mb-1.5 tracking-tight">
+          <h1 className="hero-headline font-serif-display text-earth mb-2">
             Farm Stays
           </h1>
-          <p className="text-xs md:text-sm text-muted-foreground max-w-md leading-relaxed">
-            Find farm stays across Namibia.
+          <p className="text-sm text-muted-foreground max-w-md leading-relaxed">
+            Find farm stays across Namibia. Real land, real hosts, real rest.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           {/* Region Filter */}
           <div className="relative">
             <button
               onClick={() => setRegionDropdownOpen(!regionDropdownOpen)}
-              className={`border px-3 py-1.5 rounded-full text-[10px] uppercase tracking-wider transition-colors flex items-center gap-1 min-h-[36px] ${
+              className={`border px-4 py-2.5 rounded-full text-[10px] uppercase tracking-wider font-medium transition-all duration-200 flex items-center gap-1.5 min-h-[44px] ${
                 selectedRegion !== "All Regions"
                   ? "border-earth bg-earth text-white-feorm"
                   : "border-earth/8 bg-white-feorm hover:bg-fog"
@@ -183,7 +185,7 @@ function MarketplaceContent() {
             </button>
             {regionDropdownOpen && (
               <div
-                className="absolute right-0 top-full mt-1.5 w-44 bg-white-feorm border border-earth/8 rounded-lg shadow-lg z-50 max-h-72 overflow-y-auto"
+                className="absolute right-0 top-full mt-2 w-48 bg-white-feorm border border-earth/8 rounded-2xl warm-shadow-lg z-50 max-h-72 overflow-y-auto"
                 role="listbox"
                 aria-label="Select region"
               >
@@ -191,7 +193,7 @@ function MarketplaceContent() {
                   <button
                     key={region}
                     onClick={() => handleRegionSelect(region)}
-                    className={`w-full text-left px-3.5 py-2.5 text-[11px] hover:bg-fog transition-colors ${
+                    className={`w-full text-left px-4 py-3 text-sm hover:bg-fog transition-colors first:rounded-t-2xl last:rounded-b-2xl ${
                       selectedRegion === region
                         ? "font-medium text-earth bg-fog"
                         : "text-muted-foreground"
@@ -209,7 +211,7 @@ function MarketplaceContent() {
           {/* Available Toggle */}
           <button
             onClick={() => setShowAvailableOnly(!showAvailableOnly)}
-            className={`border px-3 py-1.5 rounded-full text-[10px] uppercase tracking-wider transition-colors min-h-[36px] ${
+            className={`border px-4 py-2.5 rounded-full text-[10px] uppercase tracking-wider font-medium transition-all duration-200 min-h-[44px] ${
               showAvailableOnly
                 ? "border-earth bg-earth text-white-feorm"
                 : "border-earth/8 bg-white-feorm hover:bg-fog"
@@ -223,17 +225,17 @@ function MarketplaceContent() {
           {hasActiveFilters && (
             <button
               onClick={clearFilters}
-              className="border border-destructive/15 px-2.5 py-1.5 rounded-full text-[10px] text-destructive hover:bg-destructive-bg transition-colors min-h-[36px] flex items-center gap-1"
+              className="border border-destructive/15 px-3 py-2.5 rounded-full text-[10px] text-destructive hover:bg-destructive-bg transition-colors min-h-[44px] flex items-center gap-1"
               aria-label="Clear all filters"
             >
-              <X size={10} />
+              <X size={12} />
             </button>
           )}
         </div>
       </div>
 
       {/* Category Banner */}
-      <div className="relative w-full h-32 md:h-40 rounded-xl overflow-hidden mb-6 md:mb-8">
+      <div className="relative w-full h-36 md:h-44 rounded-2xl overflow-hidden mb-8 md:mb-10">
         <Image
           src="/images/banner-stays.png"
           alt="Farm stays across Namibia"
@@ -245,11 +247,11 @@ function MarketplaceContent() {
 
       {/* Loading skeleton */}
       {isLoading && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-          {Array.from({ length: 6 }).map((_, i) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+          {Array.from({ length: 8 }).map((_, i) => (
             <div key={i} className="bento-card flex flex-col">
-              <div className="h-48 md:h-56 p-2">
-                <div className="w-full h-full skeleton-shimmer rounded-md" />
+              <div className="h-48 md:h-60 p-2">
+                <div className="w-full h-full skeleton-shimmer rounded-xl" />
               </div>
               <div className="p-4 md:p-5 border-t border-earth/5">
                 <div className="h-2.5 w-16 skeleton-shimmer mb-3" />
@@ -265,8 +267,7 @@ function MarketplaceContent() {
       {!isLoading && viewMode === "map" && (
         <div>
           <ListingsMap listings={transformedListings} />
-          {/* Below the map, show a compact list */}
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {transformedListings.map((item) => (
               <ListingCard key={item.id} item={item} />
             ))}
@@ -276,7 +277,7 @@ function MarketplaceContent() {
 
       {/* Grid View */}
       {!isLoading && viewMode === "grid" && transformedListings && transformedListings.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 stagger-reveal">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 stagger-reveal">
           {transformedListings.map((item) => (
             <ListingCard key={item.id} item={item} />
           ))}
@@ -285,21 +286,21 @@ function MarketplaceContent() {
 
       {/* Empty */}
       {transformedListings?.length === 0 && !isLoading && (
-        <div className="border border-dashed border-sand/40 bg-white-feorm rounded-lg p-10 text-center">
+        <div className="border border-dashed border-sand/40 bg-white-feorm rounded-2xl p-12 text-center">
           <Image
             src="/images/empty-listings.png"
             alt=""
             width={200}
             height={200}
-            className="mx-auto mb-4 rounded-lg opacity-80"
+            className="mx-auto mb-4 rounded-xl opacity-80"
           />
-          <p className="text-xs text-muted-foreground mb-4">
+          <p className="text-sm text-muted-foreground mb-6">
             No listings yet{selectedRegion !== "All Regions" ? ` in ${selectedRegion}. Be the first to list here.` : ". Be the first to list on Feorm."}
           </p>
           {hasActiveFilters && (
             <button
               onClick={clearFilters}
-              className="btn-secondary-feorm px-4 py-2 text-[10px] uppercase tracking-widest"
+              className="btn-secondary-feorm px-6 py-3 text-xs uppercase tracking-widest"
             >
               Clear Filters
             </button>

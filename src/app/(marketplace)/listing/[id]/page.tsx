@@ -6,28 +6,29 @@ import { useListing } from "@/hooks/use-listings";
 import { useFeormAuth } from "@/context/feorm-context";
 import { formatPrice } from "@/lib/format";
 import Image from "next/image";
-import { ChevronLeft, MessageCircle, ArrowRight, Sparkles } from "lucide-react";
+import { ChevronLeft, MessageCircle, ArrowRight, Sparkles, Star } from "lucide-react";
 
 export default function ListingDetailPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
-  const { user } = useFeormAuth();
-
   const { data: listing, isLoading, notFound } = useListing(params.id);
 
-  // AI Description Rewrite state
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [rewrittenDesc, setRewrittenDesc] = useState<string | { title?: string; description?: string } | null>(null);
   const [rewriting, setRewriting] = useState(false);
 
-  // AI Smart Suggest state
   const [suggestions, setSuggestions] = useState<Array<{ title: string; description: string; category: string }> | null>(null);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
 
+  // All images for this listing
+  const allImages = listing?.images && listing.images.length > 1
+    ? listing.images
+    : [listing?.image || "/images/listing-stay-hero.png"];
+
   const triggerWhatsApp = (title: string, hostPhone: string) => {
     const msg = encodeURIComponent(
-      `Hi, I'm interested in [${title}] on Feorm. Can you tell me more?`
+      `Hi, I am interested in [${title}] on Feorm. Can you tell me more?`
     );
-    // Use host's actual phone number, stripped of non-digits and leading +
     const phone = hostPhone.replace(/[^\d]/g, "");
     window.open(`https://wa.me/${phone}?text=${msg}`, "_blank");
   };
@@ -52,7 +53,6 @@ export default function ListingDetailPage() {
         setRewrittenDesc(data.rewritten);
       }
     } catch {
-      // Fallback: just show the original
       setRewrittenDesc(listing.description as string);
     }
     setRewriting(false);
@@ -112,36 +112,79 @@ export default function ListingDetailPage() {
   const features = listing.features;
 
   return (
-    <div className="flex-grow w-full max-w-6xl mx-auto px-6 py-6 md:py-12">
-      <div className="bg-white-feorm border border-soil/10 rounded-[8px] overflow-hidden md:min-h-[600px]">
-        <div className="flex flex-col md:flex-row h-full">
-          {/* Left: Image */}
-          <div className="w-full md:w-1/2 bg-fog relative h-[35vh] md:h-auto border-b md:border-b-0 md:border-r border-soil/10">
-            <Image
-              src={listing.image || "/images/listing-stay-hero.png"}
-              alt={listing.title}
-              width={600}
-              height={450}
-              sizes="(max-width: 768px) 100vw, 50vw"
-              className="w-full h-full object-cover opacity-90 p-2 md:p-4"
-              loading="lazy"
-            />
-            <button
-              onClick={() => router.push("/marketplace")}
-              className="absolute top-4 left-4 md:top-8 md:left-8 bg-white-feorm/90 backdrop-blur-sm border border-soil/10 p-2 rounded-full text-earth hover:bg-white-feorm transition-colors shadow-sm"
-              aria-label="Back to marketplace"
-            >
-              <ChevronLeft size={16} />
-            </button>
+    <div className="flex-grow w-full max-w-6xl mx-auto px-4 md:px-6 py-6 md:py-12">
+      {/* Back button */}
+      <button
+        onClick={() => router.push("/marketplace")}
+        className="mb-6 flex items-center gap-2 px-4 py-2.5 text-sm text-muted-foreground hover:text-earth transition-colors min-h-[44px] rounded-full hover:bg-earth/5 font-medium"
+      >
+        <ChevronLeft size={18} /> Back to Stays
+      </button>
+
+      <div className="bento-card overflow-hidden">
+        <div className="flex flex-col lg:flex-row">
+          {/* Left: Image Gallery */}
+          <div className="w-full lg:w-[55%] bg-fog relative">
+            {/* Main Image */}
+            <div className="relative h-[40vh] md:h-[50vh] lg:h-[600px] film-grain-overlay">
+              <Image
+                src={allImages[selectedImageIndex] || "/images/listing-stay-hero.png"}
+                alt={`${listing.title} - image ${selectedImageIndex + 1}`}
+                width={800}
+                height={600}
+                sizes="(max-width: 1024px) 100vw, 55vw"
+                className="w-full h-full object-cover listing-image-filter"
+                priority
+              />
+              {/* Demo Preview Badge */}
+              <span className="demo-preview-badge">Demo Preview</span>
+              {/* Rating overlay */}
+              {listing.rating && (
+                <span className="absolute bottom-4 left-4 flex items-center gap-1.5 bg-earth/80 backdrop-blur-sm text-white-feorm text-sm font-semibold px-3 py-1.5 rounded-full z-[4]">
+                  <Star size={14} className="text-harvest fill-harvest" />
+                  {listing.rating}
+                  {listing.reviewCount && (
+                    <span className="text-[10px] font-normal text-sand">
+                      ({listing.reviewCount} reviews)
+                    </span>
+                  )}
+                </span>
+              )}
+            </div>
+
+            {/* Thumbnail Strip */}
+            {allImages.length > 1 && (
+              <div className="gallery-scroll flex gap-2 p-3 bg-white-feorm border-t border-earth/5">
+                {allImages.map((img: string, i: number) => (
+                  <button
+                    key={i}
+                    onClick={() => setSelectedImageIndex(i)}
+                    className={`shrink-0 w-16 h-12 md:w-20 md:h-14 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
+                      selectedImageIndex === i
+                        ? "border-harvest shadow-md"
+                        : "border-transparent opacity-70 hover:opacity-100"
+                    }`}
+                    aria-label={`View image ${i + 1}`}
+                  >
+                    <Image
+                      src={img}
+                      alt={`${listing.title} thumbnail ${i + 1}`}
+                      width={80}
+                      height={56}
+                      sizes="80px"
+                      className="w-full h-full object-cover listing-image-filter"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Right: Details */}
-          <div className="w-full md:w-1/2 bg-white-feorm p-6 md:p-12 flex flex-col overflow-y-auto">
-            <div className="flex-grow max-w-md">
+          <div className="w-full lg:w-[45%] bg-white-feorm p-6 md:p-8 lg:p-10 flex flex-col overflow-y-auto">
+            <div className="flex-grow">
               <div className="flex items-center gap-3 mb-5">
-                <span
-                  className="text-[10px] uppercase font-medium px-2.5 py-1 rounded-full tag-pastel"
-                >
+                <span className="text-[10px] uppercase font-medium px-3 py-1 rounded-full tag-pastel">
                   {listing.category}
                 </span>
                 <span className="font-mono-feorm text-[10px] text-muted-foreground uppercase tracking-widest">
@@ -149,11 +192,11 @@ export default function ListingDetailPage() {
                 </span>
               </div>
 
-              <h1 className="font-serif-display text-3xl md:text-4xl mb-5 text-earth leading-[1.1] tracking-tight">
+              <h1 className="section-headline font-serif-display text-earth mb-5 leading-[1.1] tracking-tight">
                 {listing.title}
               </h1>
 
-              <div className="text-earth mb-8 pb-8 border-b border-soil/10">
+              <div className="text-earth mb-8 pb-8 border-b border-earth/5">
                 <span className="text-2xl font-medium font-mono-feorm">
                   {formatPrice(listing.price)}
                 </span>
@@ -162,7 +205,7 @@ export default function ListingDetailPage() {
                 </span>
               </div>
 
-              {/* Description with AI Enhance */}
+              {/* Description */}
               <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-3">
                 Description
               </h4>
@@ -173,18 +216,13 @@ export default function ListingDetailPage() {
                       ? rewrittenDesc
                       : rewrittenDesc.description || listing.description}
                   </p>
-                  {typeof rewrittenDesc === "object" && rewrittenDesc.title && (
-                    <p className="text-bark text-sm font-medium mt-2">
-                      {rewrittenDesc.title}
-                    </p>
-                  )}
-                  <div className="flex items-center gap-3 mt-2">
+                  <div className="flex items-center gap-3 mt-3">
                     <span className="font-mono-feorm text-[9px] uppercase tracking-widest text-muted-foreground">
                       Enhanced
                     </span>
                     <button
                       onClick={() => setRewrittenDesc(null)}
-                      className="font-mono-feorm text-[9px] uppercase tracking-widest text-harvest hover:text-earth transition-colors underline underline-offset-2 px-2 py-1 rounded-full min-h-[36px]"
+                      className="font-mono-feorm text-[9px] uppercase tracking-widest text-harvest hover:text-earth transition-colors underline underline-offset-2 px-3 py-1.5 rounded-full min-h-[44px]"
                     >
                       Show Original
                     </button>
@@ -198,7 +236,7 @@ export default function ListingDetailPage() {
                   <button
                     onClick={handleRewriteDescription}
                     disabled={rewriting}
-                    className="text-[10px] uppercase tracking-widest text-muted-foreground hover:text-earth font-mono-feorm flex items-center gap-1 mt-2 transition-colors disabled:opacity-50 rounded-full px-3 py-1.5 border border-soil/10 bg-fog hover:border-soil/30 min-h-[36px]"
+                    className="btn-secondary-feorm flex items-center gap-1.5 mt-3 text-[10px] uppercase tracking-widest px-4 py-2 disabled:opacity-50"
                     aria-label="AI Enhance description"
                   >
                     {rewriting ? (
@@ -217,25 +255,25 @@ export default function ListingDetailPage() {
               )}
 
               <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-3">
-                Specifications
+                Amenities
               </h4>
               <div className="flex flex-wrap gap-2 mb-8">
                 {features.map((f: string) => (
                   <span
                     key={f}
-                    className="border border-soil/10 rounded-full bg-fog px-3 py-1 text-xs text-muted-foreground"
+                    className="border border-earth/8 rounded-full bg-fog px-3.5 py-1.5 text-xs text-earth font-medium"
                   >
                     {f.trim()}
                   </span>
                 ))}
               </div>
 
-              {/* Host Bio */}
+              {/* Host */}
               <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-3">
                 Host
               </h4>
               <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-earth text-white-feorm flex items-center justify-center text-xs font-medium font-serif-display">
+                <div className="w-11 h-11 rounded-full bg-earth text-white-feorm flex items-center justify-center text-sm font-medium font-serif-display">
                   {listing.hostName
                     .split(" ")
                     .map((n: string) => n[0])
@@ -249,20 +287,20 @@ export default function ListingDetailPage() {
                     {listing.hostPhone}
                   </p>
                 </div>
-                <span className="tag-verified text-[10px] uppercase font-medium px-2.5 py-1">
+                <span className="tag-verified text-[10px] uppercase font-semibold px-2.5 py-1">
                   Verified
                 </span>
               </div>
 
-              {/* AI Recommendations */}
-              <div className="mt-8 pt-8 border-t border-soil/10">
+              {/* AI Suggestions */}
+              <div className="mt-8 pt-8 border-t border-earth/5">
                 <h4 className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-3">
                   Smart Suggestions
                 </h4>
                 {suggestions === null && !loadingSuggestions && (
                   <button
                     onClick={handleGetSuggestions}
-                    className="text-[10px] uppercase tracking-widest text-muted-foreground hover:text-earth font-mono-feorm flex items-center gap-1 transition-colors border border-soil/10 rounded-full px-3 py-1.5 hover:border-soil/30"
+                    className="btn-secondary-feorm flex items-center gap-1.5 text-[10px] uppercase tracking-widest px-4 py-2"
                     aria-label="Get smart suggestions"
                   >
                     <Sparkles size={12} />
@@ -272,25 +310,19 @@ export default function ListingDetailPage() {
                 {loadingSuggestions && (
                   <div className="space-y-3">
                     {[1, 2, 3].map((i) => (
-                      <div
-                        key={i}
-                        className="skeleton-shimmer rounded-lg h-16 w-full"
-                      />
+                      <div key={i} className="skeleton-shimmer rounded-xl h-16 w-full" />
                     ))}
                   </div>
                 )}
                 {suggestions !== null && suggestions.length > 0 && (
                   <div className="space-y-3">
                     {suggestions.slice(0, 3).map((s, i) => (
-                      <div
-                        key={i}
-                        className="border border-soil/10 rounded-[8px] p-3 bg-fog"
-                      >
+                      <div key={i} className="bento-card p-4">
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-sm font-medium text-earth">
                             {s.title}
                           </span>
-                          <span className="text-[9px] uppercase tracking-widest text-muted-foreground font-mono-feorm border border-soil/10 rounded-full px-2 py-0.5">
+                          <span className="text-[9px] uppercase tracking-widest text-muted-foreground font-mono-feorm border border-earth/8 rounded-full px-2 py-0.5">
                             {s.category}
                           </span>
                         </div>
@@ -304,7 +336,8 @@ export default function ListingDetailPage() {
               </div>
             </div>
 
-            <div className="mt-auto pt-6 bg-white-feorm">
+            {/* CTA */}
+            <div className="mt-auto pt-6">
               <div className="flex justify-between text-sm mb-4">
                 <span className="text-muted-foreground">Security Escrow</span>
                 <span className="font-medium font-mono-feorm text-earth">
@@ -312,26 +345,14 @@ export default function ListingDetailPage() {
                 </span>
               </div>
               <button
-                onClick={() => {
-                  if (!user) {
-                    router.push("/auth?message=sign-in-to-book");
-                    return;
-                  }
-                  router.push(`/listing/${params.id}/book`);
-                }}
-                className="w-full btn-harvest px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 min-h-[44px]"
+                onClick={() => router.push(`/listing/${params.id}/book`)}
+                className="w-full btn-harvest px-5 py-4 text-xs uppercase tracking-widest flex justify-center items-center gap-2 min-h-[52px]"
               >
-                {"Request Stay"}
+                Request Stay
                 <ArrowRight size={14} aria-hidden="true" />
               </button>
               <button
-                onClick={() => {
-                  if (!user) {
-                    router.push("/auth?message=sign-in-to-book");
-                    return;
-                  }
-                  triggerWhatsApp(listing.title, listing.hostPhone);
-                }}
+                onClick={() => triggerWhatsApp(listing.title, listing.hostPhone)}
                 className="w-full mt-3 border border-whatsapp text-whatsapp px-5 py-3 text-xs uppercase tracking-widest flex justify-center items-center gap-2 rounded-full hover:bg-whatsapp/5 transition-colors min-h-[44px]"
               >
                 <MessageCircle size={14} /> WhatsApp Inquiry

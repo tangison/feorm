@@ -6,18 +6,18 @@ import Link from "next/link";
 export default function FeormFooter() {
   return (
     <footer className="border-t border-earth/5 mt-auto">
-      <div className="max-w-6xl mx-auto px-4 md:px-6 py-10 md:py-16">
+      <div className="max-w-6xl mx-auto px-6 md:px-8 py-12 md:py-16">
         {/* Main Grid */}
         <div className="grid md:grid-cols-3 gap-8 md:gap-12 mb-10">
           {/* Brand */}
           <div>
-            <Link href="/marketplace" className="flex items-center gap-2 mb-3">
+            <Link href="/marketplace" className="flex items-center gap-2.5 mb-3">
               <Image
                 src="/feorm-logo.png"
                 alt="Feorm"
-                width={20}
-                height={20}
-                className="rounded-[3px]"
+                width={24}
+                height={24}
+                className="rounded-lg"
               />
               <span className="font-serif-display text-lg italic lowercase">
                 feorm<span className="text-harvest">.</span>
@@ -33,9 +33,12 @@ export default function FeormFooter() {
             <h4 className="font-mono-feorm text-[8px] uppercase tracking-widest text-muted-foreground mb-3">
               Explore
             </h4>
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               <Link href="/marketplace?view=stays" className="block text-[11px] text-soil hover:text-earth transition-colors">
                 Farm Stays
+              </Link>
+              <Link href="/landing" className="block text-[11px] text-soil hover:text-earth transition-colors">
+                How it Works
               </Link>
               <Link href="/journeys" className="block text-[11px] text-soil hover:text-earth transition-colors">
                 My Journeys
@@ -65,8 +68,8 @@ export default function FeormFooter() {
                 <span className="font-mono-feorm text-[9px] text-earth">Escrow + Verification</span>
               </div>
               <div className="flex justify-between text-[11px]">
-                <span className="text-muted-foreground">AIC 2026</span>
-                <span className="font-mono-feorm text-[9px] text-earth">Agripreneurial Innovation</span>
+                <span className="text-muted-foreground">Mode</span>
+                <span className="font-mono-feorm text-[9px] text-harvest">Demo Preview</span>
               </div>
             </div>
           </div>

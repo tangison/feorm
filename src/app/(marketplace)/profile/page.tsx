@@ -28,7 +28,7 @@ import {
 } from "@/lib/avatar";
 
 export default function ProfilePage() {
-  const { user, phone, avatarUrl, setAvatarUrl } = useFeormAuth();
+  const { user, avatarUrl, setAvatarUrl } = useFeormAuth();
   const router = useRouter();
   const [avatarPickerOpen, setAvatarPickerOpen] = useState(false);
   const [generatingAvatar, setGeneratingAvatar] = useState(false);
@@ -170,7 +170,7 @@ export default function ProfilePage() {
               </h3>
               <p className="text-sm text-muted-foreground font-mono-feorm flex items-center gap-1">
                 <MapPin size={10} aria-hidden="true" />
-                +264{phone || "810000000"}
+                {user?.phone || "+264 81 000 0000"}
               </p>
               {selectedLabel && (
                 <p className="font-mono-feorm text-[9px] uppercase tracking-widest text-accent-foreground mt-0.5">

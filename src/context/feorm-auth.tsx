@@ -8,7 +8,7 @@ import React, {
   useCallback,
   type ReactNode,
 } from "react";
-import { createClient } from "@/utils/supabase/client";
+import { getDemoUser, type DemoUser } from "@/lib/demo-data";
 
 // ─── Types ────────────────────────────────────────────────────────
 interface FeormUser {
@@ -25,151 +25,83 @@ interface FeormUser {
   hasCompletedOnboarding?: boolean;
 }
 
-interface FeormAuthState {
-  user: FeormUser | null;
-  email: string;
-  phone: string;
-  avatarUrl: string;
-}
+type DemoPersona = "farmer" | "guest";
 
-interface FeormAuthContextType extends FeormAuthState {
-  setUser: React.Dispatch<React.SetStateAction<FeormUser | null>>;
-  setEmail: (email: string) => void;
-  setPhone: (phone: string) => void;
-  setAvatarUrl: (url: string) => void;
+interface FeormAuthContextType {
+  user: FeormUser | null;
+  avatarUrl: string;
   loading: boolean;
+  persona: DemoPersona;
+  setPersona: (p: DemoPersona) => void;
+  setAvatarUrl: (url: string) => void;
 }
 
 const FeormAuthContext = createContext<FeormAuthContextType | null>(null);
 
-// ─── Default state ────────────────────────────────────────────────
-const DEFAULTS: FeormAuthState = Object.freeze({
-  user: null,
-  email: "",
-  phone: "",
-  avatarUrl: "",
-});
+function mapDemoUser(demo: DemoUser): FeormUser {
+  return {
+    id: demo.id,
+    email: demo.email,
+    phone: demo.phone,
+    name: demo.name,
+    surname: demo.surname,
+    region: demo.region,
+    role: demo.role,
+    verified: demo.verified,
+    avatarUrl: demo.avatarUrl,
+    hasCompletedOnboarding: true,
+  };
+}
 
 export function FeormAuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<FeormUser | null>(DEFAULTS.user);
-  const [email, setEmail] = useState(DEFAULTS.email);
-  const [phone, setPhone] = useState(DEFAULTS.phone);
-  const [avatarUrl, setAvatarUrl] = useState(DEFAULTS.avatarUrl);
+  const [persona, setPersonaState] = useState<DemoPersona>("guest");
+  const [user, setUser] = useState<FeormUser | null>(null);
+  const [avatarUrl, setAvatarUrlState] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // ─── Subscribe to Supabase Auth state changes ─────────────────
+  // Load persona from localStorage on mount
   useEffect(() => {
-    const supabase = createClient();
-
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        const meta = session.user.user_metadata ?? {};
-        setEmail(session.user.email ?? meta.email ?? "");
-        setPhone(session.user.phone ?? meta.phone ?? "");
-
-        // Fetch profile from our API
-        fetch("/api/auth?action=me")
-          .then((res) => (res.ok ? res.json() : null))
-          .then((data) => {
-            if (data?.user) {
-              const profile = data.user;
-              setUser({
-                id: profile.id,
-                email: session.user.email,
-                phone: profile.phone,
-                name: profile.name,
-                surname: profile.surname,
-                region: profile.region,
-                role: profile.role ?? "guest",
-                verified: profile.verified ?? false,
-                avatarUrl: profile.avatarUrl ?? profile.avatar_url,
-                hasCompletedOnboarding: !!profile.name && !!profile.role && profile.role !== "guest",
-              });
-              if (profile.phone) setPhone(profile.phone);
-              if (profile.avatarUrl ?? profile.avatar_url) {
-                setAvatarUrl(profile.avatarUrl ?? profile.avatar_url);
-              }
-            }
-          })
-          .catch(console.error)
-          .finally(() => setLoading(false));
-      } else {
-        setLoading(false);
+    try {
+      const stored = localStorage.getItem("feorm_demo_persona");
+      if (stored === "farmer" || stored === "guest") {
+        setPersonaState(stored);
       }
-    });
-
-    // Listen for auth state changes (sign in, sign out, token refresh)
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) {
-        const meta = session.user.user_metadata ?? {};
-        setEmail(session.user.email ?? meta.email ?? "");
-        setPhone(session.user.phone ?? meta.phone ?? "");
-
-        // Fetch profile on auth change
-        fetch("/api/auth?action=me")
-          .then((res) => (res.ok ? res.json() : null))
-          .then((data) => {
-            if (data?.user) {
-              const profile = data.user;
-              setUser({
-                id: profile.id,
-                email: session.user.email,
-                phone: profile.phone,
-                name: profile.name,
-                surname: profile.surname,
-                region: profile.region,
-                role: profile.role ?? "guest",
-                verified: profile.verified ?? false,
-                avatarUrl: profile.avatarUrl ?? profile.avatar_url,
-                hasCompletedOnboarding: !!profile.name && !!profile.role && profile.role !== "guest",
-              });
-              if (profile.phone) setPhone(profile.phone);
-              if (profile.avatarUrl ?? profile.avatar_url) {
-                setAvatarUrl(profile.avatarUrl ?? profile.avatar_url);
-              }
-            }
-          })
-          .catch(console.error);
-      } else {
-        setUser(null);
-        setEmail("");
-        setPhone("");
-        setAvatarUrl("");
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
+    } catch {
+      // SSR or storage unavailable
+    }
+    setLoading(false);
   }, []);
 
-  const setEmailCallback = useCallback((value: string) => {
-    setEmail(value);
+  // Update user when persona changes
+  useEffect(() => {
+    const demoUser = getDemoUser(persona);
+    const feormUser = mapDemoUser(demoUser);
+    setUser(feormUser);
+    setAvatarUrlState(demoUser.avatarUrl);
+  }, [persona]);
+
+  const setPersona = useCallback((p: DemoPersona) => {
+    setPersonaState(p);
+    try {
+      localStorage.setItem("feorm_demo_persona", p);
+    } catch {
+      // storage unavailable
+    }
   }, []);
 
-  const setPhoneCallback = useCallback((value: string) => {
-    setPhone(value);
-  }, []);
-
-  const setAvatarUrlCallback = useCallback((value: string) => {
-    setAvatarUrl(value);
+  const setAvatarUrl = useCallback((url: string) => {
+    setAvatarUrlState(url);
   }, []);
 
   return (
     <FeormAuthContext.Provider
       value={{
         user,
-        email,
-        phone,
         avatarUrl,
-        setUser,
-        setEmail: setEmailCallback,
-        setPhone: setPhoneCallback,
-        setAvatarUrl: setAvatarUrlCallback,
         loading,
+        persona,
+        setPersona,
+        setAvatarUrl,
       }}
     >
       {children}
@@ -185,4 +117,4 @@ export function useFeormAuth() {
   return ctx;
 }
 
-export type { FeormUser };
+export type { FeormUser, DemoPersona };

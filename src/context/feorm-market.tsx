@@ -17,11 +17,14 @@ interface Listing {
   category: string;
   description: string;
   imageUrl: string;
+  images?: string[];
   features: string;
   hostId: string;
   hostName: string;
   hostPhone: string;
   available: boolean;
+  rating?: number;
+  reviewCount?: number;
 }
 
 type MarketView = "stays";

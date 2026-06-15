@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
 import {
   streamChatCompletion,
   chatCompletion,
@@ -19,15 +18,6 @@ interface ChatBody {
 
 export async function POST(request: NextRequest) {
   try {
-    // Auth guard — must be signed in to use AI chat
-    const supabase = await createClient();
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
     const body: ChatBody = await request.json();
     const { messages = [], context, stream = true } = body;
 

@@ -31,13 +31,12 @@ export function FeormOnboardingProvider({
 }: {
   children: ReactNode;
 }) {
-  // TODO: Replace with Supabase-backed state
-  // Uses: supabase.from('profiles').select('role, interests, onboarding_completed, provider_assets')
+  // Demo mode — onboarding always complete
   const [onboardingStep, setOnboardingStep] = useState(0);
-  const [selectedRole, setSelectedRole] = useState<"voyager" | "provider_stay" | null>(null);
-  const [interests, setInterests] = useState<string[]>([]);
-  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
-  const [providerAssets, setProviderAssets] = useState<("stay")[]>([]);
+  const [selectedRole, setSelectedRole] = useState<"voyager" | "provider_stay" | null>("voyager");
+  const [interests, setInterests] = useState<string[]>(["Farm Stays", "Cultural Exchange"]);
+  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(true);
+  const [providerAssets, setProviderAssets] = useState<("stay")[]>(["stay"]);
 
   return (
     <FeormOnboardingContext.Provider

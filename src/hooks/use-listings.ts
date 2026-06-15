@@ -22,7 +22,6 @@ export function useListings(type: "stay") {
       setIsLoading(true);
       setError(null);
 
-      // Check cache first for deduplication
       const cacheKey = `listings-${type}`;
       const cached = listingCache.get(cacheKey);
       if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
@@ -45,6 +44,7 @@ export function useListings(type: "stay") {
             price: item.price,
             description: item.description,
             image: item.imageUrl,
+            images: item.images || [item.imageUrl],
             features: item.features ? item.features.split(",") : [],
             category: item.category,
             hostName: item.hostName,
@@ -52,8 +52,9 @@ export function useListings(type: "stay") {
             available: item.available,
             lat: item.lat,
             lng: item.lng,
+            rating: item.rating,
+            reviewCount: item.reviewCount,
           }));
-          // Cache the result
           listingCache.set(cacheKey, { data: mapped, timestamp: Date.now() });
           if (currentTypeRef.current === type) {
             setData(mapped);
@@ -108,6 +109,7 @@ export function useListing(id: string) {
               price: found.price,
               description: found.description,
               image: found.imageUrl,
+              images: found.images || [found.imageUrl],
               features: found.features ? found.features.split(",") : [],
               category: found.category,
               hostName: found.hostName,
@@ -115,6 +117,8 @@ export function useListing(id: string) {
               available: found.available,
               lat: found.lat,
               lng: found.lng,
+              rating: found.rating,
+              reviewCount: found.reviewCount,
             });
             setIsLoading(false);
             return;
