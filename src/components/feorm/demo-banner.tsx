@@ -1,21 +1,19 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { X } from "lucide-react";
 
-export default function DemoBanner() {
-  const [dismissed, setDismissed] = useState(false);
+function getInitialDismissed(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return localStorage.getItem("feorm_demo_banner_dismissed") === "true";
+  } catch {
+    return false;
+  }
+}
 
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem("feorm_demo_banner_dismissed");
-      if (stored === "true") {
-        setDismissed(true);
-      }
-    } catch {
-      // SSR or storage unavailable
-    }
-  }, []);
+export default function DemoBanner() {
+  const [dismissed, setDismissed] = useState(getInitialDismissed);
 
   const handleDismiss = () => {
     setDismissed(true);

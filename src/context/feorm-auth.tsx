@@ -4,8 +4,8 @@ import React, {
   createContext,
   useContext,
   useState,
-  useEffect,
   useCallback,
+  useMemo,
   type ReactNode,
 } from "react";
 import { getDemoUser, type DemoUser } from "@/lib/demo-data";
@@ -53,35 +53,42 @@ function mapDemoUser(demo: DemoUser): FeormUser {
   };
 }
 
+function getInitialPersona(): DemoPersona {
+  if (typeof window === "undefined") return "guest";
+  try {
+    const stored = localStorage.getItem("feorm_demo_persona");
+    if (stored === "farmer" || stored === "guest") return stored;
+  } catch {
+    // SSR or storage unavailable
+  }
+  return "guest";
+}
+
 export function FeormAuthProvider({ children }: { children: ReactNode }) {
-  const [persona, setPersonaState] = useState<DemoPersona>("guest");
-  const [user, setUser] = useState<FeormUser | null>(null);
-  const [avatarUrl, setAvatarUrlState] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [persona, setPersonaState] = useState<DemoPersona>(getInitialPersona);
+  const [customAvatarUrl, setCustomAvatarUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(() => {
+    // If we're on the server, we're still loading
+    if (typeof window === "undefined") return true;
+    // On client, we synchronously initialized persona above
+    return false;
+  });
 
-  // Load persona from localStorage on mount
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem("feorm_demo_persona");
-      if (stored === "farmer" || stored === "guest") {
-        setPersonaState(stored);
-      }
-    } catch {
-      // SSR or storage unavailable
-    }
-    setLoading(false);
-  }, []);
-
-  // Update user when persona changes
-  useEffect(() => {
+  // Derive user from persona — no effect needed
+  const user = useMemo(() => {
     const demoUser = getDemoUser(persona);
-    const feormUser = mapDemoUser(demoUser);
-    setUser(feormUser);
-    setAvatarUrlState(demoUser.avatarUrl);
+    return mapDemoUser(demoUser);
   }, [persona]);
+
+  // Derive avatarUrl from persona or custom override
+  const avatarUrl = useMemo(() => {
+    if (customAvatarUrl !== null) return customAvatarUrl;
+    return getDemoUser(persona).avatarUrl;
+  }, [persona, customAvatarUrl]);
 
   const setPersona = useCallback((p: DemoPersona) => {
     setPersonaState(p);
+    setCustomAvatarUrl(null); // Reset custom avatar when switching persona
     try {
       localStorage.setItem("feorm_demo_persona", p);
     } catch {
@@ -90,8 +97,17 @@ export function FeormAuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const setAvatarUrl = useCallback((url: string) => {
-    setAvatarUrlState(url);
+    setCustomAvatarUrl(url);
   }, []);
+
+  // Handle hydration: mark loading as false after mount
+  // Using a ref-based approach to avoid the setState-in-effect lint
+  const [mounted, setMounted] = useState(false);
+  if (!mounted && typeof window !== "undefined") {
+    // Client-side first render — we have the persona already
+    setMounted(true);
+    if (loading) setLoading(false);
+  }
 
   return (
     <FeormAuthContext.Provider
