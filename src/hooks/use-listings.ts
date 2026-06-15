@@ -2,14 +2,61 @@
 
 import { useState, useEffect, useRef } from "react";
 
+// ─── Types ──────────────────────────────────────────────────────
+export interface ListingItem {
+  _id: string;
+  title: string;
+  type: string;
+  region: string;
+  price: number;
+  description: string;
+  image: string;
+  images: string[];
+  features: string[];
+  category: string;
+  hostName: string;
+  hostPhone: string;
+  available: boolean;
+  lat: number | null;
+  lng: number | null;
+  rating?: number;
+  reviewCount?: number;
+}
+
 // ─── Request Deduplication Cache ────────────────────────────────
-const listingCache = new Map<string, { data: any[]; timestamp: number }>();
+const listingCache = new Map<string, { data: ListingItem[]; timestamp: number }>();
 const CACHE_TTL = 30_000; // 30 seconds
+
+// ─── Helpers ────────────────────────────────────────────────────
+function mapListingResponse(item: Record<string, unknown>): ListingItem {
+  const imageUrl = (item.imageUrl as string) || "/images/listing-stay-hero.png";
+  return {
+    _id: item.id as string,
+    title: item.title as string,
+    type: item.type as string,
+    region: item.region as string,
+    price: item.price as number,
+    description: item.description as string,
+    image: imageUrl,
+    images: (item.images as string[]) || [imageUrl],
+    features: item.features
+      ? (item.features as string).split(",").map((f: string) => f.trim())
+      : [],
+    category: item.category as string,
+    hostName: item.hostName as string,
+    hostPhone: item.hostPhone as string,
+    available: item.available as boolean,
+    lat: (item.lat as number | null) ?? null,
+    lng: (item.lng as number | null) ?? null,
+    rating: item.rating as number | undefined,
+    reviewCount: item.reviewCount as number | undefined,
+  };
+}
 
 // ─── Hooks ─────────────────────────────────────────────────────
 
 export function useListings(type: "stay") {
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<ListingItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const currentTypeRef = useRef(type);
@@ -36,25 +83,9 @@ export function useListings(type: "stay") {
         });
         if (res.ok) {
           const raw = await res.json();
-          const mapped = raw.map((item: any) => ({
-            _id: item.id,
-            title: item.title,
-            type: item.type,
-            region: item.region,
-            price: item.price,
-            description: item.description,
-            image: item.imageUrl,
-            images: item.images || [item.imageUrl],
-            features: item.features ? item.features.split(",") : [],
-            category: item.category,
-            hostName: item.hostName,
-            hostPhone: item.hostPhone,
-            available: item.available,
-            lat: item.lat,
-            lng: item.lng,
-            rating: item.rating,
-            reviewCount: item.reviewCount,
-          }));
+          const mapped: ListingItem[] = Array.isArray(raw)
+            ? raw.map((item: Record<string, unknown>) => mapListingResponse(item))
+            : [];
           listingCache.set(cacheKey, { data: mapped, timestamp: Date.now() });
           if (currentTypeRef.current === type) {
             setData(mapped);
@@ -63,9 +94,9 @@ export function useListings(type: "stay") {
           return;
         }
         throw new Error(`Failed to fetch listings: ${res.status}`);
-      } catch (err: any) {
-        if (err?.name === "AbortError") return;
-        setError(err.message || "Failed to load listings");
+      } catch (err: unknown) {
+        if (err instanceof DOMException && err.name === "AbortError") return;
+        setError(err instanceof Error ? err.message : "Failed to load listings");
       }
       setIsLoading(false);
     }
@@ -77,11 +108,11 @@ export function useListings(type: "stay") {
     };
   }, [type]);
 
-  return { data, isLoading, error, source: "rest" };
+  return { data, isLoading, error, source: "rest" as const };
 }
 
 export function useListing(id: string) {
-  const [data, setData] = useState<any | null>(null);
+  const [data, setData] = useState<ListingItem | null>(null);
   const [notFound, setNotFound] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -101,33 +132,15 @@ export function useListing(id: string) {
         if (res.ok) {
           const found = await res.json();
           if (found && !found.error) {
-            setData({
-              _id: found.id,
-              title: found.title,
-              type: found.type,
-              region: found.region,
-              price: found.price,
-              description: found.description,
-              image: found.imageUrl,
-              images: found.images || [found.imageUrl],
-              features: found.features ? found.features.split(",") : [],
-              category: found.category,
-              hostName: found.hostName,
-              hostPhone: found.hostPhone,
-              available: found.available,
-              lat: found.lat,
-              lng: found.lng,
-              rating: found.rating,
-              reviewCount: found.reviewCount,
-            });
+            setData(mapListingResponse(found));
             setIsLoading(false);
             return;
           }
         }
         throw new Error(`Listing not found: ${id}`);
-      } catch (err: any) {
-        if (err?.name === "AbortError") return;
-        setError(err.message || "Failed to load listing");
+      } catch (err: unknown) {
+        if (err instanceof DOMException && err.name === "AbortError") return;
+        setError(err instanceof Error ? err.message : "Failed to load listing");
         setNotFound(true);
       }
       setIsLoading(false);

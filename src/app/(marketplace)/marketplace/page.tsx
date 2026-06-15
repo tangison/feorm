@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useFeormMarket } from "@/context/feorm-context";
 import ListingCard from "@/components/feorm/listing-card";
 import Image from "next/image";
-import { useListings } from "@/hooks/use-listings";
+import { useListings, type ListingItem } from "@/hooks/use-listings";
 import { ChevronDown, X, SlidersHorizontal, Map, LayoutGrid } from "lucide-react";
 import { NAMIBIAN_REGIONS } from "@/lib/regions";
 import dynamic from "next/dynamic";
@@ -17,7 +17,7 @@ const ListingsMap = dynamic(
 
 const REGION_OPTIONS = ["All Regions", ...NAMIBIAN_REGIONS] as const;
 
-function transformItem(item: any) {
+function transformItem(item: ListingItem) {
   return {
     id: item._id,
     title: item.title,
@@ -27,8 +27,8 @@ function transformItem(item: any) {
     category: item.category,
     description: item.description,
     imageUrl: item.image,
-    images: item.images || [item.image],
-    features: Array.isArray(item.features) ? item.features.join(",") : item.features,
+    images: item.images.length > 0 ? item.images : [item.image],
+    features: Array.isArray(item.features) ? item.features.join(",") : "",
     hostId: "",
     hostName: item.hostName,
     hostPhone: item.hostPhone,
@@ -80,12 +80,12 @@ function MarketplaceContent() {
     if (!listings) return [];
     let filtered = listings;
     if (selectedRegion !== "All Regions") {
-      filtered = filtered.filter((item: any) =>
+      filtered = filtered.filter((item) =>
         item.region?.toLowerCase().includes(selectedRegion.toLowerCase())
       );
     }
     if (showAvailableOnly) {
-      filtered = filtered.filter((item: any) => item.available !== false);
+      filtered = filtered.filter((item) => item.available !== false);
     }
     return filtered.map(transformItem);
   }, [listings, selectedRegion, showAvailableOnly]);

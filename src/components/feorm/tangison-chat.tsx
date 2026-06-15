@@ -143,8 +143,8 @@ export default function TangisonChat() {
           { role: "assistant", content: fullText, provider },
         ]);
       }
-    } catch (err: any) {
-      if (err?.name === "AbortError") return;
+    } catch (err: unknown) {
+      if (err instanceof DOMException && err.name === "AbortError") return;
       setMessages((prev) => [
         ...prev,
         {

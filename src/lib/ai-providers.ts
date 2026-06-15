@@ -152,8 +152,9 @@ export async function checkProviders(): Promise<ProviderHealth[]> {
     const start = Date.now();
     await openrouterCompletion([{ role: "user", content: "ping" }]);
     return [{ name: "openrouter", available: true, latencyMs: Date.now() - start }];
-  } catch (err: any) {
-    return [{ name: "openrouter", available: false, error: err?.message ?? "Unknown error" }];
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    return [{ name: "openrouter", available: false, error: message }];
   }
 }
 

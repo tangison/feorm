@@ -1,10 +1,19 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 
 // ─── Request Deduplication Cache ────────────────────────────────
-const bookingCache = new Map<string, { data: any[]; timestamp: number }>();
+const bookingCache = new Map<string, { data: BookingData[]; timestamp: number }>();
 const CACHE_TTL = 30_000; // 30 seconds
+
+interface ListingSummary {
+  id: string;
+  title: string;
+  type: string;
+  category: string;
+  region: string;
+  imageUrl: string;
+}
 
 interface BookingData {
   _id: string;
@@ -17,7 +26,7 @@ interface BookingData {
   serviceFee: number;
   status: string;
   reference: string;
-  listing?: any;
+  listing?: ListingSummary;
 }
 
 // Hook for user's bookings — REST API only, no demo fallback
@@ -57,19 +66,19 @@ export function useBookings(userId: string) {
         );
         if (res.ok) {
           const raw = await res.json();
-          const mapped = Array.isArray(raw)
-            ? raw.map((b: any) => ({
-                _id: b.id,
-                listingId: b.listingId,
-                userId: b.userId,
-                startDate: b.startDate,
-                endDate: b.endDate,
-                totalPrice: b.totalPrice,
-                escrowAmount: b.escrowAmount,
-                serviceFee: b.serviceFee,
-                status: b.status,
-                reference: b.referenceNumber,
-                listing: b.listing,
+          const mapped: BookingData[] = Array.isArray(raw)
+            ? raw.map((b: Record<string, unknown>) => ({
+                _id: b.id as string,
+                listingId: b.listingId as string,
+                userId: b.userId as string,
+                startDate: b.startDate as string,
+                endDate: b.endDate as string,
+                totalPrice: b.totalPrice as number,
+                escrowAmount: b.escrowAmount as number,
+                serviceFee: b.serviceFee as number,
+                status: b.status as string,
+                reference: b.referenceNumber as string,
+                listing: b.listing as ListingSummary | undefined,
               }))
             : [];
           bookingCache.set(cacheKey, { data: mapped, timestamp: Date.now() });
@@ -78,9 +87,9 @@ export function useBookings(userId: string) {
           return;
         }
         throw new Error(`Failed to fetch bookings: ${res.status}`);
-      } catch (err: any) {
-        if (err?.name === "AbortError") return;
-        setError(err.message || "Failed to load bookings");
+      } catch (err: unknown) {
+        if (err instanceof DOMException && err.name === "AbortError") return;
+        setError(err instanceof Error ? err.message : "Failed to load bookings");
       }
       setIsLoading(false);
     }
@@ -95,9 +104,17 @@ export function useBookings(userId: string) {
   return { data, isLoading, error };
 }
 
+interface BookingReferenceData {
+  _id: string;
+  reference: string;
+  status: string;
+  totalPrice: number;
+  listing?: ListingSummary;
+}
+
 // Hook for booking by reference — REST API only
 export function useBookingByReference(reference: string) {
-  const [data, setData] = useState<any>(undefined);
+  const [data, setData] = useState<BookingReferenceData | null>(null);
   const [isLoading, setIsLoading] = useState(!!reference);
   const [error, setError] = useState<string | null>(null);
 
@@ -122,20 +139,20 @@ export function useBookingByReference(reference: string) {
           const raw = await res.json();
           if (raw && !raw.error) {
             setData({
-              _id: raw.id,
-              reference: raw.referenceNumber,
-              status: raw.status,
-              totalPrice: raw.totalPrice,
-              listing: raw.listing,
+              _id: raw.id as string,
+              reference: raw.referenceNumber as string,
+              status: raw.status as string,
+              totalPrice: raw.totalPrice as number,
+              listing: raw.listing as ListingSummary | undefined,
             });
             setIsLoading(false);
             return;
           }
         }
         throw new Error(`Booking not found: ${reference}`);
-      } catch (err: any) {
-        if (err?.name === "AbortError") return;
-        setError(err.message || "Failed to load booking");
+      } catch (err: unknown) {
+        if (err instanceof DOMException && err.name === "AbortError") return;
+        setError(err instanceof Error ? err.message : "Failed to load booking");
       }
       setIsLoading(false);
     }
@@ -150,31 +167,4 @@ export function useBookingByReference(reference: string) {
   return { data, isLoading, error };
 }
 
-// Create booking via REST API only — no demo fallback
-export function useCreateBooking() {
-  const createBooking = useCallback(
-    async (bookingData: {
-      userId: string;
-      listingId: string;
-      startDate: string;
-      endDate: string;
-      totalPrice: number;
-      escrowAmount: number;
-      serviceFee: number;
-    }) => {
-      const res = await fetch("/api/bookings", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(bookingData),
-      });
-      if (!res.ok) {
-        throw new Error(`Booking creation failed: ${res.status}`);
-      }
-      const result = await res.json();
-      return { reference: result.referenceNumber };
-    },
-    []
-  );
 
-  return { createBooking };
-}
