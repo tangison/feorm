@@ -115,9 +115,11 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overscroll-behavior: none;
+    overflow-x: hidden;
   }
   html {
     -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
   }
 }
 

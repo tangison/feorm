@@ -48,6 +48,27 @@ export const metadata: Metadata = {
   icons: {
     icon: "/feorm-logo.png",
   },
+  openGraph: {
+    title: "Feorm | Namibian Farmland Marketplace",
+    description:
+      "A marketplace connecting Namibian farmland with travellers seeking farm stays.",
+    url: "https://feorm.na",
+    siteName: "Feorm",
+  },
+};
+
+const orgJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Feorm",
+  url: "https://feorm.na",
+  logo: "https://feorm.na/feorm-logo.png",
+  description:
+    "A marketplace connecting Namibian farmland with travellers seeking farm stays.",
+  address: {
+    "@type": "PostalAddress",
+    addressCountry: "NA",
+  },
 };
 
 export default function RootLayout({
@@ -60,6 +81,10 @@ export default function RootLayout({
       <body
         className={`${dmSerif.variable} ${dmSans.variable} ${jetbrainsMono.variable} antialiased`}
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+        />
         {/* Skip to Content — WCAG 2.4.1 Bypass Blocks */}
         <a href="#main-content" className="skip-link">
           Skip to content

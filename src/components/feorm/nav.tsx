@@ -95,15 +95,15 @@ export default function FeormNav() {
         <div className="flex items-center justify-between h-14 px-5">
           <Link
             href="/marketplace"
-            className="flex items-center gap-2.5"
+            className="flex items-center gap-2.5 min-h-[44px]"
             aria-label="Feorm home"
           >
             <Image
               src="/feorm-logo.png"
               alt="Feorm"
-              width={32}
-              height={32}
-              sizes="32px"
+              width={36}
+              height={36}
+              sizes="36px"
               className="rounded-lg"
             />
             <span className="font-serif-display text-xl italic lowercase leading-none">

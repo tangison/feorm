@@ -8,6 +8,21 @@ export const metadata: Metadata = {
     title: "How it Works | Feorm",
     description:
       "Feorm connects Namibian landowners with travellers seeking authentic farm stays.",
+    url: "https://feorm.na/landing",
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: "How it Works — Feorm",
+  description:
+    "Feorm connects Namibian landowners with travellers seeking authentic farm stays.",
+  url: "https://feorm.na/landing",
+  isPartOf: {
+    "@type": "WebSite",
+    name: "Feorm",
+    url: "https://feorm.na",
   },
 };
 
@@ -16,5 +31,13 @@ export default function LandingLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      {children}
+    </>
+  );
 }
