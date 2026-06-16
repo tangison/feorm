@@ -200,7 +200,7 @@ export default function SupportPage() {
           {/* Error state */}
           {aiError && (
             <div
-              className="mt-4 p-4 rounded-[8px] border border-destructive/20 bg-destructive-bg"
+              className="mt-4 p-4 rounded-xl border border-destructive/20 bg-destructive-bg"
               role="alert"
             >
               <p className="text-xs text-destructive">{aiError}</p>
@@ -216,7 +216,7 @@ export default function SupportPage() {
               {aiSuggestions.map((s, i) => (
                 <div
                   key={i}
-                  className="p-4 rounded-[8px] border border-harvest/30 bg-harvest/5"
+                  className="p-4 rounded-xl border border-harvest/30 bg-harvest/5"
                 >
                   <h4 className="text-sm font-medium text-earth mb-1">
                     {s.title}

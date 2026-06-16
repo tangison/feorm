@@ -84,14 +84,14 @@ export default function NewListingPage() {
           {/* Category: Farm Stay */}
           <div className="flex gap-3">
             <div
-              className="flex-1 p-4 text-center border-2 border-harvest bg-accent/30 rounded-[8px]"
+              className="flex-1 p-4 text-center border-2 border-harvest bg-accent/30 rounded-xl"
             >
               <span className="text-sm font-medium text-earth">Farm Stay</span>
             </div>
           </div>
 
           {/* Title */}
-          <div className="border border-soil/20 bg-white-feorm p-4 rounded-[4px] focus-within:border-earth transition-colors">
+          <div className="border border-soil/20 bg-white-feorm p-4 rounded-xl focus-within:border-earth transition-colors">
             <label htmlFor="title" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-muted-foreground">
               Title
             </label>
@@ -106,7 +106,7 @@ export default function NewListingPage() {
           </div>
 
           {/* Description */}
-          <div className="border border-soil/20 bg-white-feorm p-4 rounded-[4px] focus-within:border-earth transition-colors">
+          <div className="border border-soil/20 bg-white-feorm p-4 rounded-xl focus-within:border-earth transition-colors">
             <label htmlFor="description" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-muted-foreground">
               Description
             </label>
@@ -121,7 +121,7 @@ export default function NewListingPage() {
           </div>
 
           {/* Price */}
-          <div className="border border-soil/20 bg-white-feorm p-4 rounded-[4px] focus-within:border-earth transition-colors">
+          <div className="border border-soil/20 bg-white-feorm p-4 rounded-xl focus-within:border-earth transition-colors">
             <label htmlFor="price" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-muted-foreground">
               Price per Day (N$)
             </label>
@@ -140,7 +140,7 @@ export default function NewListingPage() {
           </div>
 
           {/* Region */}
-          <div className="border border-soil/20 bg-white-feorm p-4 rounded-[4px] focus-within:border-earth transition-colors">
+          <div className="border border-soil/20 bg-white-feorm p-4 rounded-xl focus-within:border-earth transition-colors">
             <label htmlFor="region" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-muted-foreground">
               Region
             </label>
@@ -157,7 +157,7 @@ export default function NewListingPage() {
           </div>
 
           {/* Phone */}
-          <div className="border border-soil/20 bg-white-feorm p-4 rounded-[4px] focus-within:border-earth transition-colors">
+          <div className="border border-soil/20 bg-white-feorm p-4 rounded-xl focus-within:border-earth transition-colors">
             <label htmlFor="host-phone" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-muted-foreground">
               Contact Phone
             </label>
@@ -175,7 +175,7 @@ export default function NewListingPage() {
           </div>
 
           {/* Amenities / Features */}
-          <div className="border border-soil/20 bg-white-feorm p-4 rounded-[4px] focus-within:border-earth transition-colors">
+          <div className="border border-soil/20 bg-white-feorm p-4 rounded-xl focus-within:border-earth transition-colors">
             <label htmlFor="amenities" className="block text-[10px] font-medium uppercase tracking-widest mb-2 text-muted-foreground">
               Amenities
             </label>
@@ -191,7 +191,7 @@ export default function NewListingPage() {
           </div>
 
           {/* GPS Coordinates */}
-          <div className="border border-soil/20 bg-white-feorm p-4 rounded-[4px] focus-within:border-earth transition-colors">
+          <div className="border border-soil/20 bg-white-feorm p-4 rounded-xl focus-within:border-earth transition-colors">
             <div className="flex items-center gap-2 mb-3">
               <MapPin size={14} className="text-earth" />
               <label className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">

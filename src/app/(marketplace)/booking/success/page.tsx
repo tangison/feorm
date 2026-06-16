@@ -52,7 +52,7 @@ function SuccessContent() {
         </p>
 
         {ref && (
-          <div className="border border-soil/10 bg-white-feorm rounded-[8px] p-6 mb-8">
+          <div className="border border-soil/10 bg-white-feorm rounded-xl p-6 mb-8">
             <p className="font-mono-feorm text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
               Booking Reference
             </p>

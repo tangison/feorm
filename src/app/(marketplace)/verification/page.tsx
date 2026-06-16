@@ -130,7 +130,7 @@ export default function VerificationPage() {
             />
           </div>
 
-          <div className="flex items-center gap-4 p-4 rounded-[8px] bg-cream/50">
+          <div className="flex items-center gap-4 p-4 rounded-xl bg-cream/50">
             <div className="flex items-center gap-2">
               <Star size={14} className="text-harvest" />
               <span className="font-mono-feorm text-[9px] uppercase tracking-widest text-muted-foreground">
@@ -157,7 +157,7 @@ export default function VerificationPage() {
           {!idUploaded ? (
             <button
               onClick={handleIdUpload}
-              className="w-full border-2 border-dashed border-soil/20 rounded-[8px] p-8 flex flex-col items-center gap-4 hover:border-harvest hover:bg-accent/20 transition-all cursor-pointer min-h-[44px]"
+              className="w-full border-2 border-dashed border-soil/20 rounded-xl p-8 flex flex-col items-center gap-4 hover:border-harvest hover:bg-accent/20 transition-all cursor-pointer min-h-[44px]"
               type="button"
               aria-label="Upload National ID or Passport"
             >
@@ -349,7 +349,7 @@ export default function VerificationPage() {
               {[1, 2, 3].map((i) => (
                 <div
                   key={i}
-                  className="skeleton-shimmer h-12 rounded-[8px]"
+                  className="skeleton-shimmer h-12 rounded-xl"
                 />
               ))}
             </div>
@@ -364,7 +364,7 @@ export default function VerificationPage() {
                 {aiTips.map((tip, i) => (
                   <div
                     key={i}
-                    className="flex items-start gap-3 p-3 rounded-[6px] bg-white-feorm"
+                    className="flex items-start gap-3 p-3 rounded-lg bg-white-feorm"
                   >
                     <ChevronRight
                       size={14}

@@ -222,7 +222,7 @@ export default function AdminPage() {
         {loading && pendingProviders.length === 0 ? (
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="skeleton-shimmer h-24 rounded-[8px]" />
+              <div key={i} className="skeleton-shimmer h-24 rounded-xl" />
             ))}
           </div>
         ) : pendingProviders.length === 0 ? (
