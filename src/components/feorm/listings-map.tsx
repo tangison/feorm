@@ -182,7 +182,7 @@ export default function ListingsMap({ listings }: ListingsMapProps) {
           justify-content: center;
           font-size: 12px;
           color: white;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+          box-shadow: 0 2px 8px rgba(120, 60, 20, 0.2);
           background: ${STAY_COLOR};
         `;
         el.textContent = "S";
